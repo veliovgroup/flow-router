@@ -190,6 +190,7 @@ FastRender.route('/post/:_id', function(params) {
 
 ## Other packages compatibility
 This package tested and recommended to use with next packages:
+ - [kadira:blaze-layout](https://github.com/kadirahq/blaze-layout) - Render layout template and pass data to UI
  - [meteorhacks:subs-manager](https://github.com/kadirahq/subs-manager) - Manage subscriptions with caching
  - [meteorhacks:fast-render](https://github.com/kadirahq/fast-render) - Pre-fetch collection's data on server-side
  - [jazeee:spiderable](https://github.com/jazeee/jazeee-meteor-spiderable) - Making your pages accessible for crawlers

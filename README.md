@@ -16,7 +16,7 @@ FlowRouter Extra:
 * [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook)
 * [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook)
 * [data hook](https://github.com/VeliovGroup/flow-router#data-hook)
-* [onNoData hook](https://github.com/VeliovGroup/flow-router#onNoData-hook)
+* [onNoData hook](https://github.com/VeliovGroup/flow-router#onnodata-hook)
 * [Data in other hooks](https://github.com/VeliovGroup/flow-router#data-in-other-hooks)
 * [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage)
 * [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility)

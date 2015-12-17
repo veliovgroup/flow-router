@@ -2,7 +2,7 @@ Route = function(router, pathDef, options, group) {
   options = options || {};
 
   this.options = options;
-  this.pathDef = pathDef
+  this.pathDef = pathDef;
 
   // Route.path is deprecated and will be removed in 3.0
   this.path = pathDef;
@@ -12,6 +12,11 @@ Route = function(router, pathDef, options, group) {
   }
 
   this._action = options.action || Function.prototype;
+  this._waitOn = options.waitOn || null;
+  this._whileWaiting = options.whileWaiting || null;
+  this._data = options.data || null;
+  this._onNoData = options.onNoData || null;
+  this._currentData = undefined;
   this._subscriptions = options.subscriptions || Function.prototype;
   this._triggersEnter = options.triggersEnter || [];
   this._triggersExit = options.triggersExit || [];
@@ -46,9 +51,55 @@ Route.prototype.getAllSubscriptions = function() {
   return this._subsMap;
 };
 
+Route.prototype.checkSubscriptions = function(subscriptions) {
+  var i, len, results = [];
+  for (i = 0, len = subscriptions.length; i < len; i++) {
+    subscription = subscriptions[i];
+    results.push(subscription != null ? subscription.ready() : false);
+  }
+
+  return !~results.indexOf(false);
+};
+
+Route.prototype.waitOn = function(current, next) {
+  var self = this, subscriptions, timer, _data;
+  if (self._waitOn) {
+    if (!current) { current = {}; }
+    
+    subscriptions = self._waitOn(current.params, current.queryParams);
+    timer = Meteor.setInterval(function(){
+      if (self.checkSubscriptions(subscriptions)) {
+        Meteor.clearInterval(timer);
+        if (self._data) {
+          _data = self._data(current.params, current.queryParams);
+          if (_data) {
+            self._currentData = _.clone(_data);
+          }
+        }
+        next(current, _data);
+      }
+    }, 25);
+  } else {
+    next(current);
+  }
+};
+
 Route.prototype.callAction = function(current) {
   var self = this;
-  self._action(current.params, current.queryParams);
+  if (self._waitOn) {
+    self._whileWaiting && self._whileWaiting(current.params, current.queryParams);
+
+    self.waitOn(current, function(current, data){
+      if (self._onNoData && !data) {
+        self._onNoData(current.params, current.queryParams);
+      } else {
+        self._action(current.params, current.queryParams, data);
+      }
+    });
+
+  } else {
+    self._action(current.params, current.queryParams);
+  }
 };
 
 Route.prototype.callSubscriptions = function(current) {

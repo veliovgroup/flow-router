@@ -1,8 +1,8 @@
 Package.describe({
-  name: 'kadira:flow-router',
-  summary: 'Carefully Designed Client Side Router for Meteor',
+  name: 'ostrio:flow-router-extra',
+  summary: 'Extended flow-router with waitOn and template context',
   version: '2.10.0',
-  git: 'https://github.com/kadirahq/flow-router.git'
+  git: 'https://github.com/VeliovGroup/flow-router'
 });
 
 Npm.depends({

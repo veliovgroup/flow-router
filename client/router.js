@@ -101,13 +101,16 @@ Router.prototype.route = function(pathDef, options, group) {
       self._invalidateTracker();
     };
 
-    var triggers = self._triggersEnter.concat(route._triggersEnter);
-    Triggers.runTriggers(
-      triggers,
-      self._current,
-      self._redirectFn,
-      afterAllTriggersRan
-    );
+    route.waitOn(self._current, function(current, data){
+      var triggers = self._triggersEnter.concat(route._triggersEnter);
+      Triggers.runTriggers(
+        triggers,
+        self._current,
+        self._redirectFn,
+        afterAllTriggersRan,
+        data
+      );
+    });
   };
 
   // calls when you exit from the page js route

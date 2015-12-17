@@ -69,14 +69,14 @@ Triggers.createRouteBoundTriggers = function(triggers, names, negate) {
 //  @context - context we need to pass (it must have the route)
 //  @redirectFn - function which used to redirect 
 //  @after - called after if only all the triggers runs
-Triggers.runTriggers = function(triggers, context, redirectFn, after) {
+Triggers.runTriggers = function(triggers, context, redirectFn, after, data) {
   var abort = false;
   var inCurrentLoop = true;
   var alreadyRedirected = false;
 
   for(var lc=0; lc<triggers.length; lc++) {
     var trigger = triggers[lc];
-    trigger(context, doRedirect, doStop);
+    trigger(context, doRedirect, doStop, data);
 
     if(abort) {
       return;

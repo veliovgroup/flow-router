@@ -44,7 +44,7 @@ Original FlowRouter documentation:
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function(params, queryParams) {
+  waitOn: function (params, queryParams) {
     return [subsManager.subscribe('post', params._id), Meteor.subscribe('suggestedPosts', params._id)];
   }
 });
@@ -55,10 +55,10 @@ FlowRouter.route('/post/:_id', {
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function(params) {
+  waitOn: function (params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  whileWaiting: function(params, queryParams) {
+  whileWaiting: function (params, queryParams) {
     BlazeLayout.render('_layout', {content: '_loading'});
   }
 });
@@ -69,13 +69,13 @@ FlowRouter.route('/post/:_id', {
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function(params) {
+  waitOn: function (params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  whileWaiting: function() {
+  whileWaiting: function () {
     BlazeLayout.render('_layout', {content: '_loading'});
   },
-  data: function(params, queryParams) {
+  data: function (params, queryParams) {
     return PostsCollection.findOne({_id: params._id});
   }
 });
@@ -85,13 +85,13 @@ When you having `data` hook in a route, - returned data will be passed to `actio
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  action: function(params, queryParams, data) {
+  action: function (params, queryParams, data) {
     BlazeLayout.render('_layout', {content: 'post', post: data});
   },
-  waitOn: function(params) {
+  waitOn: function (params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  data: function(params, queryParams) {
+  data: function (params, queryParams) {
     return PostsCollection.findOne({_id: params._id});
   }
 });
@@ -109,13 +109,13 @@ FlowRouter.route('/post/:_id', {
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function(params) {
+  waitOn: function (params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  data: function(params) {
+  data: function (params) {
     return PostsCollection.findOne({_id: params._id});
   },
-  onNoData: function(params, queryParams){
+  onNoData: function (params, queryParams){
     BlazeLayout.render('_layout', {content: '_404'});
   }
 });
@@ -126,13 +126,13 @@ Returned data from `data` hook, will be also passed into all `triggersEnter` hoo
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function(params) {
+  waitOn: function (params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  data: function(params) {
+  data: function (params) {
     return PostsCollection.findOne({_id: params._id});
   },
-  triggersEnter: [function(context, redirect, stop, data){
+  triggersEnter: [function (context, redirect, stop, data){
     console.log(data);
   }]
 });
@@ -143,39 +143,39 @@ As example we took simple post route:
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  action: function(params, queryParams, data) {
+  action: function (params, queryParams, data) {
     BlazeLayout.render('_layout', {content: 'post', post: data});
   },
-  waitOn: function(params) {
+  waitOn: function (params) {
     // meteorhacks:subs-manager package
     return [subsManager.subscribe('post', params._id)];
   },
-  data: function(params) {
+  data: function (params) {
     return PostsCollection.findOne({_id: params._id});
   },
-  onNoData: function(){
+  onNoData: function (){
     BlazeLayout.render('_layout', {content: '_404'});
   },
   // ostrio:flow-router-title package
-  title: function(params, queryParams, post) {
+  title: function (params, queryParams, post) {
     return (post) ? post.title : '404: Page not found';
   }
 });
 
 FlowRouter.notFound = {
   title: '404: Page not found',
-  action: function() {
+  action: function () {
     BlazeLayout.render('_layout', {content: '_404'});
   }
 };
 
 // jazeee:spiderable-longer-timeout package
-FlowRouter.triggers.enter([function() {
+FlowRouter.triggers.enter([function () {
   Meteor.isReadyForSpiderable = true;
 }]);
 
 // meteorhacks:fast-render package
-FastRender.route('/post/:_id', function(params) {
+FastRender.route('/post/:_id', function (params) {
   this.subscribe('post', params._id);
 });
 ```
@@ -221,7 +221,7 @@ Let's write our first route (add this file to `lib/router.js`):
 
 ~~~js
 FlowRouter.route('/blog/:postId', {
-    action: function(params, queryParams) {
+    action: function (params, queryParams) {
         console.log("Yeah! We are on the post:", params.postId);
     }
 });
@@ -244,7 +244,7 @@ Here's the syntax for a simple route:
 ~~~js
 FlowRouter.route('/blog/:postId', {
     // do some action for this route
-    action: function(params, queryParams) {
+    action: function (params, queryParams) {
         console.log("Params:", params);
         console.log("Query Params:", queryParams);
     },
@@ -278,24 +278,24 @@ You can group routes for better route organization. Here's an example:
 var adminRoutes = FlowRouter.group({
   prefix: '/admin',
   name: 'admin',
-  triggersEnter: [function(context, redirect) {
+  triggersEnter: [function (context, redirect) {
     console.log('running group triggers');
   }]
 });
 
 // handling /admin route
 adminRoutes.route('/', {
-  action: function() {
+  action: function () {
     BlazeLayout.render('componentLayout', {content: 'admin'});
   },
-  triggersEnter: [function(context, redirect) {
+  triggersEnter: [function (context, redirect) {
     console.log('running /admin trigger');
   }]
 });
 
 // handling /admin/posts
 adminRoutes.route('/posts', {
-  action: function() {
+  action: function () {
     BlazeLayout.render('componentLayout', {content: 'posts'});
   }
 });
@@ -318,7 +318,7 @@ var superAdminRoutes = adminRoutes.group({
 
 // handling /admin/super/post
 superAdminRoutes.route('/post', {
-    action: function() {
+    action: function () {
 
     }
 });
@@ -349,7 +349,7 @@ Then you can invoke the layout manager inside the `action` method in the router.
 
 ~~~js
 FlowRouter.route('/blog/:postId', {
-    action: function(params) {
+    action: function (params) {
         BlazeLayout.render("mainLayout", {area: "blog"});
     }
 });
@@ -367,7 +367,7 @@ Here's how you can define triggers for a route:
 FlowRouter.route('/home', {
   // calls just before the action
   triggersEnter: [trackRouteEntry],
-  action: function() {
+  action: function () {
     // do something you like
   },
   // calls when when we decide to move to another route
@@ -422,10 +422,10 @@ You can redirect to a different route using triggers. You can do it from both en
 
 ~~~js
 FlowRouter.route('/', {
-  triggersEnter: [function(context, redirect) {
+  triggersEnter: [function (context, redirect) {
     redirect('/some-other-path');
   }],
-  action: function(_params) {
+  action: function (_params) {
     throw new Error("this should not get called");
   }
 });
@@ -474,10 +474,10 @@ You can configure Not Found routes like this:
 ~~~js
 FlowRouter.notFound = {
     // Subscriptions registered here don't have Fast Render support.
-    subscriptions: function() {
+    subscriptions: function () {
 
     },
-    action: function() {
+    action: function () {
 
     }
 };
@@ -535,7 +535,7 @@ You can also use the route's name instead of the pathDef. Then, FlowRouter will 
 ~~~js
 FlowRouter.route("/blog/:cat/:id", {
     name: "blogPostRoute",
-    action: function(params) {
+    action: function (params) {
         //...
     }
 })
@@ -590,7 +590,7 @@ FlowRouter.setQueryParams({paramToRemove: null});
 To get the name of the route reactively.
 
 ~~~js
-Tracker.autorun(function() {
+Tracker.autorun(function () {
   var routeName = FlowRouter.getRouteName();
   console.log("Current route name is: ", routeName);
 });
@@ -624,7 +624,7 @@ console.log(current);
 Reactively watch the changes in the path. If you need to simply get the params or queryParams use dedicated APIs like `FlowRouter.getQueryParam()`.
 
 ~~~js
-Tracker.autorun(function() {
+Tracker.autorun(function () {
   FlowRouter.watchPathChange();
   var currentContext = FlowRouter.current();
   // do anything with the current context
@@ -646,7 +646,7 @@ Now you can hit the back button of your browser two times. This is normal behavi
 But sometimes, this is not something you want. You don't need to pollute the browser history. Then, you can use the following syntax.
 
 ~~~js
-FlowRouter.withReplaceState(function() {
+FlowRouter.withReplaceState(function () {
   FlowRouter.setParams({id: "the-id-1"});
   FlowRouter.setParams({id: "the-id-2"});
   FlowRouter.setParams({id: "the-id-3"});
@@ -674,7 +674,7 @@ eg:-
 ~~~js
 // file: app.js
 FlowRouter.wait();
-WhenEverYourAppIsReady(function() {
+WhenEverYourAppIsReady(function () {
   FlowRouter.initialize();
 });
 ~~~
@@ -686,7 +686,7 @@ For more information visit [issue #180](https://github.com/meteorhacks/flow-rout
 This API is specially designed for add-on developers. They can listen for any registered route and add custom functionality to FlowRouter. This works on both server and client alike.
 
 ~~~js
-FlowRouter.onRouteRegister(function(route) {
+FlowRouter.onRouteRegister(function (route) {
   // do anything with the route object
   console.log(route);
 });
@@ -697,10 +697,10 @@ Let's say a user defined a route like this:
 ~~~js
 FlowRouter.route('/blog/:post', {
   name: 'postList',
-  triggersEnter: [function() {}],
-  subscriptions: function() {},
-  action: function() {},
-  triggersExit: [function() {}],
+  triggersEnter: [function () {}],
+  subscriptions: function () {},
+  action: function () {},
+  triggersExit: [function () {}],
   customField: 'customName'
 });
 ~~~
@@ -727,7 +727,7 @@ FlowRouter only deals with registration of subscriptions. It does not wait until
 
 ~~~js
 FlowRouter.route('/blog/:postId', {
-    subscriptions: function(params, queryParams) {
+    subscriptions: function (params, queryParams) {
         this.register('myPost', Meteor.subscribe('blogPost', params.postId));
     }
 });
@@ -736,7 +736,7 @@ FlowRouter.route('/blog/:postId', {
 We can also register global subscriptions like this:
 
 ~~~js
-FlowRouter.subscriptions = function() {
+FlowRouter.subscriptions = function () {
   this.register('myCourses', Meteor.subscribe('courses'));
 };
 ~~~
@@ -746,7 +746,7 @@ All these global subscriptions run on every route. So, pay special attention to 
 After you've registered your subscriptions, you can reactively check for the status of those subscriptions like this:
 
 ~~~js
-Tracker.autorun(function() {
+Tracker.autorun(function () {
     console.log("Is myPost ready?:", FlowRouter.subsReady("myPost"));
     console.log("Does all subscriptions ready?:", FlowRouter.subsReady());
 });
@@ -760,8 +760,8 @@ Sometimes, we need to use `FlowRouter.subsReady()` in places where an autorun is
 
 ~~~js
 Template.myTemplate.events(
-   "click #id": function(){
-      FlowRouter.subsReady("myPost", function() {
+   "click #id": function (){
+      FlowRouter.subsReady("myPost", function () {
          // do something
       });
   }
@@ -784,7 +784,7 @@ You can exclude Fast Render support by wrapping the subscription registration in
 
 ~~~js
 FlowRouter.route('/blog/:postId', {
-    subscriptions: function(params, queryParams) {
+    subscriptions: function (params, queryParams) {
         // using Fast Render
         this.register('myPost', Meteor.subscribe('blogPost', params.postId));
 
@@ -817,7 +817,7 @@ To enable hashbang urls like `mydomain.com/#!/mypath` simple set the `hashbang` 
 ~~~js
 // file: app.js
 FlowRouter.wait();
-WhenEverYourAppIsReady(function() {
+WhenEverYourAppIsReady(function () {
   FlowRouter.initialize({hashbang: true});
 });
 ~~~
@@ -872,7 +872,7 @@ Now let's say, we need to get `appId` from the URL. Then we will do, something l
 
 ~~~js
 Templates['foo'].helpers({
-    "someData": function() {
+    "someData": function () {
         var appId = Router.current().params.appId;
         return doSomething(appId);
     }
@@ -887,7 +887,7 @@ FlowRouter fixes this issue by providing the `Router.getParam()` API. See how to
 
 ~~~js
 Templates['foo'].helpers({
-    "someData": function() {
+    "someData": function () {
         var appId = FlowRouter.getParam('appId');
         return doSomething(appId);
     }

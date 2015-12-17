@@ -65,7 +65,7 @@ Route.prototype.waitOn = function(current, next) {
   var self = this, subscriptions, timer, _data;
   if (self._waitOn) {
     if (!current) { current = {}; }
-    
+    self._whileWaiting && self._whileWaiting(current.params, current.queryParams);
     subscriptions = self._waitOn(current.params, current.queryParams);
     timer = Meteor.setInterval(function(){
       if (self.checkSubscriptions(subscriptions)) {
@@ -87,8 +87,6 @@ Route.prototype.waitOn = function(current, next) {
 Route.prototype.callAction = function(current) {
   var self = this;
   if (self._waitOn) {
-    self._whileWaiting && self._whileWaiting(current.params, current.queryParams);
-
     self.waitOn(current, function(current, data){
       if (self._onNoData && !data) {
         self._onNoData(current.params, current.queryParams);

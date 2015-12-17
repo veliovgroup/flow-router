@@ -1,3 +1,6 @@
+FlowRouter Extra
+======
+
 Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
 
 Unfortunately FlowRouter has very close API, so there is no way to extend it without digging into the core, and createing separate package, sorry for this.

@@ -3,18 +3,19 @@ FlowRouter Extra
 
 Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
 
-Unfortunately FlowRouter has very close API, so there is no way to extend it without digging into the core, and createing separate package, sorry for this.
+Unfortunately FlowRouter has very close API, so there is no way to extend it without digging into the core, and creating separate package, sorry for this.
 
 ## TOC
-* [waitOn hook](https://github.com/VeliovGroup/flow-router#waitOn)
-* [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whileWaiting)
-* [data hook](https://github.com/VeliovGroup/flow-router#data)
-* [onNoData hook](https://github.com/VeliovGroup/flow-router#onNoData)
+FlowRouter Extra:
+* [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook)
+* [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook)
+* [data hook](https://github.com/VeliovGroup/flow-router#data-hook)
+* [onNoData hook](https://github.com/VeliovGroup/flow-router#onNoData-hook)
 * [Data in other hooks](https://github.com/VeliovGroup/flow-router#data-in-other-hooks)
 * [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage)
 * [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility)
 
-Original `flow-router` documentation:
+Original FlowRouter documentation:
 * [Meteor Routing Guide](#meteor-routing-guide)
 * [Getting Started](#getting-started)
 * [Routes Definition](#routes-definition)
@@ -33,7 +34,7 @@ Original `flow-router` documentation:
 
 # Extended `flow-router`:
 ## waitOn hook
-`waitOn` hook is *Function* passed as property into route configuration object. It is called with two arguments `params` and `queryParams`, same as `action`. Works like a charm with both original Meteor's [`Meteor.subscribe`](http://docs.meteor.com/#/full/meteor_subscribe) and [`subs-manager` package](https://github.com/kadirahq/subs-manager). Function __must__ return array of subscriptions handlers.
+`waitOn` hook is *Function* passed as property into route configuration object. It is called with two arguments `params` and `queryParams`, same as `action`. Works like a charm with both original Meteor's [`Meteor.subscribe`](http://docs.meteor.com/#/full/meteor_subscribe) and [`subs-manager` package](https://github.com/kadirahq/subs-manager). Function __must__ return array of subscription handlers.
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
@@ -74,7 +75,7 @@ FlowRouter.route('/post/:_id', {
 });
 ```
 
-If you have `data` hook in your route, returned data will be passed to `action` as third argument. So you may pass fetched data into template:
+When you having `data` hook in a route, - returned data will be passed to `action` as third argument. So you may pass fetched data into template:
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
@@ -98,7 +99,7 @@ FlowRouter.route('/post/:_id', {
 ```
 
 ## onNoData hook
-`onNoData` this hook is triggered instead of `action` in case if `data` hook returns falsy value. It is called with two arguments `params` and `queryParams`, same as `action`. Let's render `_404` template in it. You may run any JavaScript code inside it, for example instead of rendering *404* template you may redirect user somewhere.
+`onNoData` hook is triggered instead of `action` in case when `data` hook returned falsy value. It is called with two arguments `params` and `queryParams`, same as `action`. Let's render `_404` template in it. You may run any JavaScript code inside it, for example instead of rendering *404* template you may redirect user somewhere.
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
@@ -184,11 +185,15 @@ FastRender.route('/post/:_id', function(params) {
 ## Other packages compatibility
 This package tested and recommended to use with next packages:
  - [meteorhacks:subs-manager](https://github.com/kadirahq/subs-manager) - Manage subscriptions with caching
- - [meteorhacks:fast-render](https://github.com/kadirahq/fast-render) - Pre-render collection's data on server-side
- - [jazeee:spiderable](https://github.com/jazeee/jazeee-meteor-spiderable) - Make your pages accessible for crawlers
+ - [meteorhacks:fast-render](https://github.com/kadirahq/fast-render) - Pre-fetch collection's data on server-side
+ - [jazeee:spiderable](https://github.com/jazeee/jazeee-meteor-spiderable) - Making your pages accessible for crawlers
  - [ostrio:flow-router-title](https://github.com/VeliovGroup/Meteor-flow-router-title) - Reactive page title (`document.title`)
  - [ostrio:flow-router-meta](https://github.com/VeliovGroup/Meteor-flow-router-meta) - Reactive `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
- - [appcache](https://github.com/meteor/meteor/wiki/AppCache) - Make your app available offline
+ - [appcache](https://github.com/meteor/meteor/wiki/AppCache) - Making your application available offline
+
+
+-------
+
 
 # Original `flow-router` documentation:
 ## Meteor Routing Guide

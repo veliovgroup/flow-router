@@ -158,7 +158,7 @@ FlowRouter.route('/post/:_id', {
   },
   // ostrio:flow-router-title package
   title: function(params, queryParams, post) {
-    return (post) ? post.title : '404: Page not found'
+    return (post) ? post.title : '404: Page not found';
   }
 });
 
@@ -171,12 +171,12 @@ FlowRouter.notFound = {
 
 // jazeee:spiderable-longer-timeout package
 FlowRouter.triggers.enter([function() {
-  Meteor.isReadyForSpiderable = true
+  Meteor.isReadyForSpiderable = true;
 }]);
 
 // meteorhacks:fast-render package
 FastRender.route('/post/:_id', function(params) {
-  this.subscribe('post', params._id)
+  this.subscribe('post', params._id);
 });
 ```
 

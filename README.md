@@ -5,6 +5,12 @@ Carefully extended [flow-router](https://github.com/kadirahq/flow-router) packag
 
 Unfortunately FlowRouter has very close API, so there is no way to extend it without digging into the core, and creating separate package, sorry for this.
 
+## Installation
+```shell
+meteor add ostrio:flow-router-extra
+```
+
+
 ## TOC
 FlowRouter Extra:
 * [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook)

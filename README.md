@@ -1,16 +1,17 @@
-# FlowRouter [![Build Status](https://travis-ci.org/kadirahq/flow-router.svg?branch=master)](https://travis-ci.org/kadirahq/flow-router) [![Stories in Ready](https://badge.waffle.io/kadirahq/flow-router.svg?label=doing&title=Activities)](http://waffle.io/kadirahq/flow-router)
+Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
 
-
-Carefully Designed Client Side Router for Meteor.
-
-FlowRouter is a very simple router for Meteor. It does routing for client-side apps and does not handle rendering itself.
-
-It exposes a great API for changing the URL and reactively getting data from the URL. However, inside the router, it's not reactive. Most importantly, FlowRouter is designed with performance in mind and it focuses on what it does best: **routing**.
-
-> We've released 2.0 and follow this [migration guide](#migrating-into-20) if you are already using FlowRouter.
+Unfortunately FlowRouter has very close API, so there is no way to extend it without digging into the core, and createing separate package, sorry for this.
 
 ## TOC
+* [waitOn hook](https://github.com/VeliovGroup/flow-router#waitOn)
+* [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whileWaiting)
+* [data hook](https://github.com/VeliovGroup/flow-router#data)
+* [onNoData hook](https://github.com/VeliovGroup/flow-router#onNoData)
+* [Data in other hooks](https://github.com/VeliovGroup/flow-router#data-in-other-hooks)
+* [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage)
+* [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility)
 
+Original `flow-router` documentation:
 * [Meteor Routing Guide](#meteor-routing-guide)
 * [Getting Started](#getting-started)
 * [Routes Definition](#routes-definition)
@@ -26,6 +27,167 @@ It exposes a great API for changing the URL and reactively getting data from the
 * [Difference with Iron Router](#difference-with-iron-router)
 * [Migrating into 2.0](#migrating-into-20)
 
+
+# Extended `flow-router`:
+## waitOn hook
+`waitOn` hook is *Function* passed as property into route configuration object. It is called with two arguments `params` and `queryParams`, same as `action`. Works like a charm with both original Meteor's [`Meteor.subscribe`](http://docs.meteor.com/#/full/meteor_subscribe) and [`subs-manager` package](https://github.com/kadirahq/subs-manager). Function __must__ return array of subscriptions handlers.
+```javascript
+FlowRouter.route('/post/:_id', {
+  name: 'post',
+  waitOn: function(params, queryParams) {
+    return [subsManager.subscribe('post', params._id), Meteor.subscribe('suggestedPosts', params._id)];
+  }
+});
+```
+
+## whileWaiting hook
+`whileWaiting` hook is capable for time between user hits your page and all subscriptions from `waitOn` hook is ready. It is called with two arguments `params` and `queryParams`, same as `action`. Let's render `_loading` template in it. This hook also follows main `flow-router` ideology - loading hook not depend from layout or anything else. You may run any JavaScript code inside this hook, it is not limited to loading template.
+```javascript
+FlowRouter.route('/post/:_id', {
+  name: 'post',
+  waitOn: function(params) {
+    return [Meteor.subscribe('post', params._id)];
+  },
+  whileWaiting: function(params, queryParams) {
+    BlazeLayout.render('_layout', {content: '_loading'});
+  }
+});
+```
+
+## data hook
+`data` hook is capable for time after `waitOn` hook is ready and `action` is begin run. It is called with two arguments `params` and `queryParams`, same as `action`. This hook must return *Object*, *Mongo.Cursor* (or array of it) or falsy value.
+```javascript
+FlowRouter.route('/post/:_id', {
+  name: 'post',
+  waitOn: function(params) {
+    return [Meteor.subscribe('post', params._id)];
+  },
+  whileWaiting: function() {
+    BlazeLayout.render('_layout', {content: '_loading'});
+  },
+  data: function(params, queryParams) {
+    return PostsCollection.findOne({_id: params._id});
+  }
+});
+```
+
+If you have `data` hook in your route, returned data will be passed to `action` as third argument. So you may pass fetched data into template:
+```javascript
+FlowRouter.route('/post/:_id', {
+  name: 'post',
+  action: function(params, queryParams, data) {
+    BlazeLayout.render('_layout', {content: 'post', post: data});
+  },
+  waitOn: function(params) {
+    return [Meteor.subscribe('post', params._id)];
+  },
+  data: function(params, queryParams) {
+    return PostsCollection.findOne({_id: params._id});
+  }
+});
+```
+```html
+<!-- in template -->
+<template name="post">
+  <h1>{{post.title}}</h1>
+  <p>{{post.text}}</p>
+</template>
+```
+
+## onNoData hook
+`onNoData` this hook is triggered instead of `action` in case if `data` hook returns falsy value. It is called with two arguments `params` and `queryParams`, same as `action`. Let's render `_404` template in it. You may run any JavaScript code inside it, for example instead of rendering *404* template you may redirect user somewhere.
+```javascript
+FlowRouter.route('/post/:_id', {
+  name: 'post',
+  waitOn: function(params) {
+    return [Meteor.subscribe('post', params._id)];
+  },
+  data: function(params) {
+    return PostsCollection.findOne({_id: params._id});
+  },
+  onNoData: function(params, queryParams){
+    BlazeLayout.render('_layout', {content: '_404'});
+  }
+});
+```
+
+## Data in other hooks
+Returned data from `data` hook, will be also passed into all `triggersEnter` hooks as fourth argument.
+```javascript
+FlowRouter.route('/post/:_id', {
+  name: 'post',
+  waitOn: function(params) {
+    return [Meteor.subscribe('post', params._id)];
+  },
+  data: function(params) {
+    return PostsCollection.findOne({_id: params._id});
+  },
+  triggersEnter: [function(context, redirect, stop, data){
+    console.log(data);
+  }]
+});
+```
+
+## Suggested usage
+As example we took simple post route:
+```javascript
+FlowRouter.route('/post/:_id', {
+  name: 'post',
+  action: function(params, queryParams, data) {
+    BlazeLayout.render('_layout', {content: 'post', post: data});
+  },
+  waitOn: function(params) {
+    // meteorhacks:subs-manager package
+    return [subsManager.subscribe('post', params._id)];
+  },
+  data: function(params) {
+    return PostsCollection.findOne({_id: params._id});
+  },
+  onNoData: function(){
+    BlazeLayout.render('_layout', {content: '_404'});
+  },
+  // ostrio:flow-router-title package
+  title: function(params, queryParams, post) {
+    return (post) ? post.title : '404: Page not found'
+  }
+});
+
+FlowRouter.notFound = {
+  title: '404: Page not found',
+  action: function() {
+    BlazeLayout.render('_layout', {content: '_404'});
+  }
+};
+
+// jazeee:spiderable-longer-timeout package
+FlowRouter.triggers.enter([function() {
+  Meteor.isReadyForSpiderable = true
+}]);
+
+// meteorhacks:fast-render package
+FastRender.route('/post/:_id', function(params) {
+  this.subscribe('post', params._id)
+});
+```
+
+```html
+<!-- in template -->
+<template name="post">
+  <h1>{{post.title}}</h1>
+  <p>{{post.text}}</p>
+</template>
+```
+
+## Other packages compatibility
+This package tested and recommended to use with next packages:
+ - [meteorhacks:subs-manager](https://github.com/kadirahq/subs-manager) - Manage subscriptions with caching
+ - [meteorhacks:fast-render](https://github.com/kadirahq/fast-render) - Pre-render collection's data on server-side
+ - [jazeee:spiderable](https://github.com/jazeee/jazeee-meteor-spiderable) - Make your pages accessible for crawlers
+ - [ostrio:flow-router-title](https://github.com/VeliovGroup/Meteor-flow-router-title) - Reactive page title (`document.title`)
+ - [ostrio:flow-router-meta](https://github.com/VeliovGroup/Meteor-flow-router-meta) - Reactive `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
+ - [appcache](https://github.com/meteor/meteor/wiki/AppCache) - Make your app available offline
+
+# Original `flow-router` documentation:
 ## Meteor Routing Guide
 
 [Meteor Routing Guide](https://kadira.io/academy/meteor-routing-guide) is a completed guide into **routing** and related topics in Meteor. It talks about how to use FlowRouter properly and use it with **Blaze and React**. It also shows how to manage **subscriptions** and implement **auth logic** in the view layer.

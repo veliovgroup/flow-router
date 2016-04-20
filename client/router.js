@@ -459,7 +459,7 @@ Router.prototype._buildTracker = function() {
 
           // We also need to afterFlush, otherwise this will re-run
           // helpers on templates which are marked for destroying
-          if(oldestRoute) {
+          if(oldestRoute && oldestRoute.registerRouteClose) {
             oldestRoute.registerRouteClose();
           }
         }

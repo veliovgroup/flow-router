@@ -8,31 +8,37 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('METEOR@1.3');
   api.use([
-    'underscore', 
-    'tracker', 
-    'reactive-dict', 
-    'reactive-var', 
-    'ejson', 
-    'modules'
-  ], ['client', 'server']);
+    'modules',
+    'underscore',
+    'tracker',
+    'reactive-dict',
+    'reactive-var',
+    'ejson'
+  ]);
 
   api.addFiles([
-    'client-modules.js', 
-    'client/triggers.js', 
-    'client/router.js', 
-    'client/group.js', 
-    'client/route.js', 
+    'client-modules.js',
+    'client/triggers.js',
+    'client/router.js',
+    'client/group.js',
+    'client/route.js',
     'client/_init.js'
   ], 'client');
 
   api.addFiles([
-    'server/router.js', 
-    'server/group.js', 
-    'server/route.js', 
-    'server/_init.js', 
-    'server/plugins/fast_render.js'
+    'server/router.js',
+    'server/group.js',
+    'server/route.js',
+    'server/_init.js'
   ], 'server');
   
   api.addFiles('lib/router.js', ['client', 'server']);
   api.export('FlowRouter');
-}
+});
+
+Npm.depends({
+  // In order to support IE9, we had to fork pagejs and apply
+  // this PR: https://github.com/visionmedia/page.js/pull/288
+  'page':'https://github.com/kadirahq/page.js/archive/34ddf45ea8e4c37269ce3df456b44fc0efc595c6.tar.gz',
+  'qs':'6.1.0'
+});

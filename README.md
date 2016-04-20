@@ -10,18 +10,17 @@ Unfortunately FlowRouter has very close API, so there is no way to extend it wit
 meteor add ostrio:flow-router-extra
 ```
 
-
 ## TOC
 FlowRouter Extra:
-* [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook)
-* [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook)
-* [data hook](https://github.com/VeliovGroup/flow-router#data-hook)
-* [onNoData hook](https://github.com/VeliovGroup/flow-router#onnodata-hook)
-* [Data in other hooks](https://github.com/VeliovGroup/flow-router#data-in-other-hooks)
-* [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage)
-* [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility)
+* [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook) - Wait for all subscriptions is ready
+* [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook) - Do something while waiting for subscriptions
+* [data hook](https://github.com/VeliovGroup/flow-router#data-hook) - Fetch data from collection before render router's template
+* [onNoData hook](https://github.com/VeliovGroup/flow-router#onnodata-hook) - Do something if "*data hook*" returns falsy value
+* [Data in other hooks](https://github.com/VeliovGroup/flow-router#data-in-other-hooks) - Use fetched data in other hooks
+* [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage) - Bootstrap router's configuration
+* [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility) - Best packages to be used with flow-router-extra
 
-Original FlowRouter documentation:
+Original FlowRouter's documentation:
 * [Meteor Routing Guide](#meteor-routing-guide)
 * [Getting Started](#getting-started)
 * [Routes Definition](#routes-definition)
@@ -39,8 +38,8 @@ Original FlowRouter documentation:
 * [Migrating into 2.0](#migrating-into-20)
 
 
-# Extended `flow-router`:
-## waitOn hook
+## FlowRouter Extra:
+### waitOn hook
 `waitOn` hook is *Function* passed as property into route configuration object. It is called with two arguments `params` and `queryParams`, same as `action`. Works like a charm with both original Meteor's [`Meteor.subscribe`](http://docs.meteor.com/#/full/meteor_subscribe) and [`subs-manager` package](https://github.com/kadirahq/subs-manager). Function __must__ return array of subscription handlers.
 ```javascript
 FlowRouter.route('/post/:_id', {
@@ -51,7 +50,7 @@ FlowRouter.route('/post/:_id', {
 });
 ```
 
-## whileWaiting hook
+### whileWaiting hook
 `whileWaiting` hook is capable for time between user hits your page and all subscriptions from `waitOn` hook is ready. It is called with two arguments `params` and `queryParams`, same as `action`. Let's render `_loading` template in it. This hook also follows main `flow-router` ideology - loading hook not depend from layout or anything else. You may run any JavaScript code inside this hook, it is not limited to loading template.
 ```javascript
 FlowRouter.route('/post/:_id', {
@@ -65,7 +64,7 @@ FlowRouter.route('/post/:_id', {
 });
 ```
 
-## data hook
+### data hook
 `data` hook is capable for time after `waitOn` hook is ready and `action` is begin run. It is called with two arguments `params` and `queryParams`, same as `action`. This hook must return *Object*, *Mongo.Cursor* (or array of it) or falsy value.
 ```javascript
 FlowRouter.route('/post/:_id', {
@@ -82,7 +81,7 @@ FlowRouter.route('/post/:_id', {
 });
 ```
 
-When you having `data` hook in a route, - returned data will be passed to `action` as third argument. So you may pass fetched data into template:
+When you having `data` hook in a route, - returned data will be passed to `action` as third argument. So you can pass fetched data into template:
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
@@ -105,8 +104,8 @@ FlowRouter.route('/post/:_id', {
 </template>
 ```
 
-## onNoData hook
-`onNoData` hook is triggered instead of `action` in case when `data` hook returned falsy value. It is called with two arguments `params` and `queryParams`, same as `action`. Let's render `_404` template in it. You may run any JavaScript code inside it, for example instead of rendering *404* template you may redirect user somewhere.
+### onNoData hook
+`onNoData` hook is triggered instead of `action` in case when `data` hook returned falsy value. It is called with two arguments `params` and `queryParams`, same as `action`. Let's render `_404` template in it. You can run any JavaScript code inside it, for example instead of rendering *404* template you can redirect user somewhere.
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
@@ -122,7 +121,7 @@ FlowRouter.route('/post/:_id', {
 });
 ```
 
-## Data in other hooks
+### Data in other hooks
 Returned data from `data` hook, will be also passed into all `triggersEnter` hooks as fourth argument.
 ```javascript
 FlowRouter.route('/post/:_id', {
@@ -139,12 +138,14 @@ FlowRouter.route('/post/:_id', {
 });
 ```
 
-## Suggested usage
+### Suggested usage
 As example we took simple post route:
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
   action: function (params, queryParams, data) {
+    // Pass data to template's context
+    // No need to create helpers
     BlazeLayout.render('_layout', {content: 'post', post: data});
   },
   waitOn: function (params) {
@@ -189,7 +190,7 @@ FastRender.route('/post/:_id', function (params) {
 </template>
 ```
 
-## Other packages compatibility
+### Other packages compatibility
 This package tested and recommended to use with next packages:
  - [kadira:blaze-layout](https://github.com/kadirahq/blaze-layout) - Render layout template and pass data to UI
  - [meteorhacks:subs-manager](https://github.com/kadirahq/subs-manager) - Manage subscriptions with caching

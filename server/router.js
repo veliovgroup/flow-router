@@ -1,4 +1,4 @@
-var Qs = Npm.require('qs');
+var Qs = require('qs');
 
 Router = function () {
   this._routes = [];

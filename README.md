@@ -144,7 +144,7 @@ FlowRouter.route('/post/:_id', {
 *Instead of BlazeLayout, you can use build-in* `this.render()` *method*. Use it in context of `action`, `onNoData`, `whileWaiting`, `data`, `waitOn` or any other hook.
 
 `this.render(layout, template [, data])`
- - `layout` {*String*} - Name of layout template (*which has * `yield`)
+ - `layout` {*String*} - Name of layout template (*which has* `yield`)
  - `template` {*String*} - Name of template (*which will be rendered into yield*)
  - `data` {*Object*} - [Optional] Object of data context to use in template. *This object supports reactive data sources, but only when handled by "yielded" template, not nested templates, otherwise use template helpers*
 

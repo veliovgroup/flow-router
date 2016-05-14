@@ -1,13 +1,15 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '2.11.0',
+  version: '2.12.1',
   git: 'https://github.com/VeliovGroup/flow-router'
 });
 
 Package.onUse(function (api) {
   api.versionsFrom('METEOR@1.3');
   api.use([
+    'blaze',
+    'templating',
     'modules',
     'underscore',
     'tracker',
@@ -17,7 +19,9 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'client-modules.js',
+    'client/yield.html',
+    'client/renderer.js',
+    'client/modules.js',
     'client/triggers.js',
     'client/router.js',
     'client/group.js',

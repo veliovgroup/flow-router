@@ -2,6 +2,8 @@ Route = function(router, pathDef, options, group) {
   options = options || {};
 
   this.options = options;
+
+  this.render  = router.Renderer.render.bind(router.Renderer);
   this.pathDef = pathDef;
 
   // Route.path is deprecated and will be removed in 3.0
@@ -64,21 +66,26 @@ Route.prototype.checkSubscriptions = function(subscriptions) {
 Route.prototype.waitOn = function(current, next) {
   var self = this, subscriptions, timer, _data;
   if (self._waitOn) {
-    if (!current) { current = {}; }
-    self._whileWaiting && self._whileWaiting(current.params, current.queryParams);
-    subscriptions = self._waitOn(current.params, current.queryParams);
-    timer = Meteor.setInterval(function(){
-      if (self.checkSubscriptions(subscriptions)) {
-        Meteor.clearInterval(timer);
-        if (self._data) {
-          _data = self._data(current.params, current.queryParams);
-          if (_data) {
-            self._currentData = _.clone(_data);
+    var wait = function () {
+      timer = Meteor.setTimeout(function(){
+        if (self.checkSubscriptions(subscriptions)) {
+          Meteor.clearTimeout(timer);
+          if (self._data) {
+            _data = self._currentData = self._data(current.params, current.queryParams);
           }
+          next(current, _data);
+        } else {
+          wait();
         }
-        next(current, _data);
-      }
-    }, 25);
+      }, 25);
+    };
+
+    if (!current) { current = {}; }
+    subscriptions = self._waitOn(current.params, current.queryParams);
+    if (!self.checkSubscriptions(subscriptions)) {
+      self._whileWaiting && self._whileWaiting(current.params, current.queryParams);
+    }
+    wait();
   } else {
     next(current);
   }
@@ -86,17 +93,19 @@ Route.prototype.waitOn = function(current, next) {
 
 Route.prototype.callAction = function(current) {
   var self = this;
-  if (self._waitOn) {
-    self.waitOn(current, function(current, data){
-      if (self._onNoData && !data) {
-        self._onNoData(current.params, current.queryParams);
-      } else {
-        self._action(current.params, current.queryParams, data);
-      }
-    });
 
+  if (!self._waitOn && self._data) {
+    self._currentData = self._data(current.params, current.queryParams);
+  }
+
+  if (self._data) {
+    if (self._onNoData && !self._currentData) {
+      self._onNoData(current.params, current.queryParams);
+    } else {
+      self._action(current.params, current.queryParams, self._currentData);
+    }
   } else {
-    self._action(current.params, current.queryParams);
+    self._action(current.params, current.queryParams, self._currentData);
   }
 };
 

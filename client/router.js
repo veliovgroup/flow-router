@@ -3,6 +3,10 @@ Router = function () {
   this.globals = [];
   this.subscriptions = Function.prototype;
 
+  this.Renderer = new BlazeRenderer(function () {
+    return document.getElementsByTagName('body')[0];
+  });
+  
   this._tracker = this._buildTracker();
   this._current = {};
 

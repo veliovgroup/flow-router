@@ -17,6 +17,8 @@ FlowRouter Extra:
 * [data hook](https://github.com/VeliovGroup/flow-router#data-hook) - Fetch data from collection before render router's template
 * [onNoData hook](https://github.com/VeliovGroup/flow-router#onnodata-hook) - Do something if "*data hook*" returns falsy value
 * [Data in other hooks](https://github.com/VeliovGroup/flow-router#data-in-other-hooks) - Use fetched data in other hooks
+* [Render Template](https://github.com/VeliovGroup/flow-router#render-template) - Render template into layout
+* [Templating](https://github.com/VeliovGroup/flow-router#templating) - Construct your layout and templates
 * [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage) - Bootstrap router's configuration
 * [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility) - Best packages to be used with flow-router-extra
 
@@ -59,7 +61,7 @@ FlowRouter.route('/post/:_id', {
     return [Meteor.subscribe('post', params._id)];
   },
   whileWaiting: function (params, queryParams) {
-    BlazeLayout.render('_layout', {content: '_loading'});
+    this.render('_layout', '_loading');
   }
 });
 ```
@@ -73,7 +75,7 @@ FlowRouter.route('/post/:_id', {
     return [Meteor.subscribe('post', params._id)];
   },
   whileWaiting: function () {
-    BlazeLayout.render('_layout', {content: '_loading'});
+    this.render('_layout', '_loading');
   },
   data: function (params, queryParams) {
     return PostsCollection.findOne({_id: params._id});
@@ -85,8 +87,8 @@ When you having `data` hook in a route, - returned data will be passed to `actio
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  action: function (params, queryParams, data) {
-    BlazeLayout.render('_layout', {content: 'post', post: data});
+  action: function (params, queryParams, post) {
+    this.render('_layout', 'post', {post: post});
   },
   waitOn: function (params) {
     return [Meteor.subscribe('post', params._id)];
@@ -116,7 +118,7 @@ FlowRouter.route('/post/:_id', {
     return PostsCollection.findOne({_id: params._id});
   },
   onNoData: function (params, queryParams){
-    BlazeLayout.render('_layout', {content: '_404'});
+    this.render('_layout', '_404');
   }
 });
 ```
@@ -138,25 +140,127 @@ FlowRouter.route('/post/:_id', {
 });
 ```
 
+### Render Template
+*Instead of BlazeLayout, you can use build-in * `this.render()` *method*. Use it in context of `action`, `onNoData`, `whileWaiting`, `data`, `waitOn` or any other hook.
+
+`this.render(layout, template [, data])`
+ - `layout` {*String*} - Name of layout template (*which has * `yield`)
+ - `template` {*String*} - Name of template (*which will be rendered into yield*)
+ - `data` {*Object*} - [Optional] Object of data context to use in template. *This object supports reactive data sources, but only when handled by "yielded" template, not nested templates, otherwise use template helpers*
+
+### Templating
+*In order to use build-in* `this.render()` *method, layout template must contain* `yield` *placeholder*
+```html
+<!-- layout.html: -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="fragment" content="!" />
+  <!-- ... -->
+  <title>My Title</title>
+</head>
+
+<template name="_layout">
+  <header>
+    {{> header}}
+  </header>
+
+  <section>
+    {{> yield}}
+  </section>
+
+  <footer>
+    {{> footer}}
+  </footer>
+</template>
+
+<template name="header">
+  <h1>My Page</h1>
+</template>
+
+<template name="footer">
+  <p><!-- ... --></p>
+</template>
+```
+
+```html
+<!-- posts.html: -->
+<template name="posts">
+  <ul>
+    {{#each post in posts}}
+      <li>
+        <a href="/post/{{post._id}}">{{post.title}}</a>
+      </li>
+    {{/each}}
+  </ul>
+</template>
+```
+
+```html
+<!-- post.html: -->
+<template name="post">
+  {{#with post}}
+    <h3>{{title}}</h3>
+    <article>
+      {{{text}}}
+    </article>
+  {{/with}}
+</template>
+```
+
+```javascript
+// routes.js
+FlowRouter.route('/posts', {
+  name: 'posts',
+  action: function (params, queryParams, posts) {
+    this.render('_layout', 'posts', posts);
+  },
+  waitOn: function () {
+    return [Meteor.subscribe('posts')];
+  },
+  data: function () {
+    return PostsCollection.find({});
+  }
+});
+
+FlowRouter.route('/post/:_id', {
+  name: 'posts',
+  action: function (params, queryParams, post) {
+    this.render('_layout', 'post', post);
+  },
+  waitOn: function (params) {
+    return [Meteor.subscribe('post', params._id)];
+  },
+  data: function (params) {
+    return PostsCollection.findOne({_id: params._id});
+  }
+});
+```
+
 ### Suggested usage
 As example we took simple post route:
 ```javascript
+// meteorhacks:subs-manager package
+var subsManager = new SubsManager();
+
 FlowRouter.route('/post/:_id', {
   name: 'post',
   action: function (params, queryParams, data) {
     // Pass data to template's context
     // No need to create helpers
-    BlazeLayout.render('_layout', {content: 'post', post: data});
+    this.render('_layout', 'post', {post: data});
   },
   waitOn: function (params) {
     // meteorhacks:subs-manager package
     return [subsManager.subscribe('post', params._id)];
   },
+  whileWaiting: function () {
+    this.render('_layout', '_loading');
+  },
   data: function (params) {
     return PostsCollection.findOne({_id: params._id});
   },
   onNoData: function (){
-    BlazeLayout.render('_layout', {content: '_404'});
+    this.render('_layout', '_404');
   },
   // ostrio:flow-router-title package
   title: function (params, queryParams, post) {
@@ -167,7 +271,7 @@ FlowRouter.route('/post/:_id', {
 FlowRouter.notFound = {
   title: '404: Page not found',
   action: function () {
-    BlazeLayout.render('_layout', {content: '_404'});
+    this.render('_layout', '_404');
   }
 };
 

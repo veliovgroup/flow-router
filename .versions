@@ -21,7 +21,7 @@ modules@0.6.1
 modules-runtime@0.6.3
 mongo-id@1.0.4
 observe-sequence@1.0.11
-ostrio:flow-router-extra@2.12.1
+ostrio:flow-router-extra@2.12.2
 promise@0.6.7
 random@1.0.9
 reactive-dict@1.1.7

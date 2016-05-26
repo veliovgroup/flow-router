@@ -65,8 +65,8 @@ Route.prototype.checkSubscriptions = function(subscriptions) {
 
 Route.prototype.waitOn = function(current, next) {
   var self = this, subscriptions, timer, _data;
-  if (self._waitOn) {
-    var wait = function () {
+  if (this._waitOn) {
+    var wait = function (delay) {
       timer = Meteor.setTimeout(function(){
         if (self.checkSubscriptions(subscriptions)) {
           Meteor.clearTimeout(timer);
@@ -75,17 +75,26 @@ Route.prototype.waitOn = function(current, next) {
           }
           next(current, _data);
         } else {
-          wait();
+          wait(25);
         }
-      }, 25);
+      }, delay);
     };
 
     if (!current) { current = {}; }
-    subscriptions = self._waitOn(current.params, current.queryParams);
-    if (!self.checkSubscriptions(subscriptions)) {
-      self._whileWaiting && self._whileWaiting(current.params, current.queryParams);
+    subscriptions = this._waitOn(current.params, current.queryParams);
+
+    this._triggersExit.push(function () {
+      for (var i = subscriptions.length - 1; i >= 0; i--) {
+        if (subscriptions[i].stop) {
+          subscriptions[i].stop();
+        }
+      }
+    });
+
+    if (!this.checkSubscriptions(subscriptions)) {
+      this._whileWaiting && this._whileWaiting(current.params, current.queryParams);
     }
-    wait();
+    wait(0);
   } else {
     next(current);
   }

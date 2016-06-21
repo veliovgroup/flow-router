@@ -304,6 +304,11 @@ This package tested and recommended to use with next packages:
  - [ostrio:flow-router-meta](https://github.com/VeliovGroup/Meteor-flow-router-meta) - Reactive `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
  - [appcache](https://github.com/meteor/meteor/wiki/AppCache) - Making your application available offline
 
+__Note:__ *if you're using any package which requires original FR namespace, throws an error, you can solve it with next code:*
+```js
+// in /lib/ directory
+Package['kadira:flow-router'] = Package['ostrio:flow-router-extra'];
+```
 
 -------
 

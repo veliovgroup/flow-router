@@ -49,7 +49,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 ```
 
 ### Preload images
-`waitOnResources` hook is *Function* passed as property into router configuration object. It is called with three arguments `params`, `queryParams` and `data`, same as `action`. You must return data in nest form: `{images: [/*array of strings with URL to images*/]}`.
+`waitOnResources` hook is *Function* passed as property into router configuration object. It is called with three arguments `params`, `queryParams` and `data`, same as `action`. You must return data in next form: `{images: [/*array of strings with URL to images*/]}`.
 
 Per route usage:
 ```javascript

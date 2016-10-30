@@ -5,7 +5,9 @@ FlowRouter.Route = Route;
 
 // Initialize FlowRouter
 Meteor.startup(function () {
-  if(!FlowRouter._askedToWait) {
+  if(!FlowRouter._askedToWait && !FlowRouter._initialized) {
     FlowRouter.initialize();
   }
 });
+
+export { FlowRouter };

@@ -12,6 +12,7 @@ meteor add ostrio:flow-router-extra
 
 ## TOC
 FlowRouter Extra:
+* [ES6 Import](https://github.com/VeliovGroup/flow-router#es6-import) - Support for `.jsx` and `ecmascript` modules/imports
 * [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook) - Wait for all subscriptions is ready
 * [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook) - Do something while waiting for subscriptions
 * [data hook](https://github.com/VeliovGroup/flow-router#data-hook) - Fetch data from collection before render router's template
@@ -41,6 +42,11 @@ Original FlowRouter's documentation:
 
 
 ## FlowRouter Extra:
+### ES6 Import
+```jsx
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+```
+
 ### waitOn hook
 `waitOn` hook is *Function* passed as property into route configuration object. It is called with two arguments `params` and `queryParams`, same as `action`. Works like a charm with both original Meteor's [`Meteor.subscribe`](http://docs.meteor.com/#/full/meteor_subscribe) and [`subs-manager` package](https://github.com/kadirahq/subs-manager). Function __must__ return array of subscription handlers.
 ```javascript

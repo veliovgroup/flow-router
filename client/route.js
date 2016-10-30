@@ -2,7 +2,7 @@ Route = function(router, pathDef, options, group) {
   options = options || {};
 
   this.options = options;
-
+  this.globals = router.globals;
   this.render  = router.Renderer.render.bind(router.Renderer);
   this.pathDef = pathDef;
 
@@ -15,6 +15,7 @@ Route = function(router, pathDef, options, group) {
 
   this._action = options.action || Function.prototype;
   this._waitOn = options.waitOn || null;
+  this._waitOnResources = options.waitOnResources || null;
   this._whileWaiting = options.whileWaiting || null;
   this._data = options.data || null;
   this._onNoData = options.onNoData || null;
@@ -64,16 +65,88 @@ Route.prototype.checkSubscriptions = function(subscriptions) {
 };
 
 Route.prototype.waitOn = function(current, next) {
-  var self = this, subscriptions, timer, _data;
+  var self = this, subscriptions, timer, _data, _preloaded = 0, _isWaiting = false, _resources = false;
+
+  if (current.route.globals.length) {
+    for (var i = 0, len = current.route.globals.length; i < len; i++) {
+      var option = current.route.globals[i];
+      if (typeof option === 'object' && option.waitOnResources) {
+        if (!_resources) { _resources = []; }
+        _resources.push(option.waitOnResources);
+      }
+    }
+  }
+
+  if (self._waitOnResources) {
+    if (!_resources) { _resources = []; }
+    _resources.push(self._waitOnResources);
+  }
+
+  var preload = function (items, _data) {
+    _preloaded++;
+    if (_preloaded >= items.length) {
+      next(current, _data);
+    }
+  };
+
+  var getResources = function () {
+    _data = getData();
+    var res = [];
+    for (var i = _resources.length - 1; i >= 0; i--) {
+      var items = _resources[i](current.params, current.queryParams, _data);
+      if (items && items.images && items.images.length) {
+        res = res.concat(items.images);
+      }
+    }
+
+    if (res && res.length){
+      res = res.filter(function(elem, index, self) {
+        return index == self.indexOf(elem);
+      })
+
+      var imgs = {};
+      for (var i = res.length - 1; i >= 0; i--) {
+        imgs[i]         = new Image();
+        imgs[i].onload  = function () { preload(res, _data);};
+        imgs[i].onerror = function () { preload(res, _data);};
+        imgs[i].src     = res[i];
+      }
+    } else {
+      next(current, _data);
+    }
+  };
+
+  var getData = function () {
+    if (self._data) {
+      if (!self._currentData) {
+        _data = self._currentData = self._data(current.params, current.queryParams);
+      } else {
+        _data = self._currentData;
+      }
+    }
+    return _data;
+  };
+
+  var whileWaitingAction = function () {
+    if (!_isWaiting) {
+      self._whileWaiting && self._whileWaiting(current.params, current.queryParams);
+      _isWaiting = true;
+    }
+  };
+
   if (this._waitOn) {
     var wait = function (delay) {
       timer = Meteor.setTimeout(function(){
         if (self.checkSubscriptions(subscriptions)) {
           Meteor.clearTimeout(timer);
-          if (self._data) {
-            _data = self._currentData = self._data(current.params, current.queryParams);
+          _data = getData();
+
+          if (_resources) {
+            whileWaitingAction();
+            getResources();
+          } else {
+            next(current, _data);
           }
-          next(current, _data);
         } else {
           wait(25);
         }
@@ -92,12 +165,14 @@ Route.prototype.waitOn = function(current, next) {
     });
 
     if (!this.checkSubscriptions(subscriptions)) {
-      this._whileWaiting && this._whileWaiting(current.params, current.queryParams);
+      whileWaitingAction();
     }
     wait(0);
-  } else if (this._data && !this._currentData) {
-    _data = this._currentData = this._data(current.params, current.queryParams);
-    next(current, _data);
+  } else if (_resources) {
+    whileWaitingAction();
+    getResources();
+  } else if (this._data) {
+    next(current, getData());
   } else {
     next(current);
   }

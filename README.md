@@ -13,6 +13,7 @@ meteor add ostrio:flow-router-extra
 ## TOC
 FlowRouter Extra:
 * [ES6 Import](https://github.com/VeliovGroup/flow-router#es6-import) - Support for `.jsx` and `ecmascript` modules/imports
+* [Preload Images](https://github.com/VeliovGroup/flow-router#preload-images)
 * [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook) - Wait for all subscriptions is ready
 * [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook) - Do something while waiting for subscriptions
 * [data hook](https://github.com/VeliovGroup/flow-router#data-hook) - Fetch data from collection before render router's template
@@ -45,6 +46,43 @@ Original FlowRouter's documentation:
 ### ES6 Import
 ```jsx
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+```
+
+### Preload images
+`waitOnResources` hook is *Function* passed as property into router configuration object. It is called with three arguments `params`, `queryParams` and `data`, same as `action`. You must return data in nest form: `{images: [/*array of strings with URL to images*/]}`.
+
+Per route usage:
+```javascript
+FlowRouter.route('/images', {
+  name: 'images',
+  waitOnResources: function (params, queryParams, data) {
+    return {
+      images:[
+        '/imgs/1.png',
+        '/imgs/2.png',
+        '/imgs/3.png'
+      ]
+    };
+  },
+  whileWaiting: function (params, queryParams) { // <- Render template with spinner
+    this.render('_layout', '_loading');
+  }
+});
+```
+
+Globally loaded images. Useful to preload background images and other globally used resources:
+```javascript
+FlowRouter.globals.push({
+  waitOnResources: function() {
+    return {
+      images: [
+        '/imgs/background/jpg',
+        '/imgs/icon-sprite.png',
+        '/img/logo.png'
+      ]
+    };
+  }
+});
 ```
 
 ### waitOn hook

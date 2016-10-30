@@ -102,14 +102,14 @@ Route.prototype.waitOn = function(current, next) {
     if (res && res.length){
       res = res.filter(function(elem, index, self) {
         return index == self.indexOf(elem);
-      })
+      });
 
       var imgs = {};
-      for (var i = res.length - 1; i >= 0; i--) {
-        imgs[i]         = new Image();
-        imgs[i].onload  = function () { preload(res, _data);};
-        imgs[i].onerror = function () { preload(res, _data);};
-        imgs[i].src     = res[i];
+      for (var j = res.length - 1; j >= 0; j--) {
+        imgs[j]         = new Image();
+        imgs[j].onload  = function () { preload(res, _data);};
+        imgs[j].onerror = function () { preload(res, _data);};
+        imgs[j].src     = res[j];
       }
     } else {
       next(current, _data);

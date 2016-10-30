@@ -95,26 +95,23 @@ Route.prototype.waitOn = function(current, next) {
       this._whileWaiting && this._whileWaiting(current.params, current.queryParams);
     }
     wait(0);
+  } else if (this._data && !this._currentData) {
+    _data = this._currentData = this._data(current.params, current.queryParams);
+    next(current, _data);
   } else {
     next(current);
   }
 };
 
 Route.prototype.callAction = function(current) {
-  var self = this;
-
-  if (!self._waitOn && self._data) {
-    self._currentData = self._data(current.params, current.queryParams);
-  }
-
-  if (self._data) {
-    if (self._onNoData && !self._currentData) {
-      self._onNoData(current.params, current.queryParams);
+  if (this._data) {
+    if (this._onNoData && !this._currentData) {
+      this._onNoData(current.params, current.queryParams);
     } else {
-      self._action(current.params, current.queryParams, self._currentData);
+      this._action(current.params, current.queryParams, this._currentData);
     }
   } else {
-    self._action(current.params, current.queryParams, self._currentData);
+    this._action(current.params, current.queryParams, this._currentData);
   }
 };
 

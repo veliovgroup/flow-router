@@ -118,7 +118,7 @@ Route.prototype.waitOn = function(current, next) {
 
   var getData = function () {
     if (self._data) {
-      if (!self._currentData) {
+      if (!_data) {
         _data = self._currentData = self._data(current.params, current.queryParams);
       } else {
         _data = self._currentData;

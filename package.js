@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '2.12.3',
+  version: '2.12.4',
   git: 'https://github.com/VeliovGroup/flow-router'
 });
 

@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '2.12.4',
+  version: '2.12.5',
   git: 'https://github.com/VeliovGroup/flow-router'
 });
 
@@ -42,8 +42,6 @@ Package.onUse(function (api) {
 });
 
 Npm.depends({
-  // In order to support IE9, we had to fork pagejs and apply
-  // this PR: https://github.com/visionmedia/page.js/pull/288
-  'page':'https://github.com/kadirahq/page.js/archive/34ddf45ea8e4c37269ce3df456b44fc0efc595c6.tar.gz',
-  'qs':'6.1.0'
+  'page':'1.7.1',
+  'qs':'6.3.0'
 });

@@ -13,8 +13,10 @@ meteor add ostrio:flow-router-extra
 ## TOC
 FlowRouter Extra:
 * [ES6 Import](https://github.com/VeliovGroup/flow-router#es6-import) - Support for `.jsx` and `ecmascript` modules/imports
-* [Preload Images](https://github.com/VeliovGroup/flow-router#preload-images)
+* [Preload Images](https://github.com/VeliovGroup/flow-router#preload-images) - "Prefetch" images before displaying Template
+* [Preload Resources](https://github.com/VeliovGroup/flow-router#preload-resources) - "Prefetch" resources, like: CSS, JS, Fonts, etc. before displaying Template
 * [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook) - Wait for all subscriptions is ready
+* [waitOn hook with reactive data](https://github.com/VeliovGroup/flow-router#waiton-hook-with-reactive-data) - Wait for all subscriptions with reactive data sources is ready
 * [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook) - Do something while waiting for subscriptions
 * [data hook](https://github.com/VeliovGroup/flow-router#data-hook) - Fetch data from collection before render router's template
 * [onNoData hook](https://github.com/VeliovGroup/flow-router#onnodata-hook) - Do something if "*data hook*" returns falsy value
@@ -85,13 +87,93 @@ FlowRouter.globals.push({
 });
 ```
 
+### Preload Resources
+`waitOnResources` hook is *Function* passed as property into router configuration object. It is called with three arguments `params`, `queryParams` and `data`, same as `action`. You must return data in next form: `{other: [/*array of strings with URL*/]}`. This method will work only for __cacheble__ resources, if URLs returns non-cacheble resources (dynamic resources) it will be useless.
+
+*Why Images and Other resources is separated? What the difference?* - Images can be prefetched via `Image()` constructor, all other resources uses `XMLHttpRequest` to cache resources. Thats also why important to make sure requested URLs returns cacheble responses
+
+Per route usage:
+```javascript
+FlowRouter.route('/', {
+  name: 'index',
+  waitOnResources: function (params, queryParams, data) {
+    return {
+      other:[
+        '/fonts/OpenSans-Regular.eot',
+        '/fonts/OpenSans-Regular.svg',
+        '/fonts/OpenSans-Regular.ttf',
+        '/fonts/OpenSans-Regular.woff',
+        '/fonts/OpenSans-Regular.woff2'
+      ]
+    };
+  },
+  whileWaiting: function (params, queryParams) { // <- Render template with spinner
+    this.render('_layout', '_loading');
+  }
+});
+```
+
+Globally loaded resources. Useful to prefetch Fonts and other globally used resources:
+```javascript
+FlowRouter.globals.push({
+  waitOnResources: function() {
+    return {
+      other:[
+        '/fonts/OpenSans-Regular.eot',
+        '/fonts/OpenSans-Regular.svg',
+        '/fonts/OpenSans-Regular.ttf',
+        '/fonts/OpenSans-Regular.woff',
+        '/fonts/OpenSans-Regular.woff2'
+      ]
+    };
+  }
+});
+```
+
+
 ### waitOn hook
-`waitOn` hook is *Function* passed as property into route configuration object. It is called with two arguments `params` and `queryParams`, same as `action`. Works like a charm with both original Meteor's [`Meteor.subscribe`](http://docs.meteor.com/#/full/meteor_subscribe) and [`subs-manager` package](https://github.com/kadirahq/subs-manager). Function __must__ return array of subscription handlers.
+`waitOn` hook is *Function* passed as property into route configuration object. It is called with two arguments `params` and `queryParams`, same as `action`. Works like a charm with both original Meteor's [`Meteor.subscribe`](http://docs.meteor.com/#/full/meteor_subscribe) and [`subs-manager` package](https://github.com/kadirahq/subs-manager). Function __must__ return subscription handler, *Array* of subscription handlers or Tracker Computation object.
 ```javascript
 FlowRouter.route('/post/:_id', {
   name: 'post',
   waitOn: function (params, queryParams) {
     return [subsManager.subscribe('post', params._id), Meteor.subscribe('suggestedPosts', params._id)];
+  }
+});
+```
+
+### waitOn hook with reactive data
+Use reactive data sources inside `waitOn` hook. To make `waitOn` rerun on reactive data changes, wrap it to `Tracker.autorun` and return Tracker Computation object or an *Array* of Tracker Computation objects. Note the third argument of `waitOn` is `ready` callback.
+```javascript
+FlowRouter.route('/posts', {
+  name: 'post',
+  waitOn: function (params, queryParams, ready) {
+    return Tracker.autorun(function() {
+      ready(function() {
+        return Meteor.subscribe('posts', search.get(), page.get());
+      });
+    });
+  }
+});
+```
+
+With multiple Trackers:
+```javascript
+FlowRouter.route('/posts', {
+  name: 'post',
+  waitOn: function (params, queryParams, ready) {
+    var tracks = [];
+    tracks.push(Tracker.autorun(function() {
+      ready(function() {
+        return Meteor.subscribe('posts', search.get(), page.get());
+      });
+    }));
+    tracks.push(Tracker.autorun(function() {
+      ready(function() {
+        return Meteor.subscribe('comments', postId.get());
+      });
+    }));
+    return tracks;
   }
 });
 ```
@@ -126,6 +208,7 @@ FlowRouter.route('/post/:_id', {
   }
 });
 ```
+
 
 When you having `data` hook in a route, - returned data will be passed to `action` as third argument. So you can pass fetched data into template:
 ```javascript

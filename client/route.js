@@ -1,39 +1,35 @@
 Route = function(router, pathDef, options, group) {
-  options = options || {};
-
-  this.options = options;
-  this.globals = router.globals;
-  this.render  = router.Renderer.render.bind(router.Renderer);
-  this.pathDef = pathDef;
+  options               = options || {};
+  this.render           = router.Renderer.render.bind(router.Renderer);
+  this.options          = options;
+  this.globals          = router.globals;
+  this.pathDef          = pathDef;
 
   // Route.path is deprecated and will be removed in 3.0
-  this.path = pathDef;
+  this.path             = pathDef;
+  this.conf             = options.conf || {};
+  this.group            = group;
+  this._data            = options.data || null;
+  this._router          = router;
+  this._action          = options.action || Function.prototype;
+  this._waitOn          = options.waitOn || null;
+  this._subsMap         = {};
+  this._onNoData        = options.onNoData || null;
+  this._currentData     = null;
+  this._triggersExit    = options.triggersExit || [];
+  this._whileWaiting    = options.whileWaiting || null;
+  this._triggersEnter   = options.triggersEnter || [];
+  this._subscriptions   = options.subscriptions || Function.prototype;
+  this._waitOnResources = options.waitOnResources || null;
+
+  this._params          = new ReactiveDict();
+  this._queryParams     = new ReactiveDict();
+  this._routeCloseDep   = new Tracker.Dependency();
+  this._pathChangeDep   = new Tracker.Dependency();
 
   if (options.name) {
     this.name = options.name;
   }
-
-  this._action = options.action || Function.prototype;
-  this._waitOn = options.waitOn || null;
-  this._waitOnResources = options.waitOnResources || null;
-  this._whileWaiting = options.whileWaiting || null;
-  this._data = options.data || null;
-  this._onNoData = options.onNoData || null;
-  this._currentData = null;
-  this._subscriptions = options.subscriptions || Function.prototype;
-  this._triggersEnter = options.triggersEnter || [];
-  this._triggersExit = options.triggersExit || [];
-  this._subsMap = {};
-  this._router = router;
-
-  this._params = new ReactiveDict();
-  this._queryParams = new ReactiveDict();
-  this._routeCloseDep = new Tracker.Dependency();
-
-  // tracks the changes in the URL
-  this._pathChangeDep = new Tracker.Dependency();
-
-  this.group = group;
 };
 
 Route.prototype.clearSubscriptions = function() {
@@ -65,7 +61,7 @@ Route.prototype.checkSubscriptions = function(subscriptions) {
 };
 
 Route.prototype.waitOn = function(current, next) {
-  var self = this, subscriptions, timer, _data, _preloaded = 0, _isWaiting = false, _resources = false;
+  var self = this, subscriptions = [], trackers = [], timer, _data = null, _preloaded = 0, _isWaiting = false, _resources = false;
 
   if (current.route.globals.length) {
     for (var i = 0, len = current.route.globals.length; i < len; i++) {
@@ -82,34 +78,59 @@ Route.prototype.waitOn = function(current, next) {
     _resources.push(self._waitOnResources);
   }
 
-  var preload = function (items, _data) {
+  var preload = function (len, _data) {
     _preloaded++;
-    if (_preloaded >= items.length) {
+    if (_preloaded >= len) {
       next(current, _data);
     }
   };
 
   var getResources = function () {
     _data = getData();
-    var res = [];
+    var len    = 0;
+    var res    = [];
+    var images = [];
+    var other  = [];
     for (var i = _resources.length - 1; i >= 0; i--) {
-      var items = _resources[i](current.params, current.queryParams, _data);
-      if (items && items.images && items.images.length) {
-        res = res.concat(items.images);
+      var items = _resources[i].call(self, current.params, current.queryParams, _data);
+      if (items) {
+        if (items.images && items.images.length) {
+          images = images.concat(items.images);
+        }
+        if (items.other && items.other.length) {
+          other = other.concat(items.other);
+        }
       }
     }
 
-    if (res && res.length){
-      res = res.filter(function(elem, index, self) {
-        return index == self.indexOf(elem);
-      });
+    if ((other && other.length) || (images && images.length)) {
+      if (other && other.length && typeof XMLHttpRequest != 'undefined') {
+        other = other.filter(function(elem, index, self) {
+          return index == self.indexOf(elem);
+        });
+        len += other.length;
+        var prefetch = {};
+        for (var k = other.length - 1; k >= 0; k--) {
+          prefetch[k] = new XMLHttpRequest();
+          prefetch[k].onload  = function () { preload(len, _data); };
+          prefetch[k].onerror = function () { preload(len, _data); };
+          prefetch[k].open('GET', other[k]);
+          prefetch[k].send(null);
+        }
+      }
 
-      var imgs = {};
-      for (var j = res.length - 1; j >= 0; j--) {
-        imgs[j]         = new Image();
-        imgs[j].onload  = function () { preload(res, _data);};
-        imgs[j].onerror = function () { preload(res, _data);};
-        imgs[j].src     = res[j];
+      if (images && images.length){
+        images = images.filter(function(elem, index, self) {
+          return index == self.indexOf(elem);
+        });
+        len += images.length;
+        var imgs = {};
+        for (var j = images.length - 1; j >= 0; j--) {
+          imgs[j]         = new Image();
+          imgs[j].onload  = function () { preload(len, _data); };
+          imgs[j].onerror = function () { preload(len, _data); };
+          imgs[j].src     = images[j];
+        }
       }
     } else {
       next(current, _data);
@@ -140,7 +161,6 @@ Route.prototype.waitOn = function(current, next) {
         if (self.checkSubscriptions(subscriptions)) {
           Meteor.clearTimeout(timer);
           _data = getData();
-
           if (_resources) {
             whileWaitingAction();
             getResources();
@@ -154,19 +174,53 @@ Route.prototype.waitOn = function(current, next) {
     };
 
     if (!current) { current = {}; }
-    subscriptions = this._waitOn(current.params, current.queryParams);
+    var processSubData = function (subData) {
+      var placeIn = function (d) {
+         if (d.flush) {
+            trackers.push(d);
+          } else if (d.ready) {
+            subscriptions.push(d);
+          }
+      };
 
-    this._triggersExit.push(function () {
+      if (subData instanceof Array) {
+        for (var i = subData.length - 1; i >= 0; i--) {
+          if (subData[i] !== null && typeof subData[i] === 'object') {
+            placeIn(subData[i]);
+          }
+        }
+      } else if (subData !== null && typeof subData === 'object') {
+        placeIn(subData);
+      }
+    };
+
+    var stopSubs = function () {
       for (var i = subscriptions.length - 1; i >= 0; i--) {
         if (subscriptions[i].stop) {
           subscriptions[i].stop();
         }
       }
+      subscriptions = [];
+    };
+
+    var done = function (subscribtion) {
+      processSubData(subscribtion());
+    };
+
+    processSubData(this._waitOn(current.params, current.queryParams, done));
+
+    this._triggersExit.push(function () {
+      stopSubs();
+      for (var i = trackers.length - 1; i >= 0; i--) {
+        if (trackers[i].stop) {
+          trackers[i].stop();
+        }
+      }
+      trackers = [];
+      _data = self._currentData = null;
     });
 
-    if (!this.checkSubscriptions(subscriptions)) {
-      whileWaitingAction();
-    }
+    whileWaitingAction();
     wait(0);
   } else if (_resources) {
     whileWaitingAction();

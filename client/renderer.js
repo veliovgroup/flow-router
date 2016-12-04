@@ -1,3 +1,8 @@
+var requestAnimFrame = (function() {
+  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
+    setTimeout(callback, 1000 / 60);
+  };
+})();
 BlazeRenderer = (function() {
   function BlazeRenderer(rootEl) {
     this.rootEl = rootEl;
@@ -14,7 +19,7 @@ BlazeRenderer = (function() {
   }
 
   BlazeRenderer.prototype.render = function(layout, template, data) {
-    var _data, _template, _layout;
+    var _data, _template, _layout, self = this;
 
     _template = typeof Template !== "undefined" && Template !== null ? Template[template] : void 0;
     _layout   = typeof Template !== "undefined" && Template !== null ? Template[layout] : void 0;
@@ -36,16 +41,6 @@ BlazeRenderer = (function() {
         _data = _.extend(_data, data);
       }
 
-      if (this.current.template === template) {
-        var self = this;
-        this.reactTemplate.set(null);
-        Meteor.setTimeout(function () {
-          self.reactTemplate.set(template);
-        }, 1);
-      } else {
-        this.reactTemplate.set(template);
-      }
-
       if (this.current.layout !== layout) {
         if (this.old) {
           Blaze.remove(this.old);
@@ -54,9 +49,19 @@ BlazeRenderer = (function() {
         var getData = function getData () {
           return _data;
         };
+
         this.old = Blaze.renderWithData(_layout, getData, this.rootEl());
       } else {
         this.old.dataVar.set(_data);
+      }
+
+      if (this.current.template === template) {
+        this.reactTemplate.set(null);
+        requestAnimFrame(function updateTemplate () {
+          self.reactTemplate.set(template);
+        });
+      } else {
+        this.reactTemplate.set(template);
       }
 
       this.current.layout = layout;

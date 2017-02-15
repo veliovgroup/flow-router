@@ -1,5 +1,4 @@
-Route = function(router, pathDef, options, group) {
-  options               = options || {};
+Route = function(router, pathDef, options = {}, group) {
   this.render           = router.Renderer.render.bind(router.Renderer);
   this.options          = options;
   this.globals          = router.globals;
@@ -36,63 +35,72 @@ Route.prototype.clearSubscriptions = function() {
   this._subsMap = {};
 };
 
-Route.prototype.register = function(name, sub, options) {
+Route.prototype.register = function(name, sub) {
   this._subsMap[name] = sub;
 };
-
 
 Route.prototype.getSubscription = function(name) {
   return this._subsMap[name];
 };
-
 
 Route.prototype.getAllSubscriptions = function() {
   return this._subsMap;
 };
 
 Route.prototype.checkSubscriptions = function(subscriptions) {
-  var i, len, results = [];
-  for (i = 0, len = subscriptions.length; i < len; i++) {
-    subscription = subscriptions[i];
-    results.push(subscription != null ? subscription.ready() : false);
+  const results = [];
+  for (let i = 0; i < subscriptions.length; i++) {
+    results.push((subscriptions[i] && subscriptions[i].ready) ? subscriptions[i].ready() : false);
   }
 
   return !~results.indexOf(false);
 };
 
-Route.prototype.waitOn = function(current, next) {
-  var self = this, subscriptions = [], trackers = [], timer, _data = null, _preloaded = 0, _isWaiting = false, _resources = false;
+Route.prototype.waitOn = function(current = {}, next) {
+  let subscriptions = [];
+  let trackers = [];
+  let timer, _data = null, _preloaded = 0, _isWaiting = false, _resources = false;
 
   if (current.route.globals.length) {
-    for (var i = 0, len = current.route.globals.length; i < len; i++) {
-      var option = current.route.globals[i];
-      if (typeof option === 'object' && option.waitOnResources) {
+    for (let i = 0; i < current.route.globals.length; i++) {
+      if (typeof current.route.globals[i] === 'object' && current.route.globals[i].waitOnResources) {
         if (!_resources) { _resources = []; }
-        _resources.push(option.waitOnResources);
+        _resources.push(current.route.globals[i].waitOnResources);
       }
     }
   }
 
-  if (self._waitOnResources) {
+  if (this._waitOnResources) {
     if (!_resources) { _resources = []; }
-    _resources.push(self._waitOnResources);
+    _resources.push(this._waitOnResources);
   }
 
-  var preload = function (len, _data) {
+  const preload = (len, __data) => {
     _preloaded++;
     if (_preloaded >= len) {
-      next(current, _data);
+      next(current, __data);
     }
   };
 
-  var getResources = function () {
+  const getData = () => {
+    if (this._data) {
+      if (!_data) {
+        _data = this._currentData = this._data(current.params, current.queryParams);
+      } else {
+        _data = this._currentData;
+      }
+    }
+    return _data;
+  };
+
+  const getResources = () => {
     _data = getData();
-    var len    = 0;
-    var res    = [];
-    var images = [];
-    var other  = [];
-    for (var i = _resources.length - 1; i >= 0; i--) {
-      var items = _resources[i].call(self, current.params, current.queryParams, _data);
+    let   len    = 0;
+    let   items;
+    let images = [];
+    let other  = [];
+    for (let i = _resources.length - 1; i >= 0; i--) {
+      items = _resources[i].call(this, current.params, current.queryParams, _data);
       if (items) {
         if (items.images && items.images.length) {
           images = images.concat(items.images);
@@ -105,30 +113,30 @@ Route.prototype.waitOn = function(current, next) {
 
     if ((other && other.length) || (images && images.length)) {
       if (other && other.length && typeof XMLHttpRequest != 'undefined') {
-        other = other.filter(function(elem, index, self) {
+        other = other.filter((elem, index, self) => {
           return index == self.indexOf(elem);
         });
         len += other.length;
-        var prefetch = {};
-        for (var k = other.length - 1; k >= 0; k--) {
+        const prefetch = {};
+        for (let k = other.length - 1; k >= 0; k--) {
           prefetch[k] = new XMLHttpRequest();
-          prefetch[k].onload  = function () { preload(len, _data); };
-          prefetch[k].onerror = function () { preload(len, _data); };
+          prefetch[k].onload  = () => { preload(len, _data); };
+          prefetch[k].onerror = () => { preload(len, _data); };
           prefetch[k].open('GET', other[k]);
           prefetch[k].send(null);
         }
       }
 
       if (images && images.length){
-        images = images.filter(function(elem, index, self) {
+        images = images.filter((elem, index, self) => {
           return index == self.indexOf(elem);
         });
         len += images.length;
-        var imgs = {};
-        for (var j = images.length - 1; j >= 0; j--) {
+        const imgs = {};
+        for (let j = images.length - 1; j >= 0; j--) {
           imgs[j]         = new Image();
-          imgs[j].onload  = function () { preload(len, _data); };
-          imgs[j].onerror = function () { preload(len, _data); };
+          imgs[j].onload  = () => { preload(len, _data); };
+          imgs[j].onerror = () => { preload(len, _data); };
           imgs[j].src     = images[j];
         }
       }
@@ -137,28 +145,17 @@ Route.prototype.waitOn = function(current, next) {
     }
   };
 
-  var getData = function () {
-    if (self._data) {
-      if (!_data) {
-        _data = self._currentData = self._data(current.params, current.queryParams);
-      } else {
-        _data = self._currentData;
-      }
-    }
-    return _data;
-  };
-
-  var whileWaitingAction = function () {
+  const whileWaitingAction = () => {
     if (!_isWaiting) {
-      self._whileWaiting && self._whileWaiting(current.params, current.queryParams);
+      this._whileWaiting && this._whileWaiting(current.params, current.queryParams);
       _isWaiting = true;
     }
   };
 
   if (this._waitOn) {
-    var wait = function (delay) {
-      timer = Meteor.setTimeout(function(){
-        if (self.checkSubscriptions(subscriptions)) {
+    const wait = (delay) => {
+      timer = Meteor.setTimeout(() => {
+        if (this.checkSubscriptions(subscriptions)) {
           Meteor.clearTimeout(timer);
           _data = getData();
           if (_resources) {
@@ -173,18 +170,17 @@ Route.prototype.waitOn = function(current, next) {
       }, delay);
     };
 
-    if (!current) { current = {}; }
-    var processSubData = function (subData) {
-      var placeIn = function (d) {
-         if (d.flush) {
-            trackers.push(d);
-          } else if (d.ready) {
-            subscriptions.push(d);
-          }
+    const processSubData = (subData) => {
+      const placeIn = (d) => {
+        if (d.flush) {
+          trackers.push(d);
+        } else if (d.ready) {
+          subscriptions.push(d);
+        }
       };
 
       if (subData instanceof Array) {
-        for (var i = subData.length - 1; i >= 0; i--) {
+        for (let i = subData.length - 1; i >= 0; i--) {
           if (subData[i] !== null && typeof subData[i] === 'object') {
             placeIn(subData[i]);
           }
@@ -194,8 +190,8 @@ Route.prototype.waitOn = function(current, next) {
       }
     };
 
-    var stopSubs = function () {
-      for (var i = subscriptions.length - 1; i >= 0; i--) {
+    const stopSubs = () => {
+      for (let i = subscriptions.length - 1; i >= 0; i--) {
         if (subscriptions[i].stop) {
           subscriptions[i].stop();
         }
@@ -203,21 +199,21 @@ Route.prototype.waitOn = function(current, next) {
       subscriptions = [];
     };
 
-    var done = function (subscribtion) {
+    const done = (subscribtion) => {
       processSubData(subscribtion());
     };
 
     processSubData(this._waitOn(current.params, current.queryParams, done));
 
-    this._triggersExit.push(function () {
+    this._triggersExit.push(() => {
       stopSubs();
-      for (var i = trackers.length - 1; i >= 0; i--) {
+      for (let i = trackers.length - 1; i >= 0; i--) {
         if (trackers[i].stop) {
           trackers[i].stop();
         }
       }
       trackers = [];
-      _data = self._currentData = null;
+      _data = this._currentData = null;
     });
 
     whileWaitingAction();
@@ -281,18 +277,16 @@ Route.prototype.registerRouteClose = function() {
 
 Route.prototype.registerRouteChange = function(currentContext, routeChanging) {
   // register params
-  var params = currentContext.params;
-  this._updateReactiveDict(this._params, params);
+  this._updateReactiveDict(this._params, currentContext.params);
 
   // register query params
-  var queryParams = currentContext.queryParams;
-  this._updateReactiveDict(this._queryParams, queryParams);
+  this._updateReactiveDict(this._queryParams, currentContext.queryParams);
 
   // if the route is changing, we need to defer triggering path changing
   // if we did this, old route's path watchers will detect this
   // Real issue is, above watcher will get removed with the new route
   // So, we don't need to trigger it now
-  // We are doing it on the route close event. So, if they exists they'll 
+  // We are doing it on the route close event. So, if they exists they'll
   // get notify that
   if(!routeChanging) {
     this._pathChangeDep.changed();
@@ -300,19 +294,19 @@ Route.prototype.registerRouteChange = function(currentContext, routeChanging) {
 };
 
 Route.prototype._updateReactiveDict = function(dict, newValues) {
-  var currentKeys = _.keys(newValues);
-  var oldKeys = _.keys(dict.keyDeps);
+  const currentKeys = _.keys(newValues);
+  const oldKeys = _.keys(dict.keyDeps);
 
   // set new values
   //  params is an array. So, _.each(params) does not works
   //  to iterate params
-  _.each(currentKeys, function(key) {
+  _.each(currentKeys, (key) => {
     dict.set(key, newValues[key]);
   });
 
   // remove keys which does not exisits here
-  var removedKeys = _.difference(oldKeys, currentKeys);
-  _.each(removedKeys, function(key) {
+  const removedKeys = _.difference(oldKeys, currentKeys);
+  _.each(removedKeys, (key) => {
     dict.set(key, undefined);
   });
 };

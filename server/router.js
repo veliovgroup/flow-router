@@ -1,4 +1,5 @@
-var Qs = require('qs');
+const Qs = require('qs');
+const pathRegExp = /(:[\w\(\)\\\+\*\.\?]+)+/g;
 
 Router = function () {
   this._routes = [];
@@ -9,14 +10,12 @@ Router = function () {
   this._onRouteCallbacks = [];
 };
 
-Router.prototype.route = function(pathDef, options) {
+Router.prototype.route = function(pathDef, options = {}) {
   if (!/^\/.*/.test(pathDef)) {
-    var message = "route's path must start with '/'";
-    throw new Error(message);
+    throw new Error('route\'s path must start with "/"');
   }
-  
-  options = options || {};
-  var route = new Route(this, pathDef, options);
+
+  const route = new Route(this, pathDef, options);
   this._routes.push(route);
 
   if (options.name) {
@@ -31,32 +30,30 @@ Router.prototype.group = function(options) {
   return new Group(this, options);
 };
 
-Router.prototype.path = function(pathDef, fields, queryParams) {
+Router.prototype.path = function(pathDef, fields = {}, queryParams) {
   if (this._routesMap[pathDef]) {
     pathDef = this._routesMap[pathDef].path;
   }
 
-  fields = fields || {};
-  var regExp = /(:[\w\(\)\\\+\*\.\?]+)+/g;
-  var path = pathDef.replace(regExp, function(key) {
-    var firstRegexpChar = key.indexOf("(");
+  let path = pathDef.replace(pathRegExp, (key) => {
+    const firstRegexpChar = key.indexOf('(');
     // get the content behind : and (\\d+/)
-    key = key.substring(1, (firstRegexpChar > 0)? firstRegexpChar: undefined);
+    key = key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);
     // remove +?*
-    key = key.replace(/[\+\*\?]+/g, "");
+    key = key.replace(/[\+\*\?]+/g, '');
 
-    return fields[key] || "";
+    return fields[key] || '';
   });
 
-  path = path.replace(/\/\/+/g, "/"); // Replace multiple slashes with single slash
+  path = path.replace(/\/\/+/g, '/'); // Replace multiple slashes with single slash
 
   // remove trailing slash
   // but keep the root slash if it's the only one
-  path = path.match(/^\/{1}$/) ? path: path.replace(/\/$/, "");
+  path = path.match(/^\/{1}$/) ? path : path.replace(/\/$/, '');
 
-  var strQueryParams = Qs.stringify(queryParams || {});
+  const strQueryParams = Qs.stringify(queryParams || {});
   if(strQueryParams) {
-    path += "?" + strQueryParams;
+    path += '?' + strQueryParams;
   }
 
   return path;
@@ -69,13 +66,10 @@ Router.prototype.onRouteRegister = function(cb) {
 Router.prototype._triggerRouteRegister = function(currentRoute) {
   // We should only need to send a safe set of fields on the route
   // object.
-  // This is not to hide what's inside the route object, but to show 
+  // This is not to hide what's inside the route object, but to show
   // these are the public APIs
-  var routePublicApi = _.pick(currentRoute, 'name', 'pathDef', 'path');
-  var omittingOptionFields = [
-    'triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name'
-  ];
-  routePublicApi.options = _.omit(currentRoute.options, omittingOptionFields);
+  const routePublicApi = _.pick(currentRoute, 'name', 'pathDef', 'path');
+  routePublicApi.options = _.omit(currentRoute.options, ['triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name']);
 
   _.each(this._onRouteCallbacks, function(cb) {
     cb(routePublicApi);
@@ -94,10 +88,10 @@ Router.prototype.current = function() {
 
 
 Router.prototype.triggers = {
-  enter: function() {
+  enter() {
     // client only
   },
-  exit: function() {
+  exit() {
     // client only
   }
 };

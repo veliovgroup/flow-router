@@ -1,5 +1,4 @@
-Route = function(router, pathDef, options) {
-  options = options || {};
+Route = function(router, pathDef, options = {}) {
   this.options = options;
   this.name = options.name;
   this.pathDef = pathDef;
@@ -13,7 +12,7 @@ Route = function(router, pathDef, options) {
 };
 
 
-Route.prototype.register = function(name, sub, options) {
+Route.prototype.register = function(name, sub) {
   this._subsMap[name] = sub;
 };
 
@@ -23,6 +22,6 @@ Route.prototype.subscription = function(name) {
 };
 
 
-Route.prototype.middleware = function(middleware) {
- 
+Route.prototype.middleware = function() {
+  // ?
 };

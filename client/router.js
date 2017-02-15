@@ -1,14 +1,14 @@
 Router = function () {
-  var self = this;
   this.globals = [];
   this.subscriptions = Function.prototype;
 
   this.Renderer = new BlazeRenderer(function () {
     return document.getElementsByTagName('body')[0];
   });
-  
+
   this._tracker = this._buildTracker();
   this._current = {};
+  this._specialChars = ['/'];
 
   // tracks the current path change
   this._onEveryPath = new Tracker.Dependency();
@@ -53,43 +53,37 @@ Router = function () {
   };
 
   // redirect function used inside triggers
-  this._redirectFn = function(pathDef, fields, queryParams) {
+  this._redirectFn = (pathDef, fields, queryParams) => {
     if (/^http(s)?:\/\//.test(pathDef)) {
-        var message = "Redirects to URLs outside of the app are not supported in this version of Flow Router. Use 'window.location = yourUrl' instead";
-        throw new Error(message);
+      throw new Error("Redirects to URLs outside of the app are not supported in this version of Flow Router. Use 'window.location = yourUrl' instead");
     }
-    self.withReplaceState(function() {
-      var path = FlowRouter.path(pathDef, fields, queryParams);
-      self._page.redirect(path);
+    this.withReplaceState(() => {
+      this._page.redirect(FlowRouter.path(pathDef, fields, queryParams));
     });
   };
   this._initTriggersAPI();
 };
 
-Router.prototype.route = function(pathDef, options, group) {
+Router.prototype.route = function(pathDef, options = {}, group) {
   if (!/^\/.*/.test(pathDef)) {
-    var message = "route's path must start with '/'";
-    throw new Error(message);
+    throw new Error("route's path must start with '/'");
   }
 
-  options = options || {};
-  var self = this;
-  var route = new Route(this, pathDef, options, group);
+  const route = new Route(this, pathDef, options, group);
 
   // calls when the page route being activates
-  route._actionHandle = function (context, next) {
-    var oldRoute = self._current.route;
-    self._oldRouteChain.push(oldRoute);
+  route._actionHandle = (context) => {
+    const oldRoute = this._current.route;
+    this._oldRouteChain.push(oldRoute);
 
-    var queryParams = self._qs.parse(context.querystring);
     // _qs.parse() gives us a object without prototypes,
     // created with Object.create(null)
     // Meteor's check doesn't play nice with it.
     // So, we need to fix it by cloning it.
     // see more: https://github.com/meteorhacks/flow-router/issues/164
-    queryParams = JSON.parse(JSON.stringify(queryParams));
+    const queryParams = JSON.parse(JSON.stringify(this._qs.parse(context.querystring)));
 
-    self._current = {
+    this._current = {
       path: context.path,
       context: context,
       params: context.params,
@@ -101,16 +95,15 @@ Router.prototype.route = function(pathDef, options, group) {
     // we need to invalidate if all the triggers have been completed
     // if not that means, we've been redirected to another path
     // then we don't need to invalidate
-    var afterAllTriggersRan = function() {
-      self._invalidateTracker();
+    const afterAllTriggersRan = () => {
+      this._invalidateTracker();
     };
 
-    route.waitOn(self._current, function(current, data){
-      var triggers = self._triggersEnter.concat(route._triggersEnter);
+    route.waitOn(this._current, (current, data) => {
       Triggers.runTriggers(
-        triggers,
-        self._current,
-        self._redirectFn,
+        this._triggersEnter.concat(route._triggersEnter),
+        this._current,
+        this._redirectFn,
         afterAllTriggersRan,
         data
       );
@@ -118,12 +111,11 @@ Router.prototype.route = function(pathDef, options, group) {
   };
 
   // calls when you exit from the page js route
-  route._exitHandle = function(context, next) {
-    var triggers = self._triggersExit.concat(route._triggersExit);
+  route._exitHandle = (context, next) => {
     Triggers.runTriggers(
-      triggers,
-      self._current,
-      self._redirectFn,
+      this._triggersExit.concat(route._triggersExit),
+      this._current,
+      this._redirectFn,
       next
     );
   };
@@ -143,59 +135,71 @@ Router.prototype.group = function(options) {
   return new Group(this, options);
 };
 
-Router.prototype.path = function(pathDef, fields, queryParams) {
+Router.prototype.path = function(pathDef, fields = {}, queryParams) {
   if (this._routesMap[pathDef]) {
     pathDef = this._routesMap[pathDef].pathDef;
   }
 
-  var path = "";
+  let path = '';
 
   // Prefix the path with the router global prefix
   if (this._basePath) {
-    path += "/" + this._basePath + "/";
+    path += '/' + this._basePath + '/';
   }
 
-  fields = fields || {};
-  var regExp = /(:[\w\(\)\\\+\*\.\?]+)+/g;
-  path += pathDef.replace(regExp, function(key) {
-    var firstRegexpChar = key.indexOf("(");
+  const regExp = /(:[\w\(\)\\\+\*\.\?]+)+/g;
+  path += pathDef.replace(regExp, (key) => {
+    const firstRegexpChar = key.indexOf('(');
     // get the content behind : and (\\d+/)
-    key = key.substring(1, (firstRegexpChar > 0)? firstRegexpChar: undefined);
+    key = key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);
     // remove +?*
-    key = key.replace(/[\+\*\?]+/g, "");
+    key = key.replace(/[\+\*\?]+/g, '');
 
     // this is to allow page js to keep the custom characters as it is
     // we need to encode 2 times otherwise "/" char does not work properly
     // So, in that case, when I includes "/" it will think it's a part of the
     // route. encoding 2times fixes it
-    return encodeURIComponent(encodeURIComponent(fields[key] || ""));
+    if (fields[key]) {
+      const keyArr = fields[key].split('');
+      let _param   = '';
+      for (let i = 0; i < keyArr.length; i++) {
+        if (!!~this._specialChars.indexOf(keyArr[i])){
+          _param += encodeURIComponent(encodeURIComponent(keyArr[i]));
+        } else {
+          _param += encodeURIComponent(keyArr[i]);
+        }
+      }
+
+      return _param;
+    }
+
+    return '';
   });
 
   // Replace multiple slashes with single slash
-  path = path.replace(/\/\/+/g, "/");
+  path = path.replace(/\/\/+/g, '/');
 
   // remove trailing slash
   // but keep the root slash if it's the only one
-  path = path.match(/^\/{1}$/) ? path: path.replace(/\/$/, "");
+  path = path.match(/^\/{1}$/) ? path : path.replace(/\/$/, '');
 
   // explictly asked to add a trailing slash
-  if(this.env.trailingSlash.get() && _.last(path) !== "/") {
-    path += "/";
+  if(this.env.trailingSlash.get() && _.last(path) !== '/') {
+    path += '/';
   }
 
-  var strQueryParams = this._qs.stringify(queryParams || {});
+  const strQueryParams = this._qs.stringify(queryParams || {});
   if(strQueryParams) {
-    path += "?" + strQueryParams;
+    path += '?' + strQueryParams;
   }
 
   return path;
 };
 
 Router.prototype.go = function(pathDef, fields, queryParams) {
-  var path = this.path(pathDef, fields, queryParams);
+  const path = this.path(pathDef, fields, queryParams);
 
-  var useReplaceState = this.env.replaceState.get();
-  if(useReplaceState) {
+  if(this.env.replaceState.get()) {
     this._page.replace(path);
   } else {
     this._page(path);
@@ -203,10 +207,8 @@ Router.prototype.go = function(pathDef, fields, queryParams) {
 };
 
 Router.prototype.reload = function() {
-  var self = this;
-
-  self.env.reload.withValue(true, function() {
-    self._page.replace(self._current.path);
+  this.env.reload.withValue(true, () => {
+    this._page.replace(this._current.path);
   });
 };
 
@@ -217,15 +219,15 @@ Router.prototype.redirect = function(path) {
 Router.prototype.setParams = function(newParams) {
   if(!this._current.route) {return false;}
 
-  var pathDef = this._current.route.pathDef;
-  var existingParams = this._current.params;
-  var params = {};
-  _.each(_.keys(existingParams), function(key) {
+  const pathDef = this._current.route.pathDef;
+  const existingParams = this._current.params;
+  let params = {};
+  _.each(_.keys(existingParams), (key) => {
     params[key] = existingParams[key];
   });
 
   params = _.extend(params, newParams);
-  var queryParams = this._current.queryParams;
+  const queryParams = this._current.queryParams;
 
   this.go(pathDef, params, queryParams);
   return true;
@@ -234,17 +236,17 @@ Router.prototype.setParams = function(newParams) {
 Router.prototype.setQueryParams = function(newParams) {
   if(!this._current.route) {return false;}
 
-  var queryParams = _.clone(this._current.queryParams);
+  const queryParams = _.clone(this._current.queryParams);
   _.extend(queryParams, newParams);
 
-  for (var k in queryParams) {
+  for (let k in queryParams) {
     if (queryParams[k] === null || queryParams[k] === undefined) {
       delete queryParams[k];
     }
   }
 
-  var pathDef = this._current.route.pathDef;
-  var params = this._current.params;
+  const pathDef = this._current.route.pathDef;
+  const params = this._current.params;
   this.go(pathDef, params, queryParams);
   return true;
 };
@@ -256,14 +258,14 @@ Router.prototype.current = function() {
   // We can't trust outside, that's why we clone this
   // Anyway, we can't clone the whole object since it has non-jsonable values
   // That's why we clone what's really needed.
-  var current = _.clone(this._current);
+  const current = _.clone(this._current);
   current.queryParams = EJSON.clone(current.queryParams);
   current.params = EJSON.clone(current.params);
   return current;
 };
 
 // Implementing Reactive APIs
-var reactiveApis = [
+const reactiveApis = [
   'getParam', 'getQueryParam',
   'getRouteName', 'watchPathChange'
 ];
@@ -271,7 +273,7 @@ reactiveApis.forEach(function(api) {
   Router.prototype[api] = function(arg1) {
     // when this is calling, there may not be any route initiated
     // so we need to handle it
-    var currentRoute = this._current.route;
+    const currentRoute = this._current.route;
     if(!currentRoute) {
       this._onEveryPath.depend();
       return;
@@ -284,15 +286,15 @@ reactiveApis.forEach(function(api) {
 });
 
 Router.prototype.subsReady = function() {
-  var callback = null;
-  var args = _.toArray(arguments);
+  let callback = null;
+  const args = _.toArray(arguments);
 
-  if (typeof _.last(args) === "function") {
+  if (typeof _.last(args) === 'function') {
     callback = args.pop();
   }
 
-  var currentRoute = this.current().route;
-  var globalRoute = this._globalRoute;
+  const currentRoute = this.current().route;
+  const globalRoute = this._globalRoute;
 
   // we need to depend for every route change and
   // rerun subscriptions to check the ready state
@@ -302,18 +304,18 @@ Router.prototype.subsReady = function() {
     return false;
   }
 
-  var subscriptions;
+  let subscriptions;
   if(args.length === 0) {
     subscriptions = _.values(globalRoute.getAllSubscriptions());
     subscriptions = subscriptions.concat(_.values(currentRoute.getAllSubscriptions()));
   } else {
-    subscriptions = _.map(args, function(subName) {
+    subscriptions = _.map(args, (subName) => {
       return globalRoute.getSubscription(subName) || currentRoute.getSubscription(subName);
     });
   }
 
-  var isReady = function() {
-    var ready =  _.every(subscriptions, function(sub) {
+  const isReady = () => {
+    const ready =  _.every(subscriptions, (sub) => {
       return sub && sub.ready();
     });
 
@@ -321,7 +323,7 @@ Router.prototype.subsReady = function() {
   };
 
   if (callback) {
-    Tracker.autorun(function(c) {
+    Tracker.autorun((c) => {
       if (isReady()) {
         callback();
         c.stop();
@@ -351,22 +353,20 @@ Router.prototype._notfoundRoute = function(context) {
   // XXX this.notfound kept for backwards compatibility
   this.notFound = this.notFound || this.notfound;
   if(!this.notFound) {
-    console.error("There is no route for the path:", context.path);
+    console.error('There is no route for the path:', context.path);
     return;
   }
 
-  this._current.route = new Route(this, "*", this.notFound);
+  this._current.route = new Route(this, '*', this.notFound);
   this._invalidateTracker();
 };
 
-Router.prototype.initialize = function(options) {
-  options = options || {};
-
+Router.prototype.initialize = function(options = {}) {
   if(this._initialized) {
-    throw new Error("FlowRouter is already initialized");
+    throw new Error('FlowRouter is already initialized');
   }
 
-  var self = this;
+  const self = this;
   this._updateCallbacks();
 
   // Implementing idempotent routing
@@ -378,11 +378,10 @@ Router.prototype.initialize = function(options) {
   //
   // we need override both show, replace to make this work
   // since we use redirect when we are talking about withReplaceState
-  _.each(['show', 'replace'], function(fnName) {
-    var original = self._page[fnName];
+  _.each(['show', 'replace'], (fnName) => {
+    const original = self._page[fnName];
     self._page[fnName] = function(path, state, dispatch, push) {
-      var reload = self.env.reload.get();
-      if (!reload && self._current.path === path) {
+      if (!self.env.reload.get() && self._current.path === path) {
         return;
       }
 
@@ -404,24 +403,19 @@ Router.prototype.initialize = function(options) {
 };
 
 Router.prototype._buildTracker = function() {
-  var self = this;
-
   // main autorun function
-  var tracker = Tracker.autorun(function () {
-    if(!self._current || !self._current.route) {
+  const tracker = Tracker.autorun(() => {
+    if(!this._current || !this._current.route) {
       return;
     }
 
     // see the definition of `this._processingContexts`
-    var currentContext = self._current;
-    var route = currentContext.route;
-    var path = currentContext.path;
+    const currentContext = this._current;
+    const route = currentContext.route;
+    const path = currentContext.path;
 
-    if(self.safeToRun === 0) {
-      var message =
-        "You can't use reactive data sources like Session" +
-        " inside the `.subscriptions` method!";
-      throw new Error(message);
+    if(this.safeToRun === 0) {
+      throw new Error("You can't use reactive data sources like Session inside the `.subscriptions` method!");
     }
 
     // We need to run subscriptions inside a Tracker
@@ -429,17 +423,16 @@ Router.prototype._buildTracker = function() {
     // But we don't need to run this tracker with
     // other reactive changes inside the .subscription method
     // We tackle this with the `safeToRun` variable
-    self._globalRoute.clearSubscriptions();
-    self.subscriptions.call(self._globalRoute, path);
+    this._globalRoute.clearSubscriptions();
+    this.subscriptions.call(this._globalRoute, path);
     route.callSubscriptions(currentContext);
 
     // otherwise, computations inside action will trigger to re-run
     // this computation. which we do not need.
-    Tracker.nonreactive(function() {
-      var isRouteChange = currentContext.oldRoute !== currentContext.route;
-      var isFirstRoute = !currentContext.oldRoute;
+    Tracker.nonreactive(() => {
+      let isRouteChange = currentContext.oldRoute !== currentContext.route;
       // first route is not a route change
-      if(isFirstRoute) {
+      if(!currentContext.oldRoute) {
         isRouteChange = false;
       }
 
@@ -447,14 +440,14 @@ Router.prototype._buildTracker = function() {
       // We still need to get a copy of the oldestRoute first
       // It's very important to get the oldest route and registerRouteClose() it
       // See: https://github.com/kadirahq/flow-router/issues/314
-      var oldestRoute = self._oldRouteChain[0];
-      self._oldRouteChain = [];
+      const oldestRoute = this._oldRouteChain[0];
+      this._oldRouteChain = [];
 
       currentContext.route.registerRouteChange(currentContext, isRouteChange);
       route.callAction(currentContext);
 
-      Tracker.afterFlush(function() {
-        self._onEveryPath.changed();
+      Tracker.afterFlush(() => {
+        this._onEveryPath.changed();
         if(isRouteChange) {
           // We need to trigger that route (definition itself) has changed.
           // So, we need to re-run all the register callbacks to current route
@@ -470,18 +463,17 @@ Router.prototype._buildTracker = function() {
       });
     });
 
-    self.safeToRun--;
+    this.safeToRun--;
   });
 
   return tracker;
 };
 
 Router.prototype._invalidateTracker = function() {
-  var self = this;
   this.safeToRun++;
   this._tracker.invalidate();
-  // After the invalidation we need to flush to make changes imediately
-  // otherwise, we have face some issues context mix-maches and so on.
+  // After the invalidation we need to flush to make changes immediately
+  // otherwise, we have face some issues context mix-matches and so on.
   // But there are some cases we can't flush. So we need to ready for that.
 
   // we clearly know, we can't flush inside an autorun
@@ -504,7 +496,7 @@ Router.prototype._invalidateTracker = function() {
       // from the router. Then we don't need to run invalidate using a tracker
 
       // this happens when we are trying to invoke a route change
-      // with inside a route chnage. (eg:- Template.onCreated)
+      // with inside a route change. (eg:- Template.onCreated)
       // Since we use page.js and tracker, we don't have much control
       // over this process.
       // only solution is to defer route execution.
@@ -512,15 +504,15 @@ Router.prototype._invalidateTracker = function() {
       // It's possible to have more than one path want to defer
       // But, we only need to pick the last one.
       // self._nextPath = self._current.path;
-      Meteor.defer(function() {
-        var path = self._nextPath;
+      Meteor.defer(() => {
+        const path = this._nextPath;
         if(!path) {
           return;
         }
 
-        delete self._nextPath;
-        self.env.reload.withValue(true, function() {
-          self.go(path);
+        delete this._nextPath;
+        this.env.reload.withValue(true, () => {
+          this.go(path);
         });
       });
     }
@@ -528,32 +520,30 @@ Router.prototype._invalidateTracker = function() {
 };
 
 Router.prototype._updateCallbacks = function () {
-  var self = this;
+  this._page.callbacks = [];
+  this._page.exits = [];
 
-  self._page.callbacks = [];
-  self._page.exits = [];
-
-  _.each(self._routes, function(route) {
-    self._page(route.pathDef, route._actionHandle);
-    self._page.exit(route.pathDef, route._exitHandle);
+  _.each(this._routes, (route) => {
+    this._page(route.pathDef, route._actionHandle);
+    this._page.exit(route.pathDef, route._exitHandle);
   });
 
-  self._page("*", function(context) {
-    self._notfoundRoute(context);
+  this._page('*', (context) => {
+    this._notfoundRoute(context);
   });
 };
 
 Router.prototype._initTriggersAPI = function() {
-  var self = this;
+  const self = this;
   this.triggers = {
-    enter: function(triggers, filter) {
+    enter(triggers, filter) {
       triggers = Triggers.applyFilters(triggers, filter);
       if(triggers.length) {
         self._triggersEnter = self._triggersEnter.concat(triggers);
       }
     },
 
-    exit: function(triggers, filter) {
+    exit(triggers, filter) {
       triggers = Triggers.applyFilters(triggers, filter);
       if(triggers.length) {
         self._triggersExit = self._triggersExit.concat(triggers);
@@ -579,13 +569,10 @@ Router.prototype._triggerRouteRegister = function(currentRoute) {
   // object.
   // This is not to hide what's inside the route object, but to show
   // these are the public APIs
-  var routePublicApi = _.pick(currentRoute, 'name', 'pathDef', 'path');
-  var omittingOptionFields = [
-    'triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name'
-  ];
-  routePublicApi.options = _.omit(currentRoute.options, omittingOptionFields);
+  const routePublicApi = _.pick(currentRoute, 'name', 'pathDef', 'path');
+  routePublicApi.options = _.omit(currentRoute.options, ['triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name']);
 
-  _.each(this._onRouteCallbacks, function(cb) {
+  _.each(this._onRouteCallbacks, (cb) => {
     cb(routePublicApi);
   });
 };

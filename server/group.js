@@ -1,5 +1,4 @@
-Group = function(router, options) {
-  options = options || {};
+Group = function(router, options = {}) {
   this.prefix = options.prefix || '';
   this.options = options;
   this._router = router;
@@ -11,7 +10,7 @@ Group.prototype.route = function(pathDef, options) {
 };
 
 Group.prototype.group = function(options) {
-  var group = new Group(this._router, options);
+  const group = new Group(this._router, options);
   group.parent = this;
 
   return group;

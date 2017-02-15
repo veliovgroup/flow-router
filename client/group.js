@@ -1,9 +1,6 @@
-Group = function(router, options, parent) {
-  options = options || {};
-
+Group = function(router, options = {}, parent) {
   if (options.prefix && !/^\/.*/.test(options.prefix)) {
-    var message = "group's prefix must start with '/'";
-    throw new Error(message);
+    throw new Error('group\'s prefix must start with "/"');
   }
 
   this._router = router;
@@ -24,22 +21,16 @@ Group = function(router, options, parent) {
   }
 };
 
-Group.prototype.route = function(pathDef, options, group) {
-  options = options || {};
-
+Group.prototype.route = function(pathDef, options = {}, group) {
   if (!/^\/.*/.test(pathDef)) {
-    var message = "route's path must start with '/'";
-    throw new Error(message);
+    throw new Error('route\'s path must start with "/"');
   }
 
   group = group || this;
   pathDef = this.prefix + pathDef;
 
-  var triggersEnter = options.triggersEnter || [];
-  options.triggersEnter = this._triggersEnter.concat(triggersEnter);
-
-  var triggersExit = options.triggersExit || [];
-  options.triggersExit = triggersExit.concat(this._triggersExit);
+  options.triggersEnter = this._triggersEnter.concat(options.triggersEnter || []);
+  options.triggersExit  = this._triggersExit.concat(options.triggersExit || []);
 
   return this._router.route(pathDef, options, group);
 };

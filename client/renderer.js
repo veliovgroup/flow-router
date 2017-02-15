@@ -1,10 +1,11 @@
-var requestAnimFrame = (function() {
+const requestAnimFrame = (() => {
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
     setTimeout(callback, 1000 / 60);
   };
 })();
-BlazeRenderer = (function() {
-  function BlazeRenderer(rootEl) {
+
+BlazeRenderer = class BlazeRenderer {
+  constructor(rootEl) {
     this.rootEl = rootEl;
     this.old    = null;
     this.reactTemplate = new ReactiveVar(null);
@@ -18,11 +19,9 @@ BlazeRenderer = (function() {
     }
   }
 
-  BlazeRenderer.prototype.render = function(layout, template, data) {
-    var _data, _template, _layout, self = this;
-
-    _template = typeof Template !== "undefined" && Template !== null ? Template[template] : void 0;
-    _layout   = typeof Template !== "undefined" && Template !== null ? Template[layout] : void 0;
+  render(layout, template, data) {
+    const _template = typeof Template !== 'undefined' && Template !== null ? Template[template] : void 0;
+    const _layout   = typeof Template !== 'undefined' && Template !== null ? Template[layout] : void 0;
 
     if (!_template) {
       throw new Meteor.Error(404, 'No such template: ' + template);
@@ -33,7 +32,7 @@ BlazeRenderer = (function() {
     }
 
     if (_layout) {
-      _data = {
+      let _data = {
         ___content: this.reactTemplate
       };
 
@@ -46,7 +45,7 @@ BlazeRenderer = (function() {
           Blaze.remove(this.old);
         }
 
-        var getData = function getData () {
+        const getData = () => {
           return _data;
         };
 
@@ -57,8 +56,8 @@ BlazeRenderer = (function() {
 
       if (this.current.template === template) {
         this.reactTemplate.set(null);
-        requestAnimFrame(function updateTemplate () {
-          self.reactTemplate.set(template);
+        requestAnimFrame(() => {
+          this.reactTemplate.set(template);
         });
       } else {
         this.reactTemplate.set(template);
@@ -67,7 +66,5 @@ BlazeRenderer = (function() {
       this.current.layout = layout;
       this.current.template = template;
     }
-  };
-
-  return BlazeRenderer;
-})();
+  }
+};

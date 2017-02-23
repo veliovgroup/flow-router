@@ -1,3 +1,5 @@
+const pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
+
 Router = function () {
   this.globals = [];
   this.subscriptions = Function.prototype;
@@ -159,8 +161,7 @@ Router.prototype.path = function(pathDef, fields = {}, queryParams) {
     path += '/' + this._basePath + '/';
   }
 
-  const regExp = /(:[\w\(\)\\\+\*\.\?]+)+/g;
-  path += pathDef.replace(regExp, (key) => {
+  path += pathDef.replace(pathRegExp, (key) => {
     const firstRegexpChar = key.indexOf('(');
     // get the content behind : and (\\d+/)
     key = key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);

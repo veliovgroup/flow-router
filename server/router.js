@@ -1,5 +1,5 @@
 const Qs = require('qs');
-const pathRegExp = /(:[\w\(\)\\\+\*\.\?]+)+/g;
+const pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
 
 Router = function () {
   this._routes = [];

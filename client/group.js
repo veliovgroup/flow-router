@@ -1,3 +1,15 @@
+const makeTriggers = (base, triggers) => {
+  if (triggers) {
+    if (!_.isArray(triggers)) {
+      triggers = [triggers];
+    }
+  } else {
+    triggers = [];
+  }
+
+  return (base || []).concat(triggers);
+};
+
 Group = function(router, options = {}, parent) {
   if (options.prefix && !/^\/.*/.test(options.prefix)) {
     throw new Error('group\'s prefix must start with "/"');
@@ -8,21 +20,8 @@ Group = function(router, options = {}, parent) {
   this.name = options.name;
   this.options = options;
 
-  this._triggersEnter = this._triggersEnter || [];
-  if (options.triggersEnter) {
-    if (!_.isArray(options.triggersEnter)) {
-      options.triggersEnter = [options.triggersEnter];
-    }
-    this._triggersEnter = this._triggersEnter.concat(options.triggersEnter);
-  }
-
-  this._triggersExit = this._triggersExit || [];
-  if (options.triggersExit) {
-    if (!_.isArray(options.triggersExit)) {
-      options.triggersExit = [options.triggersExit];
-    }
-    this._triggersExit = this._triggersExit.concat(options.triggersExit);
-  }
+  this._triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
+  this._triggersExit = makeTriggers(this._triggersExit, options.triggersExit);
 
   this._subscriptions = options.subscriptions || Function.prototype;
 
@@ -30,8 +29,8 @@ Group = function(router, options = {}, parent) {
   if (this.parent) {
     this.prefix = parent.prefix + this.prefix;
 
-    this._triggersEnter = parent._triggersEnter.concat(this._triggersEnter);
-    this._triggersExit = this._triggersExit.concat(parent._triggersExit);
+    this._triggersEnter = makeTriggers(this._triggersEnter, parent.triggersEnter);
+    this._triggersExit = makeTriggers(this._triggersExit, parent.triggersExit);
   }
 };
 
@@ -43,8 +42,8 @@ Group.prototype.route = function(pathDef, options = {}, group) {
   group = group || this;
   pathDef = this.prefix + pathDef;
 
-  options.triggersEnter = this._triggersEnter.concat(options.triggersEnter || []);
-  options.triggersExit  = this._triggersExit.concat(options.triggersExit || []);
+  options.triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
+  options.triggersExit = makeTriggers(this._triggersExit, options.triggersExit);
 
   return this._router.route(pathDef, options, group);
 };

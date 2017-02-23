@@ -1,4 +1,4 @@
-Route = function(router, pathDef, options = {}, group) {
+Route = function(router = new Router(), pathDef, options = {}, group) {
   this.render           = router.Renderer.render.bind(router.Renderer);
   this.options          = options;
   this.globals          = router.globals;

@@ -160,6 +160,7 @@ Router.prototype.path = function(pathDef, fields = {}, queryParams) {
     // So, in that case, when I includes "/" it will think it's a part of the
     // route. encoding 2times fixes it
     if (fields[key]) {
+      fields[key] = `${fields[key]}`;
       const keyArr = fields[key].split('');
       let _param   = '';
       for (let i = 0; i < keyArr.length; i++) {

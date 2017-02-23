@@ -73,19 +73,6 @@ Triggers.runTriggers = function(triggers, context, redirectFn, after, data) {
   let inCurrentLoop = true;
   let alreadyRedirected = false;
 
-  for (let lc = 0; lc < triggers.length; lc++) {
-    triggers[lc](context, doRedirect, doStop, data);
-
-    if (abort) {
-      return;
-    }
-  }
-
-  // mark that, we've exceeds the currentEventloop for
-  // this set of triggers.
-  inCurrentLoop = false;
-  after();
-
   const doRedirect = (url, params, queryParams) => {
     if(alreadyRedirected) {
       throw new Error('already redirected');
@@ -107,4 +94,17 @@ Triggers.runTriggers = function(triggers, context, redirectFn, after, data) {
   const doStop = () => {
     abort = true;
   };
+
+  for (let lc = 0; lc < triggers.length; lc++) {
+    triggers[lc](context, doRedirect, doStop, data);
+
+    if (abort) {
+      return;
+    }
+  }
+
+  // mark that, we've exceeds the currentEventloop for
+  // this set of triggers.
+  inCurrentLoop = false;
+  after();
 };

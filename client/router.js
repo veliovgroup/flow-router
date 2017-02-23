@@ -8,7 +8,19 @@ Router = function () {
 
   this._tracker = this._buildTracker();
   this._current = {};
-  this._specialChars = ['/'];
+  this._specialChars = ['/', '%', '+'];
+  this._encodeParam = (param) => {
+    const paramArr = param.split('');
+    let _param   = '';
+    for (let i = 0; i < paramArr.length; i++) {
+      if (!!~this._specialChars.indexOf(paramArr[i])){
+        _param += encodeURIComponent(encodeURIComponent(paramArr[i]));
+      } else {
+        _param += encodeURIComponent(paramArr[i]);
+      }
+    }
+    return _param;
+  };
 
   // tracks the current path change
   this._onEveryPath = new Tracker.Dependency();
@@ -160,18 +172,7 @@ Router.prototype.path = function(pathDef, fields = {}, queryParams) {
     // So, in that case, when I includes "/" it will think it's a part of the
     // route. encoding 2times fixes it
     if (fields[key]) {
-      fields[key] = `${fields[key]}`;
-      const keyArr = fields[key].split('');
-      let _param   = '';
-      for (let i = 0; i < keyArr.length; i++) {
-        if (!!~this._specialChars.indexOf(keyArr[i])){
-          _param += encodeURIComponent(encodeURIComponent(keyArr[i]));
-        } else {
-          _param += encodeURIComponent(keyArr[i]);
-        }
-      }
-
-      return _param;
+      return this._encodeParam(`${fields[key]}`);
     }
 
     return '';
@@ -200,10 +201,14 @@ Router.prototype.path = function(pathDef, fields = {}, queryParams) {
 Router.prototype.go = function(pathDef, fields, queryParams) {
   const path = this.path(pathDef, fields, queryParams);
 
-  if(this.env.replaceState.get()) {
-    this._page.replace(path);
-  } else {
-    this._page(path);
+  try {
+    if(this.env.replaceState.get()) {
+      this._page.replace(path);
+    } else {
+      this._page(path);
+    }
+  } catch (e) {
+    console.error("Malformed URI!", path, e);
   }
 };
 

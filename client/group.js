@@ -8,14 +8,22 @@ Group = function(router, options = {}, parent) {
   this.name = options.name;
   this.options = options;
 
-  this._triggersEnter = []; 
+  this._triggersEnter = this._triggersEnter || [];
   if (options.triggersEnter) {
-    this._triggersEnter.concat(options.triggersEnter);
+    if (!_.isArray(options.triggersEnter)) {
+      options.triggersEnter = [options.triggersEnter];
+    }
+    this._triggersEnter = this._triggersEnter.concat(options.triggersEnter);
   }
-  this._triggersExit = [];
-  if (options._triggersExit) {
-    this._triggersExit.concat(options._triggersExit);
+
+  this._triggersExit = this._triggersExit || [];
+  if (options.triggersExit) {
+    if (!_.isArray(options.triggersExit)) {
+      options.triggersExit = [options.triggersExit];
+    }
+    this._triggersExit = this._triggersExit.concat(options.triggersExit);
   }
+
   this._subscriptions = options.subscriptions || Function.prototype;
 
   this.parent = parent;

@@ -1,12 +1,12 @@
 // a set of utility functions for triggers
 
-Triggers = {};
+const Triggers = {};
 
 // Apply filters for a set of triggers
 // @triggers - a set of triggers
 // @filter - filter with array fields with `only` and `except`
 //           support only either `only` or `except`, but not both
-Triggers.applyFilters = function(triggers, filter) {
+Triggers.applyFilters = (triggers, filter) => {
   if(!(triggers instanceof Array)) {
     triggers = [triggers];
   }
@@ -42,7 +42,7 @@ Triggers.applyFilters = function(triggers, filter) {
 //  @triggers - a set of triggers
 //  @names - list of route names to be bound (trigger runs only for these names)
 //  @negate - negate the result (triggers won't run for above names)
-Triggers.createRouteBoundTriggers = function(triggers, names, negate) {
+Triggers.createRouteBoundTriggers = (triggers, names, negate) => {
   const namesMap = {};
   _.each(names, (name) => {
     namesMap[name] = true;
@@ -68,7 +68,7 @@ Triggers.createRouteBoundTriggers = function(triggers, names, negate) {
 //  @context - context we need to pass (it must have the route)
 //  @redirectFn - function which used to redirect
 //  @after - called after if only all the triggers runs
-Triggers.runTriggers = function(triggers, context, redirectFn, after, data) {
+Triggers.runTriggers = (triggers, context, redirectFn, after, data) => {
   let abort = false;
   let inCurrentLoop = true;
   let alreadyRedirected = false;
@@ -108,3 +108,5 @@ Triggers.runTriggers = function(triggers, context, redirectFn, after, data) {
   inCurrentLoop = false;
   after();
 };
+
+export default Triggers;

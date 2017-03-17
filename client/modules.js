@@ -1,2 +1,4 @@
-page = require('page');
-qs   = require('qs');
+const page = require('page');
+const qs   = require('qs');
+
+export { page, qs };

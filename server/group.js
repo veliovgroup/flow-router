@@ -10,45 +10,49 @@ const makeTriggers = (base, triggers) => {
   return (base || []).concat(triggers);
 };
 
-Group = function(router, options = {}, parent) {
-  if (options.prefix && !/^\/.*/.test(options.prefix)) {
-    throw new Error('group\'s prefix must start with "/"');
+class Group {
+  constructor(router, options = {}, parent) {
+    if (options.prefix && !/^\/.*/.test(options.prefix)) {
+      throw new Error('group\'s prefix must start with "/"');
+    }
+
+    this._router = router;
+    this.prefix = options.prefix || '';
+    this.name = options.name;
+    this.options = options;
+
+    this._triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
+    this._triggersExit = makeTriggers(this._triggersExit, options.triggersExit);
+
+    this.parent = parent;
+    if (this.parent) {
+      this.prefix = parent.prefix + this.prefix;
+
+      this._triggersEnter = makeTriggers(this._triggersEnter, parent.triggersEnter);
+      this._triggersExit = makeTriggers(this._triggersExit, parent.triggersExit);
+    }
   }
 
-  this._router = router;
-  this.prefix = options.prefix || '';
-  this.name = options.name;
-  this.options = options;
+  route(pathDef, options = {}, group) {
+    if (!/^\/.*/.test(pathDef)) {
+      throw new Error('route\'s path must start with "/"');
+    }
 
-  this._triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
-  this._triggersExit = makeTriggers(this._triggersExit, options.triggersExit);
+    group = group || this;
+    pathDef = this.prefix + pathDef;
 
-  this.parent = parent;
-  if (this.parent) {
-    this.prefix = parent.prefix + this.prefix;
+    options.triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
+    options.triggersExit = makeTriggers(this._triggersExit, options.triggersExit);
 
-    this._triggersEnter = makeTriggers(this._triggersEnter, parent.triggersEnter);
-    this._triggersExit = makeTriggers(this._triggersExit, parent.triggersExit);
-  }
-};
-
-Group.prototype.route = function(pathDef, options = {}, group) {
-  if (!/^\/.*/.test(pathDef)) {
-    throw new Error('route\'s path must start with "/"');
+    return this._router.route(pathDef, options, group);
   }
 
-  group = group || this;
-  pathDef = this.prefix + pathDef;
+  group(options) {
+    const group = new Group(this._router, options, this);
+    group.parent = this;
 
-  options.triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
-  options.triggersExit = makeTriggers(this._triggersExit, options.triggersExit);
+    return group;
+  }
+}
 
-  return this._router.route(pathDef, options, group);
-};
-
-Group.prototype.group = function(options) {
-  const group = new Group(this._router, options, this);
-  group.parent = this;
-
-  return group;
-};
+export default Group;

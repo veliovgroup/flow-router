@@ -1,10 +1,13 @@
+import { Template } from 'meteor/templating';
+import { Blaze } from 'meteor/blaze';
+
 const requestAnimFrame = (() => {
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
     setTimeout(callback, 1000 / 60);
   };
 })();
 
-BlazeRenderer = class BlazeRenderer {
+class BlazeRenderer {
   constructor(rootEl) {
     this.rootEl = rootEl;
     this.old    = null;
@@ -67,4 +70,7 @@ BlazeRenderer = class BlazeRenderer {
       this.current.template = template;
     }
   }
-};
+}
+
+export default BlazeRenderer;
+

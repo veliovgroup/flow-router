@@ -1,140 +1,153 @@
-const Qs = require('qs');
+import Route from './route.js';
+import Group from './group.js';
+
+const qs = require('qs');
 const pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
 
-Router = function () {
-  this._routes = [];
-  this._routesMap = {};
-  this.subscriptions = Function.prototype;
+class Router {
+  constructor() {
+    this._routes = [];
+    this._routesMap = {};
+    this.subscriptions = Function.prototype;
 
-  // holds onRoute callbacks
-  this._onRouteCallbacks = [];
-};
+    // holds onRoute callbacks
+    this._onRouteCallbacks = [];
 
-Router.prototype.route = function(pathDef, options = {}) {
-  if (!/^\/.*/.test(pathDef)) {
-    throw new Error('route\'s path must start with "/"');
+    this.triggers = {
+      enter() {
+        // client only
+      },
+      exit() {
+        // client only
+      }
+    };
   }
 
-  const route = new Route(this, pathDef, options);
-  this._routes.push(route);
+  route(pathDef, options = {}) {
+    if (!/^\/.*/.test(pathDef)) {
+      throw new Error('route\'s path must start with "/"');
+    }
 
-  if (options.name) {
-    this._routesMap[options.name] = route;
+    const route = new Route(this, pathDef, options);
+    this._routes.push(route);
+
+    if (options.name) {
+      this._routesMap[options.name] = route;
+    }
+
+    this._triggerRouteRegister(route);
+    return route;
   }
 
-  this._triggerRouteRegister(route);
-  return route;
-};
-
-Router.prototype.group = function(options) {
-  return new Group(this, options);
-};
-
-Router.prototype.path = function(pathDef, fields = {}, queryParams) {
-  if (this._routesMap[pathDef]) {
-    pathDef = this._routesMap[pathDef].path;
+  group(options) {
+    return new Group(this, options);
   }
 
-  let path = pathDef.replace(pathRegExp, (key) => {
-    const firstRegexpChar = key.indexOf('(');
-    // get the content behind : and (\\d+/)
-    key = key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);
-    // remove +?*
-    key = key.replace(/[\+\*\?]+/g, '');
+  path(pathDef, fields = {}, queryParams) {
+    if (this._routesMap[pathDef]) {
+      pathDef = this._routesMap[pathDef].path;
+    }
 
-    return fields[key] || '';
-  });
+    let path = pathDef.replace(pathRegExp, (key) => {
+      const firstRegexpChar = key.indexOf('(');
+      // get the content behind : and (\\d+/)
+      key = key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);
+      // remove +?*
+      key = key.replace(/[\+\*\?]+/g, '');
 
-  path = path.replace(/\/\/+/g, '/'); // Replace multiple slashes with single slash
+      return fields[key] || '';
+    });
 
-  // remove trailing slash
-  // but keep the root slash if it's the only one
-  path = path.match(/^\/{1}$/) ? path : path.replace(/\/$/, '');
+    path = path.replace(/\/\/+/g, '/'); // Replace multiple slashes with single slash
 
-  const strQueryParams = Qs.stringify(queryParams || {});
-  if(strQueryParams) {
-    path += '?' + strQueryParams;
+    // remove trailing slash
+    // but keep the root slash if it's the only one
+    path = path.match(/^\/{1}$/) ? path : path.replace(/\/$/, '');
+
+    const strQueryParams = qs.stringify(queryParams || {});
+    if(strQueryParams) {
+      path += '?' + strQueryParams;
+    }
+
+    return path;
   }
 
-  return path;
-};
+  onRouteRegister(cb) {
+    this._onRouteCallbacks.push(cb);
+  }
 
-Router.prototype.onRouteRegister = function(cb) {
-  this._onRouteCallbacks.push(cb);
-};
+  _triggerRouteRegister(currentRoute) {
+    // We should only need to send a safe set of fields on the route
+    // object.
+    // This is not to hide what's inside the route object, but to show
+    // these are the public APIs
+    const routePublicApi = _.pick(currentRoute, 'name', 'pathDef', 'path');
+    routePublicApi.options = _.omit(currentRoute.options, ['triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name']);
 
-Router.prototype._triggerRouteRegister = function(currentRoute) {
-  // We should only need to send a safe set of fields on the route
-  // object.
-  // This is not to hide what's inside the route object, but to show
-  // these are the public APIs
-  const routePublicApi = _.pick(currentRoute, 'name', 'pathDef', 'path');
-  routePublicApi.options = _.omit(currentRoute.options, ['triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name']);
-
-  _.each(this._onRouteCallbacks, function(cb) {
-    cb(routePublicApi);
-  });
-};
+    _.each(this._onRouteCallbacks, function(cb) {
+      cb(routePublicApi);
+    });
+  }
 
 
-Router.prototype.go = function() {
-  // client only
-};
-
-
-Router.prototype.current = function() {
-  // client only
-};
-
-
-Router.prototype.triggers = {
-  enter() {
-    // client only
-  },
-  exit() {
+  go() {
     // client only
   }
-};
-
-Router.prototype.middleware = function() {
-  // client only
-};
 
 
-Router.prototype.getState = function() {
-  // client only
-};
+  current() {
+    // client only
+  }
+
+  middleware() {
+    // client only
+  }
 
 
-Router.prototype.getAllStates = function() {
-  // client only
-};
+  getState() {
+    // client only
+  }
 
 
-Router.prototype.setState = function() {
-  // client only
-};
+  getAllStates() {
+    // client only
+  }
 
 
-Router.prototype.removeState = function() {
-  // client only
-};
+  setState() {
+    // client only
+  }
 
 
-Router.prototype.clearStates = function() {
-  // client only
-};
+  removeState() {
+    // client only
+  }
 
 
-Router.prototype.ready = function() {
-  // client only
-};
+  clearStates() {
+    // client only
+  }
 
 
-Router.prototype.initialize = function() {
-  // client only
-};
+  ready() {
+    // client only
+  }
 
-Router.prototype.wait = function() {
-  // client only
-};
+
+  initialize() {
+    // client only
+  }
+
+  wait() {
+    // client only
+  }
+
+  url() {
+    // We need to remove the leading base path, or "/", as it will be inserted
+    // automatically by `Meteor.absoluteUrl` as documented in:
+    // http://docs.meteor.com/#/full/meteor_absoluteurl
+    return Meteor.absoluteUrl(this.path.apply(this, arguments).replace(new RegExp('^' + ('/' + (this._basePath || '') + '/').replace(/\/\/+/g, '/')), ''));
+  }
+}
+
+export default Router;

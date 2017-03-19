@@ -1,3 +1,4 @@
+import { FlowRouter, Route } from 'meteor/ostrio:flow-router-extra';
 Router = FlowRouter.Router;
 
 Tinytest.addAsync('Client - Router - define and go to route', function (test, next) {
@@ -620,7 +621,7 @@ function(test, done) {
     var rand = Random.id();
     setBasePath(simulatedBasePath);
 
-    Meteor.absoluteUrl.defaultOptions.rootUrl = 'http://example.com/flow'
+    Meteor.absoluteUrl.defaultOptions.rootUrl = 'http://example.com/flow';
     test.equal(FlowRouter.url('/' + rand), 'http://example.com/flow/' + rand);
   });
   resetBasePath();

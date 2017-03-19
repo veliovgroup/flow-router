@@ -1,3 +1,5 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 Tinytest.addAsync('Client - Router - subsReady - with no args - all subscriptions ready', function (test, next) {
   var rand = Random.id();
   FlowRouter.route('/' + rand, {
@@ -208,7 +210,7 @@ Tinytest.addAsync('Client - Router - subsReady - with args - same route two diff
     setTimeout(function() {
       test.isTrue(FlowRouter.subsReady());
       next();
-    }, 100)
+    }, 100);
   }, 100);
 });
 

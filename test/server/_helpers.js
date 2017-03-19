@@ -24,16 +24,22 @@ Meteor.publish('readyness', function (doIt) {
   }
 });
 
-InjectData = Package['meteorhacks:inject-data'].InjectData;
-var urlResolve = Npm.require('url').resolve;
-GetFRData = function GetFRData(path) {
-  var url = urlResolve(process.env.ROOT_URL, path);
-  // FastRender only servers if there is a accept header with html in it
-  var options  = {
-    headers: {'accept': 'html'}
+if (Package['meteorhacks:inject-data']) {
+  InjectData = Package['meteorhacks:inject-data'].InjectData;
+  var urlResolve = Npm.require('url').resolve;
+  GetFRData = function GetFRData(path) {
+    var url = urlResolve(process.env.ROOT_URL, path);
+    // FastRender only servers if there is a accept header with html in it
+    var options  = {
+      headers: {'accept': 'html'}
+    };
+    var res = HTTP.get(url, options);
+    if (res.content) {
+      var encodedData = res.content.match(/data">(.*)<\/script/);
+      if (encodedData && encodedData[1]) {
+        return InjectData._decode(encodedData[1])['fast-render-data'];
+      }
+    }
+    return {collectionData: {'fast-render-coll': {}}};
   };
-  var res = HTTP.get(url, options);
-
-  var encodedData = res.content.match(/data">(.*)<\/script/)[1];
-  return InjectData._decode(encodedData)['fast-render-data'];
 }

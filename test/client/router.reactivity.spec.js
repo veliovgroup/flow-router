@@ -1,16 +1,18 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 Tinytest.addAsync(
 'Client - Router - Reactivity - detectChange only once', 
 function (test, done) {
   var route = "/" + Random.id();
   var name = Random.id();
   FlowRouter.route(route, {name: name});
-  
+
   var ranCount = 0;
   var pickedId = null;
   var c = Tracker.autorun(function() {
     ranCount++;
     pickedId = FlowRouter.getQueryParam("id");
-    if(pickedId) {
+    if (pickedId) {
       test.equal(pickedId, "hello");
       test.equal(ranCount, 2);
       c.stop();

@@ -1,3 +1,5 @@
+import { FlowRouter, Group } from 'meteor/ostrio:flow-router-extra';
+
 Tinytest.add('Client - Group - validate path definition', function (test, next) {
   // path & prefix must start with '/'
   test.throws(function() {
@@ -89,7 +91,7 @@ Tinytest.addAsync('Client - Group - set and retrieve group name', function (test
 });
 
 Tinytest.add('Client - Group - expose group options on a route', function (test) {
-  var pathDef = "/" + Random.id();
+  var pathDef = '/' + Random.id();
   var name = Random.id();
   var groupName = Random.id();
   var data = {aa: 10};

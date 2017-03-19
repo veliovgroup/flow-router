@@ -10,7 +10,7 @@ Tinytest.add('Server - Fast Render - fast render supported route', function (tes
 Tinytest.add('Server - Fast Render - fast render supported route with params', function (test) {
   var expectedFastRenderCollData = [
     [{
-      _id: "one", 
+      _id: "one",
       params: {id: 'the-id'},
       queryParams: {aa: "20"}
     }]

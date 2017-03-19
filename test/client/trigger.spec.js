@@ -1,3 +1,5 @@
+import { FlowRouter, Route } from 'meteor/ostrio:flow-router-extra';
+
 Tinytest.addAsync('Client - Triggers - global enter triggers', function(test, next) {
   var rand = Random.id(), rand2 = Random.id();
   var log = [];
@@ -455,7 +457,7 @@ Tinytest.addAsync('Client - Triggers - redirect from exit', function(test, next)
 
   setTimeout(function() {
     FlowRouter.go('/' + rand2);
-    
+
     setTimeout(function() {
       test.equal(log, [1, 3]);
       next();
@@ -471,8 +473,8 @@ Tinytest.addAsync('Client - Triggers - redirect to external URL fails', function
   FlowRouter.route('/' + rand, {
     triggersEnter: [function(context, redirect) {
       test.throws(function() {
-          redirect("http://example.com/")
-      }, "Redirects to URLs outside of the app are not supported")
+        redirect("http://example.com/");
+      }, "Redirects to URLs outside of the app are not supported");
     }],
     action: function(_params) {
       log.push(1);
@@ -484,7 +486,7 @@ Tinytest.addAsync('Client - Triggers - redirect to external URL fails', function
   FlowRouter.route('/' + rand2, {
     triggersEnter: [function(context, redirect) {
       test.throws(function() {
-          redirect("https://example.com/")
+        redirect("https://example.com/");
       })
     }],
     action: function(_params) {

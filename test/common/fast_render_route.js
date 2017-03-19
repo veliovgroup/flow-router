@@ -1,3 +1,5 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 FastRenderColl = new Mongo.Collection('fast-render-coll');
 
 FlowRouter.route('/the-fast-render-route', {

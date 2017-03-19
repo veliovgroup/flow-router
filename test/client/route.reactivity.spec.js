@@ -1,5 +1,5 @@
+import { FlowRouter, Route } from 'meteor/ostrio:flow-router-extra';
 Route = FlowRouter.Route;
-
 
 Tinytest.addAsync('Client - Route - Reactivity - getParam', function (test, done) {
   var r = new Route();
@@ -11,7 +11,7 @@ Tinytest.addAsync('Client - Route - Reactivity - getParam', function (test, done
       Meteor.defer(done);
     }
   });
-  
+
   setTimeout(function() {
     var context = {
       params: {id: "hello"},
@@ -32,7 +32,7 @@ Tinytest.addAsync('Client - Route - Reactivity - getParam on route close', funct
       Meteor.defer(done);
     }
   });
-  
+
   setTimeout(function() {
     closeTriggered = true;
     r.registerRouteClose();
@@ -49,7 +49,7 @@ Tinytest.addAsync('Client - Route - Reactivity - getQueryParam', function (test,
       Meteor.defer(done);
     }
   });
-  
+
   setTimeout(function() {
     var context = {
       params: {},
@@ -70,7 +70,7 @@ Tinytest.addAsync('Client - Route - Reactivity - getQueryParam on route close', 
       Meteor.defer(done);
     }
   });
-  
+
   setTimeout(function() {
     closeTriggered = true;
     r.registerRouteClose();
@@ -91,7 +91,7 @@ Tinytest.addAsync('Client - Route - Reactivity - getRouteName rerun when route c
       Meteor.defer(done);
     }
   });
-  
+
   setTimeout(function() {
     closeTriggered = true;
     r.registerRouteClose();
@@ -144,7 +144,7 @@ Tinytest.addAsync('Client - Route - Reactivity - watchPathChange when routeClose
     params: {},
     queryParams: {}
   };
-  
+
   setTimeout(function() {
     r.registerRouteClose();
     setTimeout(checkAfterRouteClose, 10);

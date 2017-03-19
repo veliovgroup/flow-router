@@ -1,5 +1,7 @@
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 Tinytest.add('Common - Group - expose group options', function (test) {
-  var pathDef = "/" + Random.id();
+  var pathDef = '/' + Random.id();
   var name = Random.id();
   var data = {aa: 10};
   var layout = 'blah';

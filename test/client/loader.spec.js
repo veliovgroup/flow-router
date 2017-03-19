@@ -1,5 +1,6 @@
-Router = FlowRouter.Router;
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
+Router = FlowRouter.Router;
 
 Tinytest.add('Client - import page.js', function (test) {
   test.isTrue(!!Router.prototype._page);

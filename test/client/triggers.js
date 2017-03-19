@@ -1,3 +1,5 @@
+import { Triggers } from 'meteor/ostrio:flow-router-extra';
+
 Tinytest.addAsync(
 'Triggers - runTriggers - run all and after',
 function(test, done) {
@@ -16,7 +18,7 @@ function(test, done) {
   var url = "http://google.com";
   var triggers = MakeTriggers(2, store);
   triggers.splice(1, 0, function(context, redirect) {
-    redirect(url); 
+    redirect(url);
   });
 
   Triggers.runTriggers(triggers, null, function(u) {
@@ -34,7 +36,7 @@ function(test, done) {
   var triggers = MakeTriggers(2, store);
   triggers.splice(1, 0, function(context, redirect) {
     try {
-      redirect(); 
+      redirect();
     } catch(ex) {
       test.isTrue(/requires an URL/.test(ex.message));
       test.equal(store, [0]);
@@ -56,7 +58,7 @@ function(test, done) {
   triggers.splice(1, 0, function(context, redirect) {
     setTimeout(function() {
       try {
-        redirect(url); 
+        redirect(url);
       } catch(ex) {
         test.isTrue(/sync/.test(ex.message));
         test.equal(store, [0, 1]);
@@ -80,7 +82,7 @@ function(test, done) {
   var redirectCalled = false;
 
   triggers.splice(1, 0, function(context, redirect) {
-    redirect(url); 
+    redirect(url);
     try {
       redirect(url);
     } catch(ex) {
@@ -290,7 +292,7 @@ function MakeTriggers(count, store) {
     });
   }
 
-  for(var lc=0; lc<count; lc++) {
+  for(var lc = 0; lc < count; lc++) {
     addTrigger(lc);
   }
   return triggers;

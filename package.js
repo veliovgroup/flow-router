@@ -1,13 +1,15 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '2.12.9',
+  version: '3.0.0',
   git: 'https://github.com/VeliovGroup/flow-router'
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('METEOR@1.3');
+  api.versionsFrom('METEOR@1.4');
   api.use([
+    'modules',
+    'ecmascript',
     'blaze',
     'templating',
     'modules',
@@ -15,9 +17,11 @@ Package.onUse(function (api) {
     'tracker',
     'reactive-dict',
     'reactive-var',
-    'ejson',
-    'ecmascript'
-  ]);
+    'ejson'
+  ], ['client', 'server']);
+
+  api.mainModule('client/_init.js', 'client');
+  api.mainModule('server/_init.js', 'server');
 
   api.addFiles([
     'client/yield.html',
@@ -28,23 +32,18 @@ Package.onUse(function (api) {
     'client/group.js',
     'client/route.js'
   ], 'client');
-  api.mainModule('client/_init.js', 'client');
 
   api.addFiles([
     'server/router.js',
     'server/group.js',
     'server/route.js'
   ], 'server');
-  api.mainModule('server/_init.js', 'server');
-  api.addFiles('lib/router.js', ['client', 'server']);
 
-  api.export('FlowRouter');
-  // Uncomment before running tests
-  // api.export('Triggers');
+  api.addFiles('lib/router.js', ['client', 'server']);
 });
 
 Package.onTest(function(api) {
-  api.use(['tinytest', 'underscore', 'reactive-var', 'tracker', 'check', 'mongo', 'http', 'random', 'ostrio:flow-router-extra', 'meteorhacks:fast-render', 'meteorhacks:inject-data', 'tmeasday:html5-history-api']);
+  api.use(['ecmascript', 'tinytest', 'underscore', 'reactive-var', 'tracker', 'check', 'mongo', 'http', 'random', 'tmeasday:html5-history-api', 'meteorhacks:fast-render', 'meteorhacks:inject-data', 'ostrio:flow-router-extra']);
 
   api.addFiles('test/common/fast_render_route.js', ['client', 'server']);
 
@@ -71,5 +70,5 @@ Package.onTest(function(api) {
 
 Npm.depends({
   'page': '1.7.1',
-  'qs': '6.3.1'
+  'qs': '6.4.0'
 });

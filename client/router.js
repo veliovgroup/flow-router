@@ -230,12 +230,13 @@ class Router {
       path += '?' + strQueryParams;
     }
 
+    path = path.replace(/\/\/+/g, '/');
     return path;
   }
 
   go(pathDef, fields, queryParams) {
     const path = this.path(pathDef, fields, queryParams);
-    if (path === this._current.path) {
+    if (!this.env.reload.get() && path === this._current.path) {
       return;
     }
 
@@ -407,7 +408,7 @@ class Router {
         if (!self.env.reload.get() && self._current.path === path) {
           return;
         }
-
+        path = path.replace(/\/\/+/g, '/');
         original.call(this, path, state, dispatch, push);
       };
     });

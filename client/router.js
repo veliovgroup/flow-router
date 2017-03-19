@@ -235,6 +235,9 @@ class Router {
 
   go(pathDef, fields, queryParams) {
     const path = this.path(pathDef, fields, queryParams);
+    if (path === this._current.path) {
+      return;
+    }
 
     try {
       if (this.env.replaceState.get()) {

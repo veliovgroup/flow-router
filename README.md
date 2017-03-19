@@ -46,18 +46,22 @@ Original FlowRouter's documentation:
 
 ## FlowRouter Extra:
 ### ES6 Import
+__Since v3.0.0__ `FlowRouter` __variable is not exported into global-scope, use__ `import`
 ```jsx
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+// Full list of available classes:
+// import { FlowRouter, Router, Route, Group, Triggers, BlazeRenderer } from 'meteor/ostrio:flow-router-extra';
 ```
 
 ### Preload images
 `waitOnResources` hook is *Function* passed as property into router configuration object. It is called with three arguments `params`, `queryParams` and `data`, same as `action`. You must return data in next form: `{images: [/*array of strings with URL to images*/]}`.
 
 Per route usage:
-```javascript
+```jsx
 FlowRouter.route('/images', {
   name: 'images',
-  waitOnResources: function (params, queryParams, data) {
+  waitOnResources(params, queryParams, data) {
     return {
       images:[
         '/imgs/1.png',
@@ -66,16 +70,16 @@ FlowRouter.route('/images', {
       ]
     };
   },
-  whileWaiting: function (params, queryParams) { // <- Render template with spinner
+  whileWaiting(params, queryParams) { // <- Render template with spinner
     this.render('_layout', '_loading');
   }
 });
 ```
 
 Globally loaded images. Useful to preload background images and other globally used resources:
-```javascript
+```jsx
 FlowRouter.globals.push({
-  waitOnResources: function() {
+  waitOnResources() {
     return {
       images: [
         '/imgs/background/jpg',
@@ -93,10 +97,10 @@ FlowRouter.globals.push({
 *Why Images and Other resources is separated? What the difference?* - Images can be prefetched via `Image()` constructor, all other resources uses `XMLHttpRequest` to cache resources. Thats also why important to make sure requested URLs returns cacheble responses
 
 Per route usage:
-```javascript
+```jsx
 FlowRouter.route('/', {
   name: 'index',
-  waitOnResources: function (params, queryParams, data) {
+  waitOnResources(params, queryParams, data) {
     return {
       other:[
         '/fonts/OpenSans-Regular.eot',
@@ -107,16 +111,16 @@ FlowRouter.route('/', {
       ]
     };
   },
-  whileWaiting: function (params, queryParams) { // <- Render template with spinner
+  whileWaiting(params, queryParams) { // <- Render template with spinner
     this.render('_layout', '_loading');
   }
 });
 ```
 
 Globally loaded resources. Useful to prefetch Fonts and other globally used resources:
-```javascript
+```jsx
 FlowRouter.globals.push({
-  waitOnResources: function() {
+  waitOnResources() {
     return {
       other:[
         '/fonts/OpenSans-Regular.eot',
@@ -133,10 +137,10 @@ FlowRouter.globals.push({
 
 ### waitOn hook
 `waitOn` hook is *Function* passed as property into route configuration object. It is called with two arguments `params` and `queryParams`, same as `action`. Works like a charm with both original Meteor's [`Meteor.subscribe`](http://docs.meteor.com/#/full/meteor_subscribe) and [`subs-manager` package](https://github.com/kadirahq/subs-manager). Function __must__ return subscription handler, *Array* of subscription handlers or Tracker Computation object.
-```javascript
+```jsx
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function (params, queryParams) {
+  waitOn(params, queryParams) {
     return [subsManager.subscribe('post', params._id), Meteor.subscribe('suggestedPosts', params._id)];
   }
 });
@@ -144,12 +148,12 @@ FlowRouter.route('/post/:_id', {
 
 ### waitOn hook with reactive data
 Use reactive data sources inside `waitOn` hook. To make `waitOn` rerun on reactive data changes, wrap it to `Tracker.autorun` and return Tracker Computation object or an *Array* of Tracker Computation objects. Note the third argument of `waitOn` is `ready` callback.
-```javascript
+```jsx
 FlowRouter.route('/posts', {
   name: 'post',
-  waitOn: function (params, queryParams, ready) {
-    return Tracker.autorun(function() {
-      ready(function() {
+  waitOn(params, queryParams, ready) {
+    return Tracker.autorun(() => {
+      ready(() => {
         return Meteor.subscribe('posts', search.get(), page.get());
       });
     });
@@ -158,18 +162,19 @@ FlowRouter.route('/posts', {
 ```
 
 With multiple Trackers:
-```javascript
+```jsx
 FlowRouter.route('/posts', {
   name: 'post',
-  waitOn: function (params, queryParams, ready) {
-    var tracks = [];
-    tracks.push(Tracker.autorun(function() {
-      ready(function() {
+  waitOn(params, queryParams, ready) {
+    const tracks = [];
+    tracks.push(Tracker.autorun(() => {
+      ready(() => {
         return Meteor.subscribe('posts', search.get(), page.get());
       });
     }));
-    tracks.push(Tracker.autorun(function() {
-      ready(function() {
+
+    tracks.push(Tracker.autorun(() => {
+      ready(() => {
         return Meteor.subscribe('comments', postId.get());
       });
     }));
@@ -180,13 +185,13 @@ FlowRouter.route('/posts', {
 
 ### whileWaiting hook
 `whileWaiting` hook is capable for time between user hits your page and all subscriptions from `waitOn` hook is ready. It is called with two arguments `params` and `queryParams`, same as `action`. Let's render `_loading` template in it. This hook also follows main `flow-router` ideology - loading hook not depend from layout or anything else. You may run any JavaScript code inside this hook, it is not limited to loading template.
-```javascript
+```jsx
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function (params) {
+  waitOn(params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  whileWaiting: function (params, queryParams) {
+  whileWaiting(params, queryParams) {
     this.render('_layout', '_loading');
   }
 });
@@ -194,16 +199,16 @@ FlowRouter.route('/post/:_id', {
 
 ### data hook
 `data` hook is capable for time after `waitOn` hook is ready and `action` is begin run. It is called with two arguments `params` and `queryParams`, same as `action`. This hook must return *Object*, *Mongo.Cursor* (or array of it) or falsy value.
-```javascript
+```jsx
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function (params) {
+  waitOn(params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  whileWaiting: function () {
+  whileWaiting() {
     this.render('_layout', '_loading');
   },
-  data: function (params, queryParams) {
+  data(params, queryParams) {
     return PostsCollection.findOne({_id: params._id});
   }
 });
@@ -211,16 +216,16 @@ FlowRouter.route('/post/:_id', {
 
 
 When you having `data` hook in a route, - returned data will be passed to `action` as third argument. So you can pass fetched data into template:
-```javascript
+```jsx
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  action: function (params, queryParams, post) {
+  action(params, queryParams, post) {
     this.render('_layout', 'post', {post: post});
   },
-  waitOn: function (params) {
+  waitOn(params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  data: function (params, queryParams) {
+  data(params, queryParams) {
     return PostsCollection.findOne({_id: params._id});
   }
 });
@@ -235,16 +240,16 @@ FlowRouter.route('/post/:_id', {
 
 ### onNoData hook
 `onNoData` hook is triggered instead of `action` in case when `data` hook returned falsy value. It is called with two arguments `params` and `queryParams`, same as `action`. Let's render `_404` template in it. You can run any JavaScript code inside it, for example instead of rendering *404* template you can redirect user somewhere.
-```javascript
+```jsx
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function (params) {
+  waitOn(params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  data: function (params) {
+  data(params) {
     return PostsCollection.findOne({_id: params._id});
   },
-  onNoData: function (params, queryParams){
+  onNoData(params, queryParams){
     this.render('_layout', '_404');
   }
 });
@@ -252,16 +257,16 @@ FlowRouter.route('/post/:_id', {
 
 ### Data in other hooks
 Returned data from `data` hook, will be also passed into all `triggersEnter` hooks as fourth argument.
-```javascript
+```jsx
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  waitOn: function (params) {
+  waitOn(params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  data: function (params) {
+  data(params) {
     return PostsCollection.findOne({_id: params._id});
   },
-  triggersEnter: [function (context, redirect, stop, data){
+  triggersEnter: [(context, redirect, stop, data) => {
     console.log(data);
   }]
 });
@@ -334,30 +339,30 @@ FlowRouter.route('/post/:_id', {
 </template>
 ```
 
-```javascript
+```jsx
 // routes.js
 FlowRouter.route('/posts', {
   name: 'posts',
-  action: function (params, queryParams, posts) {
+  action(params, queryParams, posts) {
     this.render('_layout', 'posts', posts);
   },
-  waitOn: function () {
+  waitOn() {
     return [Meteor.subscribe('posts')];
   },
-  data: function () {
+  data() {
     return PostsCollection.find({});
   }
 });
 
 FlowRouter.route('/post/:_id', {
   name: 'posts',
-  action: function (params, queryParams, post) {
+  action(params, queryParams, post) {
     this.render('_layout', 'post', post);
   },
-  waitOn: function (params) {
+  waitOn(params) {
     return [Meteor.subscribe('post', params._id)];
   },
-  data: function (params) {
+  data(params) {
     return PostsCollection.findOne({_id: params._id});
   }
 });
@@ -365,52 +370,47 @@ FlowRouter.route('/post/:_id', {
 
 ### Suggested usage
 As example we took simple post route:
-```javascript
+```jsx
 // meteorhacks:subs-manager package
-var subsManager = new SubsManager();
+const subsManager = new SubsManager();
 
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  action: function (params, queryParams, data) {
+  action(params, queryParams, data) {
     // Pass data to template's context
     // No need to create helpers
     this.render('_layout', 'post', {post: data});
   },
-  waitOn: function (params) {
+  waitOn(params) {
     // meteorhacks:subs-manager package
     return [subsManager.subscribe('post', params._id)];
   },
-  whileWaiting: function () {
+  whileWaiting() {
     this.render('_layout', '_loading');
   },
-  data: function (params) {
+  data(params) {
     return PostsCollection.findOne({_id: params._id});
   },
-  onNoData: function (){
+  onNoData(){
     this.render('_layout', '_404');
   },
   // ostrio:flow-router-title package
-  title: function (params, queryParams, post) {
+  title(params, queryParams, post) {
     return (post) ? post.title : '404: Page not found';
   }
 });
 
 FlowRouter.notFound = {
   title: '404: Page not found',
-  action: function () {
+  action() {
     this.render('_layout', '_404');
   }
 };
 
 // jazeee:spiderable-longer-timeout package
-FlowRouter.triggers.enter([function () {
+FlowRouter.triggers.enter([() => {
   Meteor.isReadyForSpiderable = true;
 }]);
-
-// meteorhacks:fast-render package
-FastRender.route('/post/:_id', function (params) {
-  this.subscribe('post', params._id);
-});
 ```
 
 ```html
@@ -425,14 +425,13 @@ FastRender.route('/post/:_id', function (params) {
 This package tested and recommended to use with next packages:
  - [kadira:blaze-layout](https://github.com/kadirahq/blaze-layout) - Render layout template and pass data to UI
  - [meteorhacks:subs-manager](https://github.com/kadirahq/subs-manager) - Manage subscriptions with caching
- - [meteorhacks:fast-render](https://github.com/kadirahq/fast-render) - Pre-fetch collection's data on server-side
  - [jazeee:spiderable](https://github.com/jazeee/jazeee-meteor-spiderable) - Making your pages accessible for crawlers
  - [ostrio:flow-router-title](https://github.com/VeliovGroup/Meteor-flow-router-title) - Reactive page title (`document.title`)
  - [ostrio:flow-router-meta](https://github.com/VeliovGroup/Meteor-flow-router-meta) - Reactive `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
  - [appcache](https://github.com/meteor/meteor/wiki/AppCache) - Making your application available offline
 
 __Note:__ *if you're using any package which requires original FR namespace, throws an error, you can solve it with next code:*
-```js
+```jsx
 // in /lib/ directory
 Package['kadira:flow-router'] = Package['ostrio:flow-router-extra'];
 ```

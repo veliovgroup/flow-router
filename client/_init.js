@@ -1,8 +1,10 @@
-import Router from './router.js';
-import Route from './route.js';
-import Group from './group.js';
-import Triggers from './triggers.js';
+import { Meteor }    from 'meteor/meteor';
+import Router        from './router.js';
+import Route         from './route.js';
+import Group         from './group.js';
+import Triggers      from './triggers.js';
 import BlazeRenderer from './renderer.js';
+import helpersInit   from './active.route.js';
 
 const FlowRouter = new Router();
 FlowRouter.Router = Router;
@@ -15,4 +17,6 @@ Meteor.startup(() => {
   }
 });
 
-export { FlowRouter, Router, Route, Group, Triggers, BlazeRenderer };
+const RouterHelpers = helpersInit(FlowRouter);
+
+export { FlowRouter, Router, Route, Group, Triggers, BlazeRenderer, RouterHelpers };

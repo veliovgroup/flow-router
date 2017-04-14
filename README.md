@@ -3,8 +3,6 @@ FlowRouter Extra
 
 Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
 
-Unfortunately FlowRouter has very close API, so there is no way to extend it without digging into the core, and creating separate package, sorry for this.
-
 ## Installation
 ```shell
 meteor add ostrio:flow-router-extra
@@ -12,7 +10,10 @@ meteor add ostrio:flow-router-extra
 
 ## TOC
 FlowRouter Extra:
+* Up-to-date dependencies
+* Compatibility with latest Meteor release
 * [ES6 Import](https://github.com/VeliovGroup/flow-router#es6-import) - Support for `.jsx` and `ecmascript` modules/imports
+* [Template Helpers](https://github.com/VeliovGroup/flow-router#template-helpers) - `isActiveRoute`, `isActivePath`, `urlFor`, `pathFor`, `isSubReady`, `currentRouteName`, `param` and many more useful helpers
 * [Preload Images](https://github.com/VeliovGroup/flow-router#preload-images) - "Prefetch" images before displaying Template
 * [Preload Resources](https://github.com/VeliovGroup/flow-router#preload-resources) - "Prefetch" resources, like: CSS, JS, Fonts, etc. before displaying Template
 * [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook) - Wait for all subscriptions is ready
@@ -51,7 +52,218 @@ __Since v3.0.0__ `FlowRouter` __variable is not exported into global-scope, use_
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 // Full list of available classes:
-// import { FlowRouter, Router, Route, Group, Triggers, BlazeRenderer } from 'meteor/ostrio:flow-router-extra';
+// import { FlowRouter, Router, Route, Group, Triggers, BlazeRenderer, RouterHelpers } from 'meteor/ostrio:flow-router-extra';
+```
+
+### Template Helpers
+Original code was taken from [`zimme:active-route`](https://github.com/meteor-activeroute/legacy) and [`arillo:flow-router-helpers`](https://github.com/arillo/meteor-flow-router-helpers).
+
+##### `isActiveRoute`
+
+Template helper to check if the supplied route name matches the currently active
+route's name.
+
+Returns either a configurable `String`, which defaults to `'active'`, or
+`false`.
+
+```handlebars
+<li class="{{isActiveRoute 'home'}}">...</li>
+<li class="{{isActiveRoute name='home'}}">...</li>
+<li class="{{isActiveRoute regex='home|dashboard'}}">...</li>
+{{#if isActiveRoute 'home'}}
+  <span>Show only if 'home' is the current route's name</span>
+{{/if}}
+{{#if isActiveRoute regex='^products'}}
+  <span>Show only if the current route's name begins with 'products'</span>
+{{/if}}
+
+<li class="{{isActiveRoute class='is-selected' name='home'}}">...</li>
+<li class="{{isActiveRoute 'home' class='is-selected'}}">...</li>
+```
+
+##### `isActivePath`
+
+Template helper to check if the supplied path matches the currently active
+route's path.
+
+Returns either a configurable `String`, which defaults to `'active'`, or
+`false`.
+
+```handlebars
+<li class="{{isActivePath '/home'}}">...</li>
+<li class="{{isActivePath path='/home'}}">...</li>
+<li class="{{isActivePath regex='home|dashboard'}}">...</li>
+{{#if isActivePath '/home'}}
+  <span>Show only if '/home' is the current route's path</span>
+{{/if}}
+{{#if isActivePath regex='^\\/products'}}
+  <span>Show only if current route's path begins with '/products'</span>
+{{/if}}
+
+<li class="{{isActivePath class='is-selected' path='/home'}}">...</li>
+<li class="{{isActivePath '/home' class='is-selected'}}">...</li>
+```
+
+##### `isNotActiveRoute`
+
+Template helper to check if the supplied route name doesn't match the currently
+active route's name.
+
+Returns either a configurable `String`, which defaults to `'disabled'`, or
+`false`.
+
+```handlebars
+<li class="{{isNotActiveRoute 'home'}}">...</li>
+<li class="{{isNotActiveRoute name='home'}}">...</li>
+<li class="{{isNotActiveRoute regex='home|dashboard'}}">...</li>
+{{#if isNotActiveRoute 'home'}}
+  <span>Show only if 'home' isn't the current route's name</span>
+{{/if}}
+{{#if isNotActiveRoute regex='^products'}}
+  <span>
+    Show only if the current route's name doesn't begin with 'products'
+  </span>
+{{/if}}
+
+<li class="{{isNotActiveRoute class='is-disabled' name='home'}}">...</li>
+<li class="{{isNotActiveRoute 'home' class='is-disabled'}}">...</li>
+```
+
+##### `isNotActivePath`
+
+Template helper to check if the supplied path doesn't match the currently active route's path.
+
+Returns either a configurable `String`, which defaults to `'disabled'`, or `false`.
+
+```handlebars
+<li class="{{isNotActivePath '/home'}}">...</li>
+<li class="{{isNotActivePath path='/home'}}">...</li>
+<li class="{{isNotActivePath regex='home|dashboard'}}">...</li>
+{{#if isNotActivePath '/home'}}
+  <span>Show only if '/home' isn't the current route's path</span>
+{{/if}}
+{{#if isNotActivePath regex='^\\/products'}}
+  <span>Show only if current route's path doesn't begin with '/products'</span>
+{{/if}}
+
+<li class="{{isNotActivePath class='is-disabled' path='/home'}}">...</li>
+<li class="{{isNotActivePath '/home' class='is-disabled'}}">...</li>
+```
+
+#### Arguments
+
+The following can be used by as arguments in `isNotActivePath`, `isNotActiveRoute`, `isActivePath` and `isActiveRoute` helpers.
+
+* Data context, Optional. `String` or `Object` with `name`, `path` or `regex`
+* `name` {*String*} - Only available for `isActiveRoute` and `isNotActiveRoute`
+* `path` {*String*} - Only available for `isActivePath` and `isNotActivePath`
+* `regex` {*String|RegExp*}
+
+
+##### `pathFor`
+
+Used to build a path to your route. First parameter can be either the path definition or name you assigned to the route. After that you can pass the params needed to construct the path. Query parameters can be passed with the `query` parameter. Hash is supported via `hash` parameter.
+
+```handlebars
+<a href="{{pathFor '/post/:id' id=_id}}">Link to post</a>
+<a href="{{pathFor 'postRouteName' id=_id}}">Link to post</a>
+<a href="{{pathFor '/post/:id/comments/:cid' id=_id cid=comment._id}}">Link to comment in post</a>
+<a href="{{pathFor '/post/:id/comments/:cid' id=_id hash=comment._id}}">Jump to comment</a>
+<a href="{{pathFor '/post/:id/comments/:cid' id=_id cid=comment._id query='back=yes&more=true'}}">Link to comment in post with query params</a>
+```
+
+##### `urlFor`
+
+Same as pathFor, returns absolute URL.
+
+```handlebars
+{{urlFor '/post/:id' id=_id}}
+```
+
+##### `linkTo`
+
+Custom content block for creating a link
+
+```handlebars
+{{#linkTo '/posts/'}}
+  Go to posts
+{{/linkTo}}
+```
+
+will return ```<a href="/posts/">Go to posts</a>```
+
+##### `param`
+
+Returns the value for a url parameter
+
+```handlebars
+<div>ID of this post is <em>{{param 'id'}}</em></div>
+```
+
+##### `queryParam`
+
+Returns the value for a query parameter
+
+```handlebars
+<input placeholder="Search" value="{{queryParam 'query'}}">
+```
+
+##### `currentRouteName`
+
+Returns the name of the current route
+
+```handlebars
+<div class={{currentRouteName}}>
+  ...
+</div>
+```
+
+##### `currentRouteOption`
+
+This adds support to get options from flow router
+
+```javascript
+FlowRouter.route('name', {
+  name: 'routeName',
+  action() {
+    this.render('layoutTemplate', 'main');
+  },
+  coolOption: "coolOptionValue"
+});
+```
+
+```handlebars
+<div class={{currentRouteOption 'coolOption'}}>
+  ...
+</div>
+```
+
+#### Javascript Usage
+```jsx
+import { RouterHelpers } from 'meteor/ostrio:flow-router-extra';
+
+RouterHelpers.name('home');
+// Returns true if current route's name is 'home'.
+RouterHelpers.name(new RegExp('home|dashboard'));
+// Returns true if current route's name contains 'home' or 'dashboard'.
+RouterHelpers.name(/^products/);
+// Returns true if current route's name starts with 'products'.
+RouterHelpers.path('/home');
+// Returns true if current route's path is '/home'.
+RouterHelpers.path(new RegExp('users'));
+// Returns true if current route's path contains 'users'.
+RouterHelpers.path(/\/edit$/i);
+// Returns true if current route's path ends with '/edit', matching is
+// case-insensitive
+
+RouterHelpers.pathFor('/post/:id', {id: '12345'});
+
+RouterHelpers.configure({
+  activeClass: 'active',
+  caseSensitive: true,
+  disabledClass: 'disabled',
+  regex: 'false'
+});
 ```
 
 ### Preload images

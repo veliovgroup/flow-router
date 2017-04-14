@@ -1,10 +1,11 @@
-const makeTriggers = (base, triggers) => {
+import { _ } from 'meteor/underscore';
+
+const makeTriggers = (base, _triggers) => {
+  let triggers = _triggers || [];
   if (triggers) {
     if (!_.isArray(triggers)) {
       triggers = [triggers];
     }
-  } else {
-    triggers = [];
   }
 
   return (base || []).concat(triggers);
@@ -33,13 +34,13 @@ class Group {
     }
   }
 
-  route(pathDef, options = {}, group) {
-    if (!/^\/.*/.test(pathDef)) {
+  route(_pathDef, options = {}, _group) {
+    if (!/^\/.*/.test(_pathDef)) {
       throw new Error('route\'s path must start with "/"');
     }
 
-    group = group || this;
-    pathDef = this.prefix + pathDef;
+    const group = _group || this;
+    const pathDef = this.prefix + _pathDef;
 
     options.triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
     options.triggersExit = makeTriggers(this._triggersExit, options.triggersExit);

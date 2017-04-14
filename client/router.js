@@ -1,4 +1,8 @@
 import { FlowRouter, Route, Group, Triggers, BlazeRenderer } from './_init.js';
+import { _ }        from 'meteor/underscore';
+import { EJSON }    from 'meteor/ejson';
+import { Meteor }   from 'meteor/meteor';
+import { Tracker }  from 'meteor/tracker';
 import { page, qs } from './modules.js';
 
 const pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;

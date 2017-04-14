@@ -1,5 +1,7 @@
-import Route from './route.js';
-import Group from './group.js';
+import { _ }      from 'meteor/underscore';
+import Route      from './route.js';
+import Group      from './group.js';
+import { Meteor } from 'meteor/meteor';
 
 const qs = require('qs');
 const pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;

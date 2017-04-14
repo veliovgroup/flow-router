@@ -1,3 +1,5 @@
+import { _ } from 'meteor/underscore';
+
 // a set of utility functions for triggers
 
 const Triggers = {};
@@ -6,7 +8,8 @@ const Triggers = {};
 // @triggers - a set of triggers
 // @filter - filter with array fields with `only` and `except`
 //           support only either `only` or `except`, but not both
-Triggers.applyFilters = (triggers, filter) => {
+Triggers.applyFilters = (_triggers, filter) => {
+  let triggers = _triggers;
   if(!(triggers instanceof Array)) {
     triggers = [triggers];
   }

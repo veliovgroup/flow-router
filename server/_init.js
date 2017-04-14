@@ -1,6 +1,6 @@
 import Router from './router.js';
-import Route from './route.js';
-import Group from './group.js';
+import Route  from './route.js';
+import Group  from './group.js';
 
 const Triggers = {};
 const BlazeRenderer = {};

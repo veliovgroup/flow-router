@@ -1,5 +1,8 @@
-import { Template } from 'meteor/templating';
-import { Blaze } from 'meteor/blaze';
+import { _ }           from 'meteor/underscore';
+import { Blaze }       from 'meteor/blaze';
+import { Meteor }      from 'meteor/meteor';
+import { Template }    from 'meteor/templating';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 const requestAnimFrame = (() => {
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {

@@ -1,4 +1,7 @@
-import { Router } from './_init.js';
+import { _ }            from 'meteor/underscore';
+import { Router }       from './_init.js';
+import { Meteor }       from 'meteor/meteor';
+import { Tracker }      from 'meteor/tracker';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import './yield.html';
 

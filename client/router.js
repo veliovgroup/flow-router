@@ -313,6 +313,30 @@ class Router {
     return current;
   }
 
+  track(reactiveMapper) {
+    return (props, onData, env) => {
+      let trackerCleanup = null;
+      const handler = Tracker.nonreactive(() => {
+        return Tracker.autorun(() => {
+          trackerCleanup = reactiveMapper(props, onData, env);
+        });
+      });
+
+      return () => {
+        if (typeof trackerCleanup === 'function') {
+          trackerCleanup();
+        }
+        return handler.stop();
+      };
+    };
+  }
+
+  mapper(props, onData) {
+    if (typeof onData === 'function') {
+      onData(null, { route: this.current() });
+    }
+  }
+
   subsReady() {
     let callback = null;
     const args = _.toArray(arguments);

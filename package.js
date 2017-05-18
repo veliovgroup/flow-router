@@ -1,12 +1,12 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '3.1.0',
+  version: '3.1.1',
   git: 'https://github.com/VeliovGroup/flow-router'
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('METEOR@1.4');
+  api.versionsFrom('1.4');
   api.use([
     'modules',
     'ecmascript',

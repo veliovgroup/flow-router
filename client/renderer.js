@@ -26,8 +26,25 @@ class BlazeRenderer {
   }
 
   render(layout, template, data) {
-    const _template = typeof Template !== 'undefined' && Template !== null ? Template[template] : void 0;
-    const _layout   = typeof Template !== 'undefined' && Template !== null ? Template[layout] : void 0;
+    let _template = '';
+    if (_.isString(template)) {
+      _template = typeof Template !== 'undefined' && Template !== null ? Template[template] : void 0;
+    } else if (template instanceof Blaze.Template) {
+      _template = template;
+      template  = template.viewName.replace('Template.', '');
+    } else {
+      _template = false;
+    }
+
+    let _layout = '';
+    if (_.isString(layout)) {
+      _layout = typeof Template !== 'undefined' && Template !== null ? Template[layout] : void 0;
+    } else if (layout instanceof Blaze.Template) {
+      _layout = layout;
+      layout  = layout.viewName.replace('Template.', '');
+    } else {
+      _layout = false;
+    }
 
     if (!_template) {
       throw new Meteor.Error(404, 'No such template: ' + template);
@@ -76,4 +93,3 @@ class BlazeRenderer {
 }
 
 export default BlazeRenderer;
-

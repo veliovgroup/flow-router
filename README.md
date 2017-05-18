@@ -47,7 +47,7 @@ Original FlowRouter's documentation:
 
 ## FlowRouter Extra:
 ### ES6 Import
-__Since v3.0.0__ `FlowRouter` __variable is not exported into global-scope, use__ `import`
+__Since v3.0.0__ `FlowRouter` __variable is not exported into global-scope, use__ - `import`
 ```jsx
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
@@ -488,8 +488,8 @@ FlowRouter.route('/post/:_id', {
 *Instead of BlazeLayout, you can use build-in* `this.render()` *method*. Use it in context of `action`, `onNoData`, `whileWaiting`, `data`, `waitOn` or any other hook.
 
 `this.render(layout, template [, data])`
- - `layout` {*String*} - Name of layout template (*which has* `yield`)
- - `template` {*String*} - Name of template (*which will be rendered into yield*)
+ - `layout` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of layout template (*which has* `yield`)
+ - `template` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of template (*which will be rendered into yield*)
  - `data` {*Object*} - [Optional] Object of data context to use in template. *This object supports reactive data sources, but only when handled by "yielded" template, not nested templates, otherwise use template helpers*
 
 ### Templating
@@ -552,11 +552,15 @@ FlowRouter.route('/post/:_id', {
 ```
 
 ```jsx
+require('./layout.html');
 // routes.js
 FlowRouter.route('/posts', {
   name: 'posts',
   action(params, queryParams, posts) {
+    require('./posts.html');
     this.render('_layout', 'posts', posts);
+    // Or as Blaze.Template instance:
+    // this.render(Template._layout, Template.posts, posts);
   },
   waitOn() {
     return [Meteor.subscribe('posts')];
@@ -569,7 +573,10 @@ FlowRouter.route('/posts', {
 FlowRouter.route('/post/:_id', {
   name: 'posts',
   action(params, queryParams, post) {
+    require('./post.html');
     this.render('_layout', 'post', post);
+    // Or as Blaze.Template instance:
+    // this.render(Template._layout, Template.post, posts);
   },
   waitOn(params) {
     return [Meteor.subscribe('post', params._id)];
@@ -635,7 +642,6 @@ FlowRouter.triggers.enter([() => {
 
 ### Other packages compatibility
 This package tested and recommended to use with next packages:
- - [kadira:blaze-layout](https://github.com/kadirahq/blaze-layout) - Render layout template and pass data to UI
  - [meteorhacks:subs-manager](https://github.com/kadirahq/subs-manager) - Manage subscriptions with caching
  - [jazeee:spiderable](https://github.com/jazeee/jazeee-meteor-spiderable) - Making your pages accessible for crawlers
  - [ostrio:flow-router-title](https://github.com/VeliovGroup/Meteor-flow-router-title) - Reactive page title (`document.title`)

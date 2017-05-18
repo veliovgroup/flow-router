@@ -337,6 +337,10 @@ class Router {
     }
   }
 
+  trackMapper() {
+    return this.track(this.mapper);
+  }
+
   subsReady() {
     let callback = null;
     const args = _.toArray(arguments);

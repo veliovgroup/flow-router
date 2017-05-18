@@ -32,12 +32,6 @@ const init = (FlowRouter) => {
     }
   };
 
-  const checkRouterPackages = () => {
-    if (!(Package['ostrio:flow-router-extra'] || Package['kadira:flow-router'] || Package['meteorhacks:flow-router'] || Package['kadira:flow-router-ssr'])) {
-      throw new Error(errorMessages.noSupportedRouter);
-    }
-  };
-
   const config = new ReactiveDict('activeRouteConfig');
   config.setDefault({
     activeClass: 'active',
@@ -101,10 +95,6 @@ const init = (FlowRouter) => {
       return test(FlowRouter.current().path, path);
     }
   };
-
-  Meteor.startup(() => {
-    checkRouterPackages();
-  });
 
   // Client
   const isActive = (type, inverse = false) => {

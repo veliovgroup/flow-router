@@ -1,53 +1,52 @@
 FlowRouter Extra
 ======
-
 Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
 
-## Installation
+## TOC
+FlowRouter Extra:
+ - Great tests coverage
+ - Up-to-date dependencies
+ - Compatibility with latest Meteor release
+ - [ES6 Import](https://github.com/VeliovGroup/flow-router#es6-import) - Support for `.jsx` and `ecmascript` modules/imports
+ - [Template Helpers](https://github.com/VeliovGroup/flow-router#template-helpers) - `isActiveRoute`, `isActivePath`, `urlFor`, `pathFor`, `isSubReady`, `currentRouteName`, `param` and many more useful helpers
+ - [Preload Images](https://github.com/VeliovGroup/flow-router#preload-images) - "Prefetch" images before displaying Template
+ - [Preload Resources](https://github.com/VeliovGroup/flow-router#preload-resources) - "Prefetch" resources, like: CSS, JS, Fonts, etc. before displaying Template
+ - [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook) - Wait for all subscriptions is ready
+ - [waitOn hook with reactive data](https://github.com/VeliovGroup/flow-router#waiton-hook-with-reactive-data) - Wait for all subscriptions with reactive data sources is ready
+ - [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook) - Do something while waiting for subscriptions
+ - [data hook](https://github.com/VeliovGroup/flow-router#data-hook) - Fetch data from collection before render router's template
+ - [onNoData hook](https://github.com/VeliovGroup/flow-router#onnodata-hook) - Do something if "*data hook*" returns falsy value
+ - [Data in other hooks](https://github.com/VeliovGroup/flow-router#data-in-other-hooks) - Use fetched data in other hooks
+ - [Render Template](https://github.com/VeliovGroup/flow-router#render-template) - Render template into layout
+ - [Templating](https://github.com/VeliovGroup/flow-router#templating) - Construct your layout and templates
+ - [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage) - Bootstrap router's configuration
+ - [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility) - Best packages to be used with flow-router-extra
+
+Original FlowRouter's documentation:
+ - [Meteor Routing Guide](#meteor-routing-guide)
+ - [Getting Started](#getting-started)
+ - [Routes Definition](#routes-definition)
+ - [Group Routes](#group-routes)
+ - [Rendering and Layout Management](#rendering-and-layout-management)
+ - [Triggers](#triggers)
+ - [Not Found Routes](#not-found-routes)
+ - [API](#api)
+ - [Subscription Management](#subscription-management)
+ - [IE9 Support](#ie9-support)
+ - [Hashbang URLs](#hashbang-urls)
+ - [Prefixed paths](#prefixed-paths)
+ - [Add-ons](#add-ons)
+ - [Difference with Iron Router](#difference-with-iron-router)
+ - [Migrating into 2.0](#migrating-into-20)
+
+
+## FlowRouter Extra:
+### Installation
 ```shell
 meteor add ostrio:flow-router-extra
 ```
 
-## TOC
-FlowRouter Extra:
-* Up-to-date dependencies
-* Compatibility with latest Meteor release
-* [ES6 Import](https://github.com/VeliovGroup/flow-router#es6-import) - Support for `.jsx` and `ecmascript` modules/imports
-* [Template Helpers](https://github.com/VeliovGroup/flow-router#template-helpers) - `isActiveRoute`, `isActivePath`, `urlFor`, `pathFor`, `isSubReady`, `currentRouteName`, `param` and many more useful helpers
-* [Preload Images](https://github.com/VeliovGroup/flow-router#preload-images) - "Prefetch" images before displaying Template
-* [Preload Resources](https://github.com/VeliovGroup/flow-router#preload-resources) - "Prefetch" resources, like: CSS, JS, Fonts, etc. before displaying Template
-* [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook) - Wait for all subscriptions is ready
-* [waitOn hook with reactive data](https://github.com/VeliovGroup/flow-router#waiton-hook-with-reactive-data) - Wait for all subscriptions with reactive data sources is ready
-* [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook) - Do something while waiting for subscriptions
-* [data hook](https://github.com/VeliovGroup/flow-router#data-hook) - Fetch data from collection before render router's template
-* [onNoData hook](https://github.com/VeliovGroup/flow-router#onnodata-hook) - Do something if "*data hook*" returns falsy value
-* [Data in other hooks](https://github.com/VeliovGroup/flow-router#data-in-other-hooks) - Use fetched data in other hooks
-* [Render Template](https://github.com/VeliovGroup/flow-router#render-template) - Render template into layout
-* [Templating](https://github.com/VeliovGroup/flow-router#templating) - Construct your layout and templates
-* [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage) - Bootstrap router's configuration
-* [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility) - Best packages to be used with flow-router-extra
-
-Original FlowRouter's documentation:
-* [Meteor Routing Guide](#meteor-routing-guide)
-* [Getting Started](#getting-started)
-* [Routes Definition](#routes-definition)
-* [Group Routes](#group-routes)
-* [Rendering and Layout Management](#rendering-and-layout-management)
-* [Triggers](#triggers)
-* [Not Found Routes](#not-found-routes)
-* [API](#api)
-* [Subscription Management](#subscription-management)
-* [IE9 Support](#ie9-support)
-* [Hashbang URLs](#hashbang-urls)
-* [Prefixed paths](#prefixed-paths)
-* [Add-ons](#add-ons)
-* [Difference with Iron Router](#difference-with-iron-router)
-* [Migrating into 2.0](#migrating-into-20)
-
-
-## FlowRouter Extra:
 ### ES6 Import
-__Since v3.0.0__ `FlowRouter` __variable is not exported into global-scope, use__ - `import`
 ```jsx
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
@@ -59,7 +58,6 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 Original code was taken from [`zimme:active-route`](https://github.com/meteor-activeroute/legacy) and [`arillo:flow-router-helpers`](https://github.com/arillo/meteor-flow-router-helpers).
 
 ##### `isActiveRoute`
-
 Template helper to check if the supplied route name matches the currently active
 route's name.
 
@@ -82,7 +80,6 @@ Returns either a configurable `String`, which defaults to `'active'`, or
 ```
 
 ##### `isActivePath`
-
 Template helper to check if the supplied path matches the currently active
 route's path.
 
@@ -105,7 +102,6 @@ Returns either a configurable `String`, which defaults to `'active'`, or
 ```
 
 ##### `isNotActiveRoute`
-
 Template helper to check if the supplied route name doesn't match the currently
 active route's name.
 
@@ -130,7 +126,6 @@ Returns either a configurable `String`, which defaults to `'disabled'`, or
 ```
 
 ##### `isNotActivePath`
-
 Template helper to check if the supplied path doesn't match the currently active route's path.
 
 Returns either a configurable `String`, which defaults to `'disabled'`, or `false`.
@@ -151,7 +146,6 @@ Returns either a configurable `String`, which defaults to `'disabled'`, or `fals
 ```
 
 #### Arguments
-
 The following can be used by as arguments in `isNotActivePath`, `isNotActiveRoute`, `isActivePath` and `isActiveRoute` helpers.
 
 * Data context, Optional. `String` or `Object` with `name`, `path` or `regex`
@@ -161,7 +155,6 @@ The following can be used by as arguments in `isNotActivePath`, `isNotActiveRout
 
 
 ##### `pathFor`
-
 Used to build a path to your route. First parameter can be either the path definition or name you assigned to the route. After that you can pass the params needed to construct the path. Query parameters can be passed with the `query` parameter. Hash is supported via `hash` parameter.
 
 ```handlebars
@@ -173,7 +166,6 @@ Used to build a path to your route. First parameter can be either the path defin
 ```
 
 ##### `urlFor`
-
 Same as pathFor, returns absolute URL.
 
 ```handlebars
@@ -181,7 +173,6 @@ Same as pathFor, returns absolute URL.
 ```
 
 ##### `linkTo`
-
 Custom content block for creating a link
 
 ```handlebars
@@ -193,7 +184,6 @@ Custom content block for creating a link
 will return ```<a href="/posts/">Go to posts</a>```
 
 ##### `param`
-
 Returns the value for a url parameter
 
 ```handlebars
@@ -201,7 +191,6 @@ Returns the value for a url parameter
 ```
 
 ##### `queryParam`
-
 Returns the value for a query parameter
 
 ```handlebars
@@ -209,7 +198,6 @@ Returns the value for a query parameter
 ```
 
 ##### `currentRouteName`
-
 Returns the name of the current route
 
 ```handlebars
@@ -219,7 +207,6 @@ Returns the name of the current route
 ```
 
 ##### `currentRouteOption`
-
 This adds support to get options from flow router
 
 ```javascript

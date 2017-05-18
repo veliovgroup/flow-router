@@ -331,9 +331,9 @@ class Router {
     };
   }
 
-  mapper(props, onData) {
+  mapper(props, onData, env) {
     if (typeof onData === 'function') {
-      onData(null, { route: this.current() });
+      onData(null, { route: this.current(), props, env });
     }
   }
 

@@ -1,6 +1,7 @@
 import { _ }            from 'meteor/underscore';
 import { Router }       from './_init.js';
 import { Meteor }       from 'meteor/meteor';
+import { Promise }      from 'meteor/promise';
 import { Tracker }      from 'meteor/tracker';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import './yield.html';
@@ -68,6 +69,7 @@ class Route {
   waitOn(current = {}, next) {
     let subscriptions = [];
     let trackers = [];
+    let promises = [];
     let timer;
     let _data = null;
     let _preloaded = 0;
@@ -107,9 +109,9 @@ class Route {
     };
 
     const getResources = () => {
-      _data = getData();
-      let   len    = 0;
-      let   items;
+      _data      = getData();
+      let len    = 0;
+      let items;
       let images = [];
       let other  = [];
       for (let i = _resources.length - 1; i >= 0; i--) {
@@ -166,7 +168,7 @@ class Route {
     };
 
     if (this._waitOn) {
-      const wait = (delay) => {
+      const subWait = (delay) => {
         timer = Meteor.setTimeout(() => {
           if (this.checkSubscriptions(subscriptions)) {
             Meteor.clearTimeout(timer);
@@ -183,9 +185,21 @@ class Route {
         }, delay);
       };
 
+      const wait = (delay) => {
+        if (promises.length) {
+          Promise.all(promises).then(() => {
+            subWait(delay);
+          });
+        } else {
+          subWait(delay);
+        }
+      };
+
       const processSubData = (subData) => {
         const placeIn = (d) => {
-          if (d.flush) {
+          if (Object.prototype.toString.call(d) === '[object Promise]') {
+            promises.push(d);
+          } else if (d.flush) {
             trackers.push(d);
           } else if (d.ready) {
             subscriptions.push(d);
@@ -213,7 +227,7 @@ class Route {
       };
 
       const done = (subscribtion) => {
-        processSubData(subscribtion());
+        processSubData( _.isFunction(subscribtion) ? subscribtion() : subscribtion);
       };
 
       processSubData(this._waitOn(current.params, current.queryParams, done));

@@ -12,6 +12,8 @@ FlowRouter Extra:
  - [Preload Images](https://github.com/VeliovGroup/flow-router#preload-images) - "Prefetch" images before displaying Template
  - [Preload Resources](https://github.com/VeliovGroup/flow-router#preload-resources) - "Prefetch" resources, like: CSS, JS, Fonts, etc. before displaying Template
  - [waitOn hook](https://github.com/VeliovGroup/flow-router#waiton-hook) - Wait for all subscriptions is ready
+ - [waitOn hook with Promises](https://github.com/VeliovGroup/flow-router#waiton-hook-with-promises) - Wait for Promise(s) to be *fulfilled*
+ - [waitOn hook with `dynamic import(...)`](https://github.com/VeliovGroup/flow-router#waiton-hook-with-dynamic-import) - Use dynamic per route [`import()`](https://github.com/tc39/proposal-dynamic-import) as [explained here](https://blog.meteor.com/dynamic-imports-in-meteor-1-5-c6130419c3cd). __Note: Only for [Meteor >= 1.5](https://github.com/meteor/meteor/blob/devel/History.md#v15-2017-05-30)__
  - [waitOn hook with reactive data](https://github.com/VeliovGroup/flow-router#waiton-hook-with-reactive-data) - Wait for all subscriptions with reactive data sources is ready
  - [whileWaiting hook](https://github.com/VeliovGroup/flow-router#whilewaiting-hook) - Do something while waiting for subscriptions
  - [data hook](https://github.com/VeliovGroup/flow-router#data-hook) - Fetch data from collection before render router's template
@@ -346,7 +348,7 @@ FlowRouter.route('/post/:_id', {
 ```
 
 ### waitOn hook with reactive data
-Use reactive data sources inside `waitOn` hook. To make `waitOn` rerun on reactive data changes, wrap it to `Tracker.autorun` and return Tracker Computation object or an *Array* of Tracker Computation objects. Note the third argument of `waitOn` is `ready` callback.
+Use reactive data sources inside `waitOn` hook. To make `waitOn` rerun on reactive data changes, wrap it to `Tracker.autorun` and return Tracker Computation object or an *Array* of Tracker Computation objects. Note: the third argument of `waitOn` is `ready` callback.
 ```jsx
 FlowRouter.route('/posts', {
   name: 'post',
@@ -378,6 +380,68 @@ FlowRouter.route('/posts', {
       });
     }));
     return tracks;
+  }
+});
+```
+
+### waitOn hook with Promises
+Use Promise(s) data sources inside `waitOn` hook.
+```jsx
+FlowRouter.route('/posts', {
+  name: 'posts',
+  waitOn() {
+    return new Promise((resolve, reject) => {
+      loadPosts((err) => {
+        (err) ? reject() : resolve();
+      })
+    });
+  }
+});
+
+// Or with Array of Promises:
+FlowRouter.route('/posts', {
+  name: 'posts',
+  waitOn() {
+    return [new Promise({/*..*/}), new Promise({/*..*/}), new Promise({/*..*/})];
+  }
+});
+```
+
+### waitOn hook with dynamic `import`
+Use dynamic per route [`import()`](https://github.com/tc39/proposal-dynamic-import) as [explained here](https://blog.meteor.com/dynamic-imports-in-meteor-1-5-c6130419c3cd). __Note: Only for [Meteor >= 1.5](https://github.com/meteor/meteor/blob/devel/History.md#v15-2017-05-30)__
+```jsx
+FlowRouter.route('/posts', {
+  name: 'posts',
+  waitOn() {
+    return import('/imports/client/posts.js');
+  }
+});
+
+// Or with Array of import(s):
+FlowRouter.route('/posts', {
+  name: 'posts',
+  waitOn() {
+    return [import('/imports/client/posts.js'), import('/imports/client/sidebar.js'), import('/imports/client/footer.js')];
+  }
+});
+
+// Use `whileWaiting` and `endWaiting` to show spinner (a.k.a. loader):
+FlowRouter.route('/posts', {
+  name: 'posts',
+  whileWaiting: startSpinner,
+  endWaiting: stopSpinner,
+  waitOn() {
+    return [import('/imports/client/posts.js'), import('/imports/client/sidebar.js'), import('/imports/client/footer.js')];
+  }
+});
+
+// Combine with subscription:
+FlowRouter.route('/posts', {
+  name: 'posts',
+  whileWaiting: startSpinner,
+  endWaiting: stopSpinner,
+  waitOn() {
+    return [import('/imports/client/posts.js'), Meteor.subscribe('Posts')];
   }
 });
 ```

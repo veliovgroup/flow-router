@@ -5,7 +5,7 @@ import { Template }    from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 const requestAnimFrame = (() => {
-  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
+  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
     setTimeout(callback, 1000 / 60);
   };
 })();
@@ -25,8 +25,11 @@ class BlazeRenderer {
     }
   }
 
-  render(layout, template, data) {
+  render(__layout, __template, data = {}) {
+    let layout    = __layout;
+    let template  = __template;
     let _template = '';
+
     if (_.isString(template)) {
       _template = typeof Template !== 'undefined' && Template !== null ? Template[template] : void 0;
     } else if (template instanceof Blaze.Template) {
@@ -60,35 +63,48 @@ class BlazeRenderer {
       };
 
       if (data) {
-        _data = _.extend(_data, data);
+        _data = Object.assign({}, _data, data);
+      }
+
+      if (this.current.template !== template) {
+        this.reactTemplate.set(null);
       }
 
       if (this.current.layout !== layout) {
         if (this.old) {
-          Blaze.remove(this.old);
+          requestAnimFrame(() => {
+            Blaze.remove(this.old);
+            this._render(template, _data, layout, _layout);
+          });
+        } else {
+          this._render(template, _data, layout, _layout);
         }
-
-        const getData = () => {
-          return _data;
-        };
-
-        this.old = Blaze.renderWithData(_layout, getData, this.rootEl());
       } else {
+        this._load(true, template, _data, layout);
+      }
+    }
+  }
+
+  _render(template, _data, layout, _layout) {
+    const getData = () => {
+      return _data;
+    };
+
+    requestAnimFrame(() => {
+      this.old = Blaze.renderWithData(_layout, getData, this.rootEl());
+      this._load(false, template, _data, layout);
+    });
+  }
+
+  _load(isOld, template, _data, layout) {
+    requestAnimFrame(() => {
+      this.reactTemplate.set(template);
+      if (isOld) {
         this.old.dataVar.set(_data);
       }
-
-      if (this.current.template === template) {
-        this.reactTemplate.set(null);
-        requestAnimFrame(() => {
-          this.reactTemplate.set(template);
-        });
-      } else {
-        this.reactTemplate.set(template);
-      }
-
       this.current.layout = layout;
       this.current.template = template;
-    }
+    });
   }
 }
 

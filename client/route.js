@@ -22,6 +22,7 @@ class Route {
     this._waitOn          = options.waitOn || null;
     this._subsMap         = {};
     this._onNoData        = options.onNoData || null;
+    this._endWaiting      = options.endWaiting || null;
     this._currentData     = null;
     this._triggersExit    = options.triggersExit || [];
     this._whileWaiting    = options.whileWaiting || null;
@@ -243,11 +244,14 @@ class Route {
   callAction(current) {
     if (this._data) {
       if (this._onNoData && !this._currentData) {
+        this._endWaiting && this._endWaiting();
         this._onNoData(current.params, current.queryParams);
       } else {
+        this._endWaiting && this._endWaiting();
         this._action(current.params, current.queryParams, this._currentData);
       }
     } else {
+      this._endWaiting && this._endWaiting();
       this._action(current.params, current.queryParams, this._currentData);
     }
   }

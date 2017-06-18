@@ -197,7 +197,7 @@ class Route {
 
       const processSubData = (subData) => {
         const placeIn = (d) => {
-          if (Object.prototype.toString.call(d) === '[object Promise]') {
+          if (Object.prototype.toString.call(d) === '[object Promise]' || d.then && Object.prototype.toString.call(d.then) === '[object Function]') {
             promises.push(d);
           } else if (d.flush) {
             trackers.push(d);

@@ -6,6 +6,16 @@ import { Tracker }      from 'meteor/tracker';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import './yield.html';
 
+const makeTriggers = (triggers) => {
+  if (_.isFunction(triggers)) {
+    return [triggers];
+  } else if (!_.isArray(triggers)) {
+    return [];
+  }
+
+  return triggers;
+};
+
 class Route {
   constructor(router = new Router(), pathDef, options = {}, group) {
     this.render           = router.Renderer.render.bind(router.Renderer);
@@ -25,9 +35,9 @@ class Route {
     this._onNoData        = options.onNoData || null;
     this._endWaiting      = options.endWaiting || null;
     this._currentData     = null;
-    this._triggersExit    = options.triggersExit || [];
+    this._triggersExit    = options.triggersExit ? makeTriggers(options.triggersExit) : [];
     this._whileWaiting    = options.whileWaiting || null;
-    this._triggersEnter   = options.triggersEnter || [];
+    this._triggersEnter   = options.triggersEnter ? makeTriggers(options.triggersEnter) : [];
     this._subscriptions   = options.subscriptions || Function.prototype;
     this._waitOnResources = options.waitOnResources || null;
 

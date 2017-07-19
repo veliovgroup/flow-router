@@ -1,14 +1,20 @@
 import { _ } from 'meteor/underscore';
 
-const makeTriggers = (base, _triggers) => {
-  let triggers = _triggers || [];
-  if (triggers) {
-    if (!_.isArray(triggers)) {
-      triggers = [triggers];
-    }
+const makeTrigger = (trigger) => {
+  if (_.isFunction(trigger)) {
+    return [trigger];
+  } else if (!_.isArray(trigger)) {
+    return [];
   }
 
-  return (base || []).concat(triggers);
+  return trigger;
+};
+
+const makeTriggers = (_base, _triggers) => {
+  if ((!_base && !_triggers)) {
+    return [];
+  }
+  return makeTrigger(_base).concat(makeTrigger(_triggers));
 };
 
 class Group {
@@ -22,15 +28,16 @@ class Group {
     this.name = options.name;
     this.options = options;
 
-    this._triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
-    this._triggersExit = makeTriggers(this._triggersExit, options.triggersExit);
+    this._triggersEnter = makeTriggers(options.triggersEnter, this._triggersEnter);
+    this._triggersExit  = makeTriggers(this._triggersExit, options.triggersExit);
+
+    this._subscriptions = options.subscriptions || Function.prototype;
 
     this.parent = parent;
     if (this.parent) {
       this.prefix = parent.prefix + this.prefix;
-
-      this._triggersEnter = makeTriggers(this._triggersEnter, parent.triggersEnter);
-      this._triggersExit = makeTriggers(this._triggersExit, parent.triggersExit);
+      this._triggersEnter = makeTriggers(parent._triggersEnter, this._triggersEnter);
+      this._triggersExit  = makeTriggers(this._triggersExit, parent._triggersExit);
     }
   }
 
@@ -39,20 +46,17 @@ class Group {
       throw new Error('route\'s path must start with "/"');
     }
 
-    const group = _group || this;
+    const group   = _group || this;
     const pathDef = this.prefix + _pathDef;
 
     options.triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
-    options.triggersExit = makeTriggers(this._triggersExit, options.triggersExit);
+    options.triggersExit  = makeTriggers(options.triggersExit, this._triggersExit);
 
     return this._router.route(pathDef, options, group);
   }
 
   group(options) {
-    const group = new Group(this._router, options, this);
-    group.parent = this;
-
-    return group;
+    return new Group(this._router, options, this);
   }
 }
 

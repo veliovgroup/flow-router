@@ -356,6 +356,221 @@ Tinytest.addAsync('Client - Triggers - group exit triggers', function (test, nex
   }, 100);
 });
 
+Tinytest.addAsync('Client - Triggers - nested group enter triggers', function (test, next) {
+  var rand = Random.id();
+  var log = [];
+  var paths = ['/' + rand];
+
+  var rootGroup = FlowRouter.group({
+    triggersEnter: function (context) {
+      log.push('root');
+    }
+  });
+
+
+  var group = rootGroup.group({
+    triggersEnter: [function (context) {
+      log.push('group');
+    }]
+  });
+
+
+  let route = group.route('/' + rand, {
+    action: function(_params) {
+      log.push('route');
+    },
+    triggersEnter: function (context) {
+      test.equal(context.path, paths.pop());
+      log.push('route trigger');
+    }
+  });
+
+
+  setTimeout(function() {
+    FlowRouter.go('/' + rand);
+
+    setTimeout(function() {
+      test.equal(log, ['root', 'group', 'route trigger', 'route']);
+      setTimeout(next, 100);
+    }, 100);
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Triggers - nested group enter triggers no route triggers', function (test, next) {
+  var rand = Random.id();
+  var log = [];
+  var paths = ['/' + rand];
+
+  var rootGroup = FlowRouter.group({
+    triggersEnter: [function (context) {
+      log.push('root');
+    }]
+  });
+
+  var group = rootGroup.group({
+    triggersEnter: function (context) {
+      log.push('group');
+    }
+  });
+
+  group.route('/' + rand, {
+    action: function(_params) {
+      log.push('route');
+    }
+  });
+
+  setTimeout(function() {
+    FlowRouter.go('/' + rand);
+
+    setTimeout(function() {
+      test.equal(log, ['root', 'group', 'route']);
+      setTimeout(next, 100);
+    }, 100);
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Triggers - nested group enter triggers, no route action', function (test, next) {
+  var rand = Random.id();
+  var log = [];
+  var paths = ['/' + rand];
+
+  var rootGroup = FlowRouter.group({
+    triggersEnter: function (context) {
+      log.push('root');
+    }
+  });
+
+  var group = rootGroup.group({
+    triggersEnter: [function (context) {
+      log.push('group');
+    }]
+  });
+
+  group.route('/' + rand, {
+    triggersEnter: [function (context) {
+      test.equal(context.path, paths.pop());
+      log.push('route trigger');
+    }]
+  });
+
+  setTimeout(function() {
+    FlowRouter.go('/' + rand);
+
+    setTimeout(function() {
+      test.equal(log, ['root', 'group', 'route trigger']);
+      setTimeout(next, 100);
+    }, 100);
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Triggers - nested group exit triggers', function (test, next) {
+  var rand = Random.id();
+  var log = [];
+  var paths = ['/' + rand];
+
+  var rootGroup = FlowRouter.group({
+    triggersExit: function (context) {
+      log.push('root');
+    }
+  });
+
+
+  var group = rootGroup.group({
+    triggersExit: [function (context) {
+      log.push('group');
+    }]
+  });
+
+
+  let route = group.route('/' + rand, {
+    action: function(_params) {
+      log.push('route');
+    },
+    triggersExit: function (context) {
+      test.equal(context.path, paths.pop());
+      console.log('route trigger');
+      log.push('route trigger');
+    }
+  });
+
+
+  FlowRouter.go('/' + rand);
+  setTimeout(function() {
+    FlowRouter.go('/');
+    setTimeout(function() {
+      test.equal(log, ['route', 'route trigger', 'group', 'root']);
+      setTimeout(next, 150);
+    }, 100);
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Triggers - nested group exit triggers no route triggers', function (test, next) {
+  var rand = Random.id();
+  var log = [];
+  var paths = ['/' + rand];
+
+  var rootGroup = FlowRouter.group({
+    triggersExit: [function (context) {
+      log.push('root');
+    }]
+  });
+
+  var group = rootGroup.group({
+    triggersExit: function (context) {
+      log.push('group');
+    }
+  });
+
+  group.route('/' + rand, {
+    action: function(_params) {
+      log.push('route');
+    }
+  });
+
+  FlowRouter.go('/' + rand);
+  setTimeout(function() {
+    FlowRouter.go('/');
+    setTimeout(function() {
+      test.equal(log, ['route', 'group', 'root']);
+      setTimeout(next, 150);
+    }, 100);
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Triggers - nested group exit triggers, no route action', function (test, next) {
+  var rand = Random.id();
+  var log = [];
+  var paths = ['/' + rand];
+
+  var rootGroup = FlowRouter.group({
+    triggersExit: function (context) {
+      log.push('root');
+    }
+  });
+
+  var group = rootGroup.group({
+    triggersExit: [function (context) {
+      log.push('group');
+    }]
+  });
+
+  group.route('/' + rand, {
+    triggersExit: [function (context) {
+      test.equal(context.path, paths.pop());
+      log.push('route trigger');
+    }]
+  });
+
+  FlowRouter.go('/' + rand);
+  setTimeout(function() {
+    FlowRouter.go('/');
+    setTimeout(function() {
+      test.equal(log, ['route trigger', 'group', 'root']);
+      setTimeout(next, 150);
+    }, 100);
+  }, 100);
+});
+
 Tinytest.addAsync('Client - Triggers - redirect from enter', function(test, next) {
   var rand = Random.id(), rand2 = Random.id();
   var log = [];

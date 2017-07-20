@@ -111,6 +111,7 @@ class Router {
   }
 
   set notFound(opts) {
+    opts.name = opts.name || '__notFound';
     this._notFound = this.route('*', opts);
   }
 
@@ -594,7 +595,6 @@ class Router {
           self._triggersEnter = self._triggersEnter.concat(triggers);
         }
       },
-
       exit(triggers, filter) {
         triggers = Triggers.applyFilters(triggers, filter);
         if (triggers.length) {

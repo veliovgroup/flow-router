@@ -31,6 +31,7 @@ class Route {
     this._router          = router;
     this._action          = options.action || Function.prototype;
     this._waitOn          = options.waitOn || null;
+    this._waitFor         = [];
     this._subsMap         = {};
     this._onNoData        = options.onNoData || null;
     this._endWaiting      = options.endWaiting || null;
@@ -77,20 +78,36 @@ class Route {
   }
 
   waitOn(current = {}, next) {
+    let _data         = null;
+    let _isWaiting    = false;
+    let _preloaded    = 0;
+    let _resources    = false;
+    let promises      = [];
     let subscriptions = [];
-    let trackers = [];
-    let promises = [];
     let timer;
-    let _data = null;
-    let _preloaded = 0;
-    let _isWaiting = false;
-    let _resources = false;
+    let trackers      = [];
+
+    const placeIn = (d) => {
+      if (Object.prototype.toString.call(d) === '[object Promise]' || d.then && Object.prototype.toString.call(d.then) === '[object Function]') {
+        promises.push(d);
+      } else if (d.flush) {
+        trackers.push(d);
+      } else if (d.ready) {
+        subscriptions.push(d);
+      }
+    };
 
     if (current.route.globals.length) {
       for (let i = 0; i < current.route.globals.length; i++) {
-        if (typeof current.route.globals[i] === 'object' && current.route.globals[i].waitOnResources) {
-          if (!_resources) { _resources = []; }
-          _resources.push(current.route.globals[i].waitOnResources);
+        if (typeof current.route.globals[i] === 'object') {
+          if (current.route.globals[i].waitOnResources) {
+            if (!_resources) { _resources = []; }
+            _resources.push(current.route.globals[i].waitOnResources);
+          }
+
+          if (current.route.globals[i].waitOn && _.isFunction(current.route.globals[i].waitOn)) {
+            this._waitFor = [current.route.globals[i].waitOn].concat(this._waitFor);
+          }
         }
       }
     }
@@ -177,7 +194,11 @@ class Route {
       }
     };
 
-    if (this._waitOn) {
+    if (_.isFunction(this._waitOn)) {
+      this._waitFor.push(this._waitOn);
+    }
+
+    if (this._waitFor && this._waitFor.length) {
       const subWait = (delay) => {
         timer = Meteor.setTimeout(() => {
           if (this.checkSubscriptions(subscriptions)) {
@@ -199,6 +220,7 @@ class Route {
         if (promises.length) {
           Promise.all(promises).then(() => {
             subWait(delay);
+            promises = [];
           });
         } else {
           subWait(delay);
@@ -206,16 +228,6 @@ class Route {
       };
 
       const processSubData = (subData) => {
-        const placeIn = (d) => {
-          if (Object.prototype.toString.call(d) === '[object Promise]' || d.then && Object.prototype.toString.call(d.then) === '[object Function]') {
-            promises.push(d);
-          } else if (d.flush) {
-            trackers.push(d);
-          } else if (d.ready) {
-            subscriptions.push(d);
-          }
-        };
-
         if (subData instanceof Array) {
           for (let i = subData.length - 1; i >= 0; i--) {
             if (subData[i] !== null && typeof subData[i] === 'object') {
@@ -236,11 +248,15 @@ class Route {
         subscriptions = [];
       };
 
-      const done = (subscribtion) => {
-        processSubData( _.isFunction(subscribtion) ? subscribtion() : subscribtion);
+      const done = (subscription) => {
+        processSubData(_.isFunction(subscription) ? subscription() : subscription);
       };
 
-      processSubData(this._waitOn(current.params, current.queryParams, done));
+      this._waitFor.forEach((wo) => {
+        processSubData(wo(current.params, current.queryParams, done));
+      });
+
+      this._waitFor = [];
 
       this._triggersExit.push(() => {
         stopSubs();

@@ -66,7 +66,7 @@ class BlazeRenderer {
         _data = Object.assign({}, _data, data);
       }
 
-      if (this.current.template !== template) {
+      if (this.current.template === template) {
         this.reactTemplate.set(null);
       }
 

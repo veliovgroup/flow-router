@@ -50,7 +50,8 @@ class Router {
     this._routes = [];
     this._routesMap = {};
     this._updateCallbacks();
-    this.notFound = this.notfound = null;
+    this._notFound = null;
+    this.notfound = this.notFound;
     // indicate it's okay (or not okay) to run the tracker
     // when doing subscriptions
     // using a number and increment it help us to support FlowRouter.go()
@@ -109,6 +110,14 @@ class Router {
     this._initTriggersAPI();
   }
 
+  set notFound(opts) {
+    this._notFound = this.route('*', opts);
+  }
+
+  get notFound() {
+    return this._notFound;
+  }
+
   get _page() {
     return page;
   }
@@ -118,7 +127,7 @@ class Router {
   }
 
   route(pathDef, options = {}, group) {
-    if (!/^\/.*/.test(pathDef)) {
+    if (!/^\//.test(pathDef) && pathDef !== '*') {
       throw new Error("route's path must start with '/'");
     }
 
@@ -398,25 +407,6 @@ class Router {
     return this.env.trailingSlash.withValue(true, fn);
   }
 
-  _notfoundRoute(context) {
-    this._current = {
-      path: context.path,
-      context: context,
-      params: [],
-      queryParams: {},
-    };
-
-    // XXX this.notfound kept for backwards compatibility
-    this.notFound = this.notFound || this.notfound;
-    if (!this.notFound) {
-      console.error('There is no route for the path:', context.path);
-      return;
-    }
-
-    this._current.route = new Route(this, '*', this.notFound);
-    this._invalidateTracker();
-  }
-
   initialize(options = {}) {
     if (this._initialized) {
       throw new Error('FlowRouter is already initialized');
@@ -578,15 +568,21 @@ class Router {
   _updateCallbacks() {
     this._page.callbacks = [];
     this._page.exits = [];
+    let catchAll = null;
 
     _.each(this._routes, (route) => {
-      this._page(route.pathDef, route._actionHandle);
-      this._page.exit(route.pathDef, route._exitHandle);
+      if (route.pathDef === '*') {
+        catchAll = route;
+      } else {
+        this._page(route.pathDef, route._actionHandle);
+        this._page.exit(route.pathDef, route._exitHandle);
+      }
     });
 
-    this._page('*', (context) => {
-      this._notfoundRoute(context);
-    });
+    if (catchAll) {
+      this._page(catchAll.pathDef, catchAll._actionHandle);
+      this._page.exit(catchAll.pathDef, catchAll._exitHandle);
+    }
   }
 
   _initTriggersAPI() {

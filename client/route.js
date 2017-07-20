@@ -31,12 +31,13 @@ class Route {
     this._router          = router;
     this._action          = options.action || Function.prototype;
     this._waitOn          = options.waitOn || null;
-    this._waitFor         = [];
+    this._waitFor         = _.isArray(options.waitFor) ? options.waitFor : [];
     this._subsMap         = {};
     this._onNoData        = options.onNoData || null;
     this._endWaiting      = options.endWaiting || null;
     this._currentData     = null;
     this._triggersExit    = options.triggersExit ? makeTriggers(options.triggersExit) : [];
+    this._trackerExit     = false;
     this._whileWaiting    = options.whileWaiting || null;
     this._triggersEnter   = options.triggersEnter ? makeTriggers(options.triggersEnter) : [];
     this._subscriptions   = options.subscriptions || Function.prototype;
@@ -258,16 +259,19 @@ class Route {
 
       this._waitFor = [];
 
-      this._triggersExit.push(() => {
-        stopSubs();
-        for (let i = trackers.length - 1; i >= 0; i--) {
-          if (trackers[i].stop) {
-            trackers[i].stop();
+      if (!this._trackerExit) {
+        this._trackerExit = true;
+        this._triggersExit.push(() => {
+          stopSubs();
+          for (let i = trackers.length - 1; i >= 0; i--) {
+            if (trackers[i].stop) {
+              trackers[i].stop();
+            }
           }
-        }
-        trackers = [];
-        _data = this._currentData = null;
-      });
+          trackers = [];
+          _data = this._currentData = null;
+        });
+      }
 
       whileWaitingAction();
       wait(0);

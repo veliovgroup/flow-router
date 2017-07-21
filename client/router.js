@@ -581,9 +581,12 @@ class Router {
       }
     });
 
+    // Setting exit triggers on catch all routes leads to weird behavior.
+    // We recommend to avoid enter and exit triggers on catch all (`*`) routes.
+    // Use FlowRouter.triggers.exit([func]) and FlowRouter.triggers.enter([func]) instead
     if (catchAll) {
       this._page(catchAll.pathDef, catchAll._actionHandle);
-      this._page.exit(catchAll.pathDef, catchAll._exitHandle);
+      // this._page.exit(catchAll.pathDef, catchAll._exitHandle);
     }
   }
 

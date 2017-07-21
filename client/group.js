@@ -27,7 +27,7 @@ const makeTriggers = (_base, _triggers) => {
 
 class Group {
   constructor(router, options = {}, parent) {
-    if (options.prefix && !/^\/.*/.test(options.prefix)) {
+    if (options.prefix && !/^\//.test(options.prefix)) {
       throw new Error('group\'s prefix must start with "/"');
     }
 
@@ -52,7 +52,7 @@ class Group {
   }
 
   route(_pathDef, options = {}, _group) {
-    if (!/^\/.*/.test(_pathDef)) {
+    if (!/^\//.test(_pathDef)) {
       throw new Error('route\'s path must start with "/"');
     }
 

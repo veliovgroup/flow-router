@@ -254,7 +254,7 @@ class Route {
       };
 
       this._waitFor.forEach((wo) => {
-        processSubData(wo(current.params, current.queryParams, done));
+        processSubData(wo.call(this, current.params, current.queryParams, done));
       });
 
       this._waitFor = _.isArray(this.options.waitFor) ? this.options.waitFor : [];

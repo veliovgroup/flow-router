@@ -23,6 +23,7 @@ FlowRouter Extra:
  - [Templating](https://github.com/VeliovGroup/flow-router#templating) - Construct your layout and templates
  - [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage) - Bootstrap router's configuration
  - [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility) - Best packages to be used with flow-router-extra
+ - [Support this project](https://github.com/VeliovGroup/flow-router#support-this-project)
 
 Original FlowRouter's documentation:
  - [Meteor Routing Guide](#meteor-routing-guide)
@@ -707,6 +708,12 @@ __Note:__ *if you're using any package which requires original FR namespace, thr
 // in /lib/ directory
 Package['kadira:flow-router'] = Package['ostrio:flow-router-extra'];
 ```
+
+
+### Support this project:
+This project can't be possible without [ostr.io](https://ostr.io).
+
+By using [ostr.io](https://ostr.io) you are not only [protecting domain names](https://ostr.io/info/domain-names-protection), [monitoring websites and servers](https://ostr.io/info/monitoring), using [Prerendering for better SEO](https://ostr.io/info/prerendering) of your JavaScript website, but support our Open Source activity, and great packages like this one are available for free.
 
 -------
 

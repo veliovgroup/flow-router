@@ -670,12 +670,15 @@ FlowRouter.route('/post/:_id', {
   }
 });
 
-FlowRouter.notFound = {
+// 404 route
+// Since v3.2.0 it's recommended to use `*` route
+// instead of deprecated `.notFound` option
+FlowRouter.route('*', {
   title: '404: Page not found',
   action() {
     this.render('_layout', '_404');
   }
-};
+});
 
 // jazeee:spiderable-longer-timeout package
 FlowRouter.triggers.enter([() => {

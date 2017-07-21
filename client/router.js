@@ -111,6 +111,7 @@ class Router {
   }
 
   set notFound(opts) {
+    console.warn('FlowRouter.notFound is deprecated, use FlowRouter.route(\'*\', () => { /*...*/ }) instead!');
     opts.name = opts.name || '__notFound';
     this._notFound = this.route('*', opts);
   }

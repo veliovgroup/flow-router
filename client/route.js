@@ -257,7 +257,7 @@ class Route {
         processSubData(wo(current.params, current.queryParams, done));
       });
 
-      this._waitFor = [];
+      this._waitFor = _.isArray(this.options.waitFor) ? this.options.waitFor : [];
 
       if (!this._trackerExit) {
         this._trackerExit = true;

@@ -10,8 +10,16 @@ const makeTrigger = (trigger) => {
   return trigger;
 };
 
+const makeWaitFor = (func) => {
+  if (_.isFunction(func)) {
+    return [func];
+  }
+
+  return [];
+};
+
 const makeTriggers = (_base, _triggers) => {
-  if ((!_base && !_triggers)) {
+  if (!_base && !_triggers) {
     return [];
   }
   return makeTrigger(_base).concat(makeTrigger(_triggers));
@@ -23,10 +31,11 @@ class Group {
       throw new Error('group\'s prefix must start with "/"');
     }
 
-    this._router = router;
-    this.prefix = options.prefix || '';
-    this.name = options.name;
-    this.options = options;
+    this._waitFor = makeWaitFor(options.waitOn);
+    this._router  = router;
+    this.prefix   = options.prefix || '';
+    this.name     = options.name;
+    this.options  = options;
 
     this._triggersEnter = makeTriggers(options.triggersEnter, this._triggersEnter);
     this._triggersExit  = makeTriggers(this._triggersExit, options.triggersExit);
@@ -38,6 +47,7 @@ class Group {
       this.prefix = parent.prefix + this.prefix;
       this._triggersEnter = makeTriggers(parent._triggersEnter, this._triggersEnter);
       this._triggersExit  = makeTriggers(this._triggersExit, parent._triggersExit);
+      this._waitFor       = this.parent._waitFor.concat(this._waitFor);
     }
   }
 
@@ -51,6 +61,7 @@ class Group {
 
     options.triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
     options.triggersExit  = makeTriggers(options.triggersExit, this._triggersExit);
+    options.waitFor       = this._waitFor.concat([]);
 
     return this._router.route(pathDef, options, group);
   }

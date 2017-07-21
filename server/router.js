@@ -26,7 +26,7 @@ class Router {
   }
 
   route(pathDef, options = {}) {
-    if (!/^\/.*/.test(pathDef)) {
+    if (!/^\/.*/.test(pathDef) && pathDef !== '*') {
       throw new Error('route\'s path must start with "/"');
     }
 

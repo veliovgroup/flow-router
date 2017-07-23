@@ -13,7 +13,7 @@ class Router {
     this.subscriptions = Function.prototype;
 
     this.Renderer = new BlazeRenderer(() => {
-      return document.getElementsByTagName('body')[0];
+      return document.body;
     });
 
     this._tracker = this._buildTracker();

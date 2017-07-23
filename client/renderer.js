@@ -58,30 +58,27 @@ class BlazeRenderer {
     }
 
     if (_layout) {
-      let _data = {
-        ___content: this.reactTemplate
-      };
+      requestAnimFrame(() => {
+        let _data = {
+          ___content: this.reactTemplate
+        };
 
-      if (data) {
-        _data = Object.assign({}, _data, data);
-      }
+        if (data) {
+          _data = Object.assign({}, _data, data);
+        }
 
-      if (this.current.template === template) {
         this.reactTemplate.set(null);
-      }
-
-      if (this.current.layout !== layout) {
-        if (this.old) {
-          requestAnimFrame(() => {
+        if (this.current.layout !== layout) {
+          if (this.old) {
             Blaze.remove(this.old);
             this._render(template, _data, layout, _layout);
-          });
+          } else {
+            this._render(template, _data, layout, _layout);
+          }
         } else {
-          this._render(template, _data, layout, _layout);
+          this._load(true, template, _data, layout);
         }
-      } else {
-        this._load(true, template, _data, layout);
-      }
+      });
     }
   }
 
@@ -90,21 +87,18 @@ class BlazeRenderer {
       return _data;
     };
 
-    requestAnimFrame(() => {
-      this.old = Blaze.renderWithData(_layout, getData, this.rootEl());
-      this._load(false, template, _data, layout);
-    });
+    this._load(false, template, _data, layout);
+    this.old = Blaze.renderWithData(_layout, getData, this.rootEl());
   }
 
   _load(isOld, template, _data, layout) {
-    requestAnimFrame(() => {
-      this.reactTemplate.set(template);
-      if (isOld) {
-        this.old.dataVar.set(_data);
-      }
-      this.current.layout = layout;
-      this.current.template = template;
-    });
+    if (isOld) {
+      this.old.dataVar.set(_data);
+    }
+
+    this.reactTemplate.set(template);
+    this.current.layout = layout;
+    this.current.template = template;
   }
 }
 

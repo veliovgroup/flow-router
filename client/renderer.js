@@ -2,7 +2,7 @@ import { _ }           from 'meteor/underscore';
 import { Blaze }       from 'meteor/blaze';
 import { Meteor }      from 'meteor/meteor';
 import { Template }    from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
+import './yield.html';
 
 const requestAnimFrame = (() => {
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
@@ -12,10 +12,12 @@ const requestAnimFrame = (() => {
 
 class BlazeRenderer {
   constructor(rootEl) {
-    this.rootEl = rootEl;
-    this.old    = null;
-    this.reactTemplate = new ReactiveVar(null);
-    this.current = {
+    const self     = this;
+    this.rootEl   = rootEl;
+    this.layout   = null;
+    this.yield    = null;
+    this.template = null;
+    this.current  = {
       layout: null,
       template: null
     };
@@ -23,30 +25,34 @@ class BlazeRenderer {
     if (!rootEl || !_.isFunction(rootEl)) {
       throw new Meteor.Error(400, 'You must pass function into BlazeRenderer constructor, which returns DOM element');
     }
+
+    Template.yield.onCreated(function () {
+      self.yield = this;
+    });
+
+    Template.yield.onRendered(function () {
+      self.yield = this;
+    });
   }
 
   render(__layout, __template, data = {}) {
     let layout    = __layout;
+    let _layout   = false;
     let template  = __template;
-    let _template = '';
+    let _template = false;
 
     if (_.isString(template)) {
       _template = typeof Template !== 'undefined' && Template !== null ? Template[template] : void 0;
     } else if (template instanceof Blaze.Template) {
       _template = template;
       template  = template.viewName.replace('Template.', '');
-    } else {
-      _template = false;
     }
 
-    let _layout = '';
     if (_.isString(layout)) {
       _layout = typeof Template !== 'undefined' && Template !== null ? Template[layout] : void 0;
     } else if (layout instanceof Blaze.Template) {
       _layout = layout;
       layout  = layout.viewName.replace('Template.', '');
-    } else {
-      _layout = false;
     }
 
     if (!_template) {
@@ -57,48 +63,59 @@ class BlazeRenderer {
       throw new Meteor.Error(404, 'No such layout: ' + layout);
     }
 
-    if (_layout) {
-      requestAnimFrame(() => {
-        let _data = {
-          ___content: this.reactTemplate
-        };
+    let updateTemplate = true;
+    if (this.current.template !== template) {
+      if (this.template) {
+        Blaze.remove(this.template);
+        this.template = null;
+      }
+      updateTemplate = false;
+    }
 
-        if (data) {
-          _data = Object.assign({}, _data, data);
-        }
-
-        this.reactTemplate.set(null);
-        if (this.current.layout !== layout) {
-          if (this.old) {
-            Blaze.remove(this.old);
-            this._render(template, _data, layout, _layout);
-          } else {
-            this._render(template, _data, layout, _layout);
-          }
-        } else {
-          this._load(true, template, _data, layout);
-        }
-      });
+    if (this.current.layout !== layout) {
+      this.current.layout   = layout;
+      this.current.template = template;
+      if (this.layout) {
+        requestAnimFrame(() => {
+          Blaze.remove(this.layout);
+          this.layout = null;
+          this._render(_template, data, _layout);
+        });
+      } else {
+        this._render(_template, data, _layout);
+      }
+    } else {
+      this.current.template = template;
+      this._load(updateTemplate, true, _template, data);
     }
   }
 
-  _render(template, _data, layout, _layout) {
+  _render(_template, data, _layout) {
     const getData = () => {
-      return _data;
+      return data;
     };
 
-    this._load(false, template, _data, layout);
-    this.old = Blaze.renderWithData(_layout, getData, this.rootEl());
+    requestAnimFrame(() => {
+      this.layout = Blaze.renderWithData(_layout, getData, this.rootEl());
+      this._load(false, false, _template, data);
+    })
   }
 
-  _load(isOld, template, _data, layout) {
-    if (isOld) {
-      this.old.dataVar.set(_data);
+  _load(updateTemplate, updateLayout, _template, data) {
+    if (updateLayout) {
+      this.layout.dataVar.set(data);
     }
 
-    this.reactTemplate.set(template);
-    this.current.layout = layout;
-    this.current.template = template;
+    if (updateTemplate) {
+      this.template.dataVar.set(data);
+    } else {
+      const getData = () => {
+        return data;
+      };
+      requestAnimFrame(() => {
+        this.template = Blaze.renderWithData(_template, getData, this.yield.view._domrange.parentElement);
+      });
+    }
   }
 }
 

@@ -1,4 +1,5 @@
 import { _ }            from 'meteor/underscore';
+import { Blaze }        from 'meteor/blaze';
 import { Router }       from './_init.js';
 import { Meteor }       from 'meteor/meteor';
 import { Promise }      from 'meteor/promise';
@@ -37,7 +38,6 @@ class Route {
     this._endWaiting      = options.endWaiting || null;
     this._currentData     = null;
     this._triggersExit    = options.triggersExit ? makeTriggers(options.triggersExit) : [];
-    this._trackerExit     = false;
     this._whileWaiting    = options.whileWaiting || null;
     this._triggersEnter   = options.triggersEnter ? makeTriggers(options.triggersEnter) : [];
     this._subscriptions   = options.subscriptions || Function.prototype;
@@ -83,6 +83,7 @@ class Route {
     let _isWaiting    = false;
     let _preloaded    = 0;
     let _resources    = false;
+    let waitFor       = [];
     let promises      = [];
     let subscriptions = [];
     let timer;
@@ -98,6 +99,67 @@ class Route {
       }
     };
 
+    const whileWaitingAction = () => {
+      if (!_isWaiting) {
+        this._whileWaiting && this._whileWaiting(current.params, current.queryParams);
+        _isWaiting = true;
+      }
+    };
+
+    const subWait = (delay) => {
+      timer = Meteor.setTimeout(() => {
+        if (this.checkSubscriptions(subscriptions)) {
+          Meteor.clearTimeout(timer);
+          _data = getData();
+          if (_resources) {
+            whileWaitingAction();
+            getResources();
+          } else {
+            next(current, _data);
+          }
+        } else {
+          wait(25);
+        }
+      }, delay);
+    };
+
+    const wait = (delay) => {
+      if (promises.length) {
+        Promise.all(promises).then(() => {
+          subWait(delay);
+          promises = [];
+        });
+      } else {
+        subWait(delay);
+      }
+    };
+
+    const processSubData = (subData) => {
+      if (subData instanceof Array) {
+        for (let i = subData.length - 1; i >= 0; i--) {
+          if (subData[i] !== null && typeof subData[i] === 'object') {
+            placeIn(subData[i]);
+          }
+        }
+      } else if (subData !== null && typeof subData === 'object') {
+        placeIn(subData);
+      }
+    };
+
+    const stopSubs = () => {
+      for (let i = subscriptions.length - 1; i >= 0; i--) {
+        if (subscriptions[i].stop) {
+          subscriptions[i].stop();
+        }
+        delete subscriptions[i];
+      }
+      subscriptions = [];
+    };
+
+    const done = (subscription) => {
+      processSubData(_.isFunction(subscription) ? subscription() : subscription);
+    };
+
     if (current.route.globals.length) {
       for (let i = 0; i < current.route.globals.length; i++) {
         if (typeof current.route.globals[i] === 'object') {
@@ -107,7 +169,7 @@ class Route {
           }
 
           if (current.route.globals[i].waitOn && _.isFunction(current.route.globals[i].waitOn)) {
-            this._waitFor = [current.route.globals[i].waitOn].concat(this._waitFor);
+            waitFor = [current.route.globals[i].waitOn].concat(waitFor);
           }
         }
       }
@@ -188,90 +250,29 @@ class Route {
       }
     };
 
-    const whileWaitingAction = () => {
-      if (!_isWaiting) {
-        this._whileWaiting && this._whileWaiting(current.params, current.queryParams);
-        _isWaiting = true;
-      }
-    };
-
     if (_.isFunction(this._waitOn)) {
-      this._waitFor.push(this._waitOn);
+      waitFor.push(this._waitOn);
     }
 
-    if (this._waitFor && this._waitFor.length) {
-      const subWait = (delay) => {
-        timer = Meteor.setTimeout(() => {
-          if (this.checkSubscriptions(subscriptions)) {
-            Meteor.clearTimeout(timer);
-            _data = getData();
-            if (_resources) {
-              whileWaitingAction();
-              getResources();
-            } else {
-              next(current, _data);
-            }
-          } else {
-            wait(25);
-          }
-        }, delay);
-      };
-
-      const wait = (delay) => {
-        if (promises.length) {
-          Promise.all(promises).then(() => {
-            subWait(delay);
-            promises = [];
-          });
-        } else {
-          subWait(delay);
-        }
-      };
-
-      const processSubData = (subData) => {
-        if (subData instanceof Array) {
-          for (let i = subData.length - 1; i >= 0; i--) {
-            if (subData[i] !== null && typeof subData[i] === 'object') {
-              placeIn(subData[i]);
-            }
-          }
-        } else if (subData !== null && typeof subData === 'object') {
-          placeIn(subData);
-        }
-      };
-
-      const stopSubs = () => {
-        for (let i = subscriptions.length - 1; i >= 0; i--) {
-          if (subscriptions[i].stop) {
-            subscriptions[i].stop();
-          }
-        }
-        subscriptions = [];
-      };
-
-      const done = (subscription) => {
-        processSubData(_.isFunction(subscription) ? subscription() : subscription);
-      };
-
-      this._waitFor.forEach((wo) => {
+    if (waitFor.length) {
+      this._waitFor.concat(waitFor).forEach((wo) => {
         processSubData(wo.call(this, current.params, current.queryParams, done));
       });
 
-      this._waitFor = _.isArray(this.options.waitFor) ? this.options.waitFor : [];
-
-      if (!this._trackerExit) {
-        this._trackerExit = true;
-        this._triggersExit.push(() => {
-          stopSubs();
-          for (let i = trackers.length - 1; i >= 0; i--) {
-            if (trackers[i].stop) {
-              trackers[i].stop();
-            }
+      let triggerExitIndex = this._triggersExit.push(() => {
+        stopSubs();
+        for (let i = trackers.length - 1; i >= 0; i--) {
+          if (trackers[i].stop) {
+            trackers[i].stop();
           }
-          trackers = [];
-          _data = this._currentData = null;
-        });
-      }
+          delete trackers[i];
+        }
+        trackers = [];
+        promises = [];
+        subscriptions = [];
+        _data = this._currentData = null;
+        this._triggersExit.splice(triggerExitIndex - 1, 1);
+      });
 
       whileWaitingAction();
       wait(0);

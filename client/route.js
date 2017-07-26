@@ -1,5 +1,4 @@
 import { _ }            from 'meteor/underscore';
-import { Blaze }        from 'meteor/blaze';
 import { Router }       from './_init.js';
 import { Meteor }       from 'meteor/meteor';
 import { Promise }      from 'meteor/promise';

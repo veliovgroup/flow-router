@@ -4,7 +4,6 @@ import { Meteor }       from 'meteor/meteor';
 import { Promise }      from 'meteor/promise';
 import { Tracker }      from 'meteor/tracker';
 import { ReactiveDict } from 'meteor/reactive-dict';
-import './yield.html';
 
 const makeTriggers = (triggers) => {
   if (_.isFunction(triggers)) {

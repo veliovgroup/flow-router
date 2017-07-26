@@ -11,18 +11,32 @@ const requestAnimFrame = (() => {
 })();
 
 class BlazeRenderer {
-  constructor(rootEl) {
-    const self     = this;
-    this.rootEl   = rootEl;
+  constructor(opts = {}) {
+    this.cacheElement = document.createElement('div');
+    this.rootElement  = opts.rootElement || function () {
+      return document.body;
+    };
+
+    const self    = this;
     this.layout   = null;
     this.yield    = null;
     this.template = null;
+    this.key      = null;
     this.current  = {
       layout: null,
       template: null
     };
+    this.inMemoryCache     = {};
+    this.inMemoryRendering = opts.inMemoryRendering || false;
+    this.getMemoryElement  = opts.getMemoryElement || function () {
+      return document.createElement('div');
+    };
 
-    if (!rootEl || !_.isFunction(rootEl)) {
+    if (!this.getMemoryElement || !_.isFunction(this.getMemoryElement)) {
+      throw new Meteor.Error(400, '{getMemoryElement} must be a function, which returns new DOM element');
+    }
+
+    if (!this.rootElement || !_.isFunction(this.rootElement)) {
       throw new Meteor.Error(400, 'You must pass function into BlazeRenderer constructor, which returns DOM element');
     }
 
@@ -32,6 +46,10 @@ class BlazeRenderer {
 
     Template.yield.onRendered(function () {
       self.yield = this;
+    });
+
+    Template.yield.onDestroyed(() => {
+      self.yield = null;
     });
   }
 
@@ -63,6 +81,29 @@ class BlazeRenderer {
       throw new Meteor.Error(404, 'No such layout: ' + layout);
     }
 
+    if (this.inMemoryRendering) {
+      this.key = '__key__' + layout + '__' +  template;
+
+      if (!this.inMemoryCache['__layout__' + layout]) {
+        this.inMemoryCache['__layout__' + layout] = this.getMemoryElement();
+        this.cacheElement.appendChild(this.inMemoryCache['__layout__' + layout]);
+        this.inMemoryCache['__layout__' + layout]._parentElement = this.cacheElement;
+      }
+
+      if (!this.inMemoryCache['__template__' + template]) {
+        this.inMemoryCache['__template__' + template] = this.getMemoryElement();
+        this.cacheElement.appendChild(this.inMemoryCache['__template__' + template]);
+        this.inMemoryCache['__template__' + template]._parentElement = this.cacheElement;
+      }
+
+      if (!this.inMemoryCache[this.key]) {
+        this.inMemoryCache[this.key] = {
+          layout: this.inMemoryCache['__layout__' + layout],
+          template: this.inMemoryCache['__template__' + template]
+        };
+      }
+    }
+
     let updateTemplate = true;
     if (this.current.template !== template) {
       if (this.template) {
@@ -76,11 +117,9 @@ class BlazeRenderer {
       this.current.layout   = layout;
       this.current.template = template;
       if (this.layout) {
-        requestAnimFrame(() => {
-          Blaze.remove(this.layout);
-          this.layout = null;
-          this._render(_template, data, _layout);
-        });
+        Blaze.remove(this.layout);
+        this.layout = null;
+        this._render(_template, data, _layout);
       } else {
         this._render(_template, data, _layout);
       }
@@ -95,10 +134,24 @@ class BlazeRenderer {
       return data;
     };
 
-    requestAnimFrame(() => {
-      this.layout = Blaze.renderWithData(_layout, getData, this.rootEl());
-      this._load(false, false, _template, data);
-    })
+    const rootElement = this.rootElement();
+    if (!rootElement) {
+      throw new Meteor.Error(400, 'BlazeRenderer can\'t find root element!');
+    }
+
+    if (this.inMemoryRendering) {
+      this.inMemoryCache[this.key].layout._parentElement = rootElement;
+      this.layout = Blaze.renderWithData(_layout, getData, this.inMemoryCache[this.key].layout);
+      requestAnimFrame(() => {
+        rootElement.appendChild(this.inMemoryCache[this.key].layout);
+        this._load(false, false, _template, data);
+      });
+    } else {
+      requestAnimFrame(() => {
+        this.layout = Blaze.renderWithData(_layout, getData, rootElement);
+        this._load(false, false, _template, data);
+      });
+    }
   }
 
   _load(updateTemplate, updateLayout, _template, data) {
@@ -112,9 +165,22 @@ class BlazeRenderer {
       const getData = () => {
         return data;
       };
-      requestAnimFrame(() => {
-        this.template = Blaze.renderWithData(_template, getData, this.yield.view._domrange.parentElement);
-      });
+
+      if (!this.yield) {
+        throw new Meteor.Error(400, 'Yield template is not found!');
+      }
+
+      if (this.inMemoryRendering) {
+        this.inMemoryCache[this.key].template._parentElement = this.yield.view._domrange.parentElement;
+        this.template = Blaze.renderWithData(_template, getData, this.inMemoryCache[this.key].template, this.yield.view);
+        requestAnimFrame(() => {
+          this.yield.view._domrange.parentElement.appendChild(this.inMemoryCache[this.key].template, this.layout);
+        });
+      } else {
+        requestAnimFrame(() => {
+          this.template = Blaze.renderWithData(_template, getData, this.yield.view._domrange.parentElement, this.yield.view);
+        });
+      }
     }
   }
 }

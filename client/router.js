@@ -11,10 +11,7 @@ class Router {
   constructor() {
     this.globals = [];
     this.subscriptions = Function.prototype;
-
-    this.Renderer = new BlazeRenderer(() => {
-      return document.body;
-    });
+    this.Renderer = new BlazeRenderer();
 
     this._tracker = this._buildTracker();
     this._current = {};

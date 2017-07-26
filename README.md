@@ -1,6 +1,6 @@
 FlowRouter Extra
 ======
-Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
+Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package. *This package is meant to replace original FlowRouter,* `kadira:flow-router` *should be removed to avoid interference and unexpected behavior.*
 
 ## TOC
 FlowRouter Extra:
@@ -46,6 +46,8 @@ Original FlowRouter's documentation:
 ## FlowRouter Extra:
 ### Installation
 ```shell
+# Remove original FlowRouter
+meteor remove kadira:flow-router
 meteor add ostrio:flow-router-extra
 ```
 
@@ -550,6 +552,10 @@ Settings:
 
 `this.render(layout, template [, data])`
  - `layout` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of layout template (*which has* `yield`)
+ - `template` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of template (*which will be rendered into yield*)
+ - `data` {*Object*} - [Optional] Object of data context to use in template. *This object supports reactive data sources, but only when handled by "yielded" template, not nested templates, otherwise use template helpers*
+
+`this.render(template [, data])`
  - `template` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of template (*which will be rendered into yield*)
  - `data` {*Object*} - [Optional] Object of data context to use in template. *This object supports reactive data sources, but only when handled by "yielded" template, not nested templates, otherwise use template helpers*
 

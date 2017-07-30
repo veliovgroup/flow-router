@@ -1,8 +1,7 @@
-import { _ }           from 'meteor/underscore';
-import { Blaze }       from 'meteor/blaze';
-import { Meteor }      from 'meteor/meteor';
-import { Template }    from 'meteor/templating';
-import './yield.html';
+import { _ }        from 'meteor/underscore';
+import { Blaze }    from 'meteor/blaze';
+import { Meteor }   from 'meteor/meteor';
+import { Template } from 'meteor/templating';
 
 const requestAnimFrame = (() => {
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
@@ -12,21 +11,18 @@ const requestAnimFrame = (() => {
 
 class BlazeRenderer {
   constructor(opts = {}) {
-    this.cacheElement = document.createElement('div');
     this.rootElement  = opts.rootElement || function () {
       return document.body;
     };
 
-    const self    = this;
-    this.layout   = null;
-    this.yield    = null;
-    this.template = null;
-    this.key      = null;
-    this.current  = {
-      layout: null,
-      template: null
-    };
-    this.inMemoryCache     = {};
+    const self        = this;
+    this.isRendering  = false;
+    this.queue        = [];
+    this.yield        = null;
+    this.cache        = {};
+    this.old          = this.newState();
+    this.old.materialized = true;
+
     this.inMemoryRendering = opts.inMemoryRendering || false;
     this.getMemoryElement  = opts.getMemoryElement || function () {
       return document.createElement('div');
@@ -40,30 +36,66 @@ class BlazeRenderer {
       throw new Meteor.Error(400, 'You must pass function into BlazeRenderer constructor, which returns DOM element');
     }
 
+    Template.yield = new Template('yield', function () {});
+
     Template.yield.onCreated(function () {
       self.yield = this;
     });
 
     Template.yield.onRendered(function () {
       self.yield = this;
+      self.materialize(self.old);
     });
 
-    Template.yield.onDestroyed(() => {
+    Template.yield.onDestroyed(function () {
       self.yield = null;
     });
   }
 
-  render(__layout, __template, data = {}) {
+  render(__layout, __template = false, __data = {}, __callback) {
+    this.queue.push([__layout, __template, __data, __callback]);
+    this.startQueue();
+  }
+
+  startQueue() {
+    if (this.queue.length) {
+      if (!this.isRendering) {
+        this.isRendering = true;
+        const task = this.queue.shift();
+        this.proceed.apply(this, task);
+        if (this.queue.length) {
+          requestAnimFrame(this.startQueue.bind(this));
+        }
+      } else {
+        requestAnimFrame(this.startQueue.bind(this));
+      }
+    }
+  }
+
+  proceed(__layout, __template = false, __data = {}, __callback) {
+    let data      = __data;
     let layout    = __layout;
     let _layout   = false;
     let template  = __template;
     let _template = false;
+    let callback  = __callback || function () {};
 
     if (_.isString(template)) {
       _template = typeof Template !== 'undefined' && Template !== null ? Template[template] : void 0;
     } else if (template instanceof Blaze.Template) {
       _template = template;
       template  = template.viewName.replace('Template.', '');
+    } else if (_.isObject(template)) {
+      data     = template;
+      template = false;
+    } else if (_.isFunction(template)) {
+      callback = template;
+      template = false;
+    }
+
+    if (_.isFunction(data)) {
+      callback = data;
+      data     = {};
     }
 
     if (_.isString(layout)) {
@@ -73,65 +105,62 @@ class BlazeRenderer {
       layout  = layout.viewName.replace('Template.', '');
     }
 
-    if (!_template) {
-      throw new Meteor.Error(404, 'No such template: ' + template);
-    }
-
     if (!_layout) {
+      this.old.materialized = true;
+      this.isRendering = false;
       throw new Meteor.Error(404, 'No such layout: ' + layout);
     }
 
-    if (this.inMemoryRendering) {
-      this.key = '__key__' + layout + '__' +  template;
-
-      if (!this.inMemoryCache['__layout__' + layout]) {
-        this.inMemoryCache['__layout__' + layout] = this.getMemoryElement();
-        this.cacheElement.appendChild(this.inMemoryCache['__layout__' + layout]);
-        this.inMemoryCache['__layout__' + layout]._parentElement = this.cacheElement;
-      }
-
-      if (!this.inMemoryCache['__template__' + template]) {
-        this.inMemoryCache['__template__' + template] = this.getMemoryElement();
-        this.cacheElement.appendChild(this.inMemoryCache['__template__' + template]);
-        this.inMemoryCache['__template__' + template]._parentElement = this.cacheElement;
-      }
-
-      if (!this.inMemoryCache[this.key]) {
-        this.inMemoryCache[this.key] = {
-          layout: this.inMemoryCache['__layout__' + layout],
-          template: this.inMemoryCache['__template__' + template]
-        };
-      }
-    }
+    const current    = this.newState(layout, template);
+    current.data     = data;
+    current.callback = callback;
 
     let updateTemplate = true;
-    if (this.current.template !== template) {
-      if (this.template) {
-        Blaze.remove(this.template);
-        this.template = null;
+
+    if (this.old.template.name !== template) {
+      current.template.name  = template;
+      current.template.blaze = _template;
+      this.newElement('template', current);
+      if (this.old.template.view) {
+        Blaze.remove(this.old.template.view);
+        this.old.template.view = null;
       }
       updateTemplate = false;
+    } else {
+      current.template = this.old.template;
     }
 
-    if (this.current.layout !== layout) {
-      this.current.layout   = layout;
-      this.current.template = template;
-      if (this.layout) {
-        Blaze.remove(this.layout);
-        this.layout = null;
-        this._render(_template, data, _layout);
-      } else {
-        this._render(_template, data, _layout);
+    if (this.old.layout.name !== layout) {
+      current.layout.name    = layout;
+      current.layout.blaze   = _layout;
+      current.template.name  = template;
+      current.template.blaze = _template;
+      this.newElement('layout', current);
+
+      if (this.old.layout.view) {
+        Blaze.remove(this.old.layout.view);
+        this.old.layout.view = null;
       }
+
+      this._render(current);
+    } else if (template) {
+      current.layout         = this.old.layout;
+      current.template.name  = template;
+      current.template.blaze = _template;
+      this._load(updateTemplate, true, current);
     } else {
-      this.current.template = template;
-      this._load(updateTemplate, true, _template, data);
+      current.layout = this.old.layout;
+      this.isRendering = false;
+      current.materialized = true;
+      current.callback();
     }
+
+    this.old = current;
   }
 
-  _render(_template, data, _layout) {
+  _render(current) {
     const getData = () => {
-      return data;
+      return current.data;
     };
 
     const rootElement = this.rootElement();
@@ -140,45 +169,120 @@ class BlazeRenderer {
     }
 
     if (this.inMemoryRendering) {
-      this.inMemoryCache[this.key].layout._parentElement = rootElement;
-      this.layout = Blaze.renderWithData(_layout, getData, this.inMemoryCache[this.key].layout);
+      current.layout.view = Blaze.renderWithData(current.layout.blaze, getData, current.layout.element);
       requestAnimFrame(() => {
-        rootElement.appendChild(this.inMemoryCache[this.key].layout);
-        this._load(false, false, _template, data);
+        rootElement.appendChild(current.layout.element);
+        this._load(false, false, current);
       });
     } else {
       requestAnimFrame(() => {
-        this.layout = Blaze.renderWithData(_layout, getData, rootElement);
-        this._load(false, false, _template, data);
+        current.layout.view = Blaze.renderWithData(current.layout.blaze, getData, rootElement);
+        this._load(false, false, current);
       });
     }
   }
 
-  _load(updateTemplate, updateLayout, _template, data) {
-    if (updateLayout) {
-      this.layout.dataVar.set(data);
+  _load(updateTemplate, updateLayout, current) {
+    if (updateLayout && current.layout.view) {
+      current.layout.view.dataVar.set(current.data);
     }
 
-    if (updateTemplate) {
-      this.template.dataVar.set(data);
+    if (current.template.view && updateTemplate) {
+      current.template.view.dataVar.set(current.data);
+      this.isRendering = false;
+      current.materialized = true;
+    } else if (current.template.name && this.yield) {
+      this.materialize(current);
     } else {
+      this.isRendering = false;
+      current.materialized = true;
+      current.callback();
+    }
+  }
+
+  newElement(type, current) {
+    if (!this.inMemoryRendering) {
+      return;
+    }
+
+    current[type].parent  = current[type].parent ? current[type].parent : document.createElement('div');
+    if (!current[type].element) {
+      current[type].element = this.getMemoryElement();
+      current[type].parent.appendChild(current[type].element);
+      current[type].element._parentElement = current[type].parent;
+    }
+  }
+
+  newState(layout = false, template = false) {
+    const base = {
+      materialized: false,
+      data: null,
+      callback: function () {},
+      layout: {
+        view: null,
+        name: '',
+        blaze: null,
+        parent: null,
+        element: null
+      },
+      template: {
+        view: null,
+        name: '',
+        blaze: null,
+        parent: null,
+        element: null
+      }
+    };
+
+    if (!this.inMemoryRendering || (!layout && !template)) {
+      return base;
+    }
+
+    if (layout && this.cache[layout]) {
+      base.layout = this.cache[layout];
+    }
+
+    if (template && this.cache[template]) {
+      base.template = this.cache[template];
+    }
+
+    this.cache[template] = base;
+    return base;
+  }
+
+  materialize(current) {
+    if (current.template.name && !current.materialized) {
       const getData = () => {
-        return data;
+        return current.data;
       };
 
       if (!this.yield) {
-        throw new Meteor.Error(400, 'Yield template is not found!');
+        return;
       }
 
+      current.materialized = true;
       if (this.inMemoryRendering) {
-        this.inMemoryCache[this.key].template._parentElement = this.yield.view._domrange.parentElement;
-        this.template = Blaze.renderWithData(_template, getData, this.inMemoryCache[this.key].template, this.yield.view);
+        current.template.view = Blaze.renderWithData(current.template.blaze, getData, current.template.element, this.yield.view);
         requestAnimFrame(() => {
-          this.yield.view._domrange.parentElement.appendChild(this.inMemoryCache[this.key].template, this.layout);
+          if (this.yield) {
+            this.yield.view._domrange.parentElement.appendChild(current.template.element);
+            this.isRendering = false;
+            current.materialized = true;
+            current.callback();
+          } else {
+            current.materialized = false;
+          }
         });
       } else {
         requestAnimFrame(() => {
-          this.template = Blaze.renderWithData(_template, getData, this.yield.view._domrange.parentElement, this.yield.view);
+          if (this.yield) {
+            current.template.view = Blaze.renderWithData(current.template.blaze, getData, this.yield.view._domrange.parentElement, this.yield.view);
+            this.isRendering = false;
+            current.materialized = true;
+            current.callback();
+          } else {
+            current.materialized = false;
+          }
         });
       }
     }

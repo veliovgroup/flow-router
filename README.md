@@ -542,22 +542,27 @@ FlowRouter.route('/post/:_id', {
 *Instead of BlazeLayout, you can use build-in* `this.render()` *method*. Use it in context of `action`, `onNoData`, `whileWaiting`, `data`, `waitOn` or any other hook.
 
 Features:
- - Made with animation performance in mind, all DOM changes wrapped into `requestAnimationFrame`
+ - Made with animation performance in mind, all DOM interactions are wrapped into `requestAnimationFrame`
  - In-memory rendering (*a.k.a. off-screen rendering, virtual DOM*), disabled by default, can be activated with `FlowRouter.Renderer.inMemoryRendering = true;`
 
-Settings:
+Settings (*Experimental!*):
+ - Settings below is experimental, targeted to reduce on-screen DOM layout reflow, speed up rendering on slower devices and Phones in first place, by moving DOM computation to off-screen (*a.k.a. In-Memory DOM, Virtual DOM*)
  - `FlowRouter.Renderer.rootElement` {*Function*} - Function which returns root DOM element where layout will be rendered, default: `document.body`
  - `FlowRouter.Renderer.inMemoryRendering` {*Boolean*} - Enable/Disable in-memory rendering, default: `false`
  - `FlowRouter.Renderer.getMemoryElement` {*Function*} - Function which returns default in-memory element, default: `document.createElement('div')`. Use `document.createDocumentFragment()` to avoid extra parent elements
+     * The default `document.createElement('div')` will cause extra wrapping `div` element
+     * `document.createDocumentFragment()` won't cause extra wrapping `div` element but may lead to exceptions in Blaze engine, depends from your app implementation
 
-`this.render(layout, template [, data])`
+`this.render(layout, template [, data, callback])`
  - `layout` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of layout template (*which has* `yield`)
  - `template` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of template (*which will be rendered into yield*)
- - `data` {*Object*} - [Optional] Object of data context to use in template. *This object supports reactive data sources, but only when handled by "yielded" template, not nested templates, otherwise use template helpers*
+ - `data` {*Object*} - [Optional] Object of data context to use in template. Will be passed to both `layout` and `template`
+ - `callback` {*Function*} - [Optional] Callback triggered after template is rendered and placed into DOM. This callback has no context
 
-`this.render(template [, data])`
+`this.render(template [, data, callback])`
  - `template` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of template (*which will be rendered into yield*)
- - `data` {*Object*} - [Optional] Object of data context to use in template. *This object supports reactive data sources, but only when handled by "yielded" template, not nested templates, otherwise use template helpers*
+ - `data` {*Object*} - [Optional] Object of data context to use in template
+ - `callback` {*Function*} - [Optional] Callback triggered after template is rendered and placed into DOM. This callback has no context
 
 ### Templating
 *In order to use build-in* `this.render()` *method, layout template must contain* `yield` *placeholder*

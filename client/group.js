@@ -62,7 +62,6 @@ class Group {
     options.triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
     options.triggersExit  = makeTriggers(options.triggersExit, this._triggersExit);
     options.waitFor       = this._waitFor.concat([]);
-
     return this._router.route(pathDef, options, group);
   }
 

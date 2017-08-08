@@ -167,7 +167,7 @@ class Route {
           }
 
           if (current.route.globals[i].waitOn && _.isFunction(current.route.globals[i].waitOn)) {
-            waitFor = [current.route.globals[i].waitOn].concat(waitFor);
+            waitFor.unshift(current.route.globals[i].waitOn);
           }
         }
       }
@@ -248,12 +248,16 @@ class Route {
       }
     };
 
+    if (this._waitFor.length) {
+      waitFor = waitFor.concat(this._waitFor);
+    }
+
     if (_.isFunction(this._waitOn)) {
       waitFor.push(this._waitOn);
     }
 
     if (waitFor.length) {
-      this._waitFor.concat(waitFor).forEach((wo) => {
+      waitFor.forEach((wo) => {
         processSubData(wo.call(this, current.params, current.queryParams, done));
       });
 

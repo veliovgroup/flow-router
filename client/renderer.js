@@ -48,6 +48,11 @@ class BlazeRenderer {
     });
 
     Template.yield.onDestroyed(function () {
+      if (self.old.template.view) {
+        Blaze.remove(self.old.template.view);
+        self.old.template.view = null;
+        self.old.materialized = false;
+      }
       self.yield = null;
     });
   }
@@ -124,7 +129,9 @@ class BlazeRenderer {
       if (this.old.template.view) {
         Blaze.remove(this.old.template.view);
         this.old.template.view = null;
+        this.old.materialized = false;
       }
+
       updateTemplate = false;
     } else {
       current.template = this.old.template;
@@ -153,6 +160,7 @@ class BlazeRenderer {
       this.isRendering = false;
       current.materialized = true;
       current.callback();
+      current.callback = () => {};
     }
 
     this.old = current;
@@ -191,12 +199,20 @@ class BlazeRenderer {
       current.template.view.dataVar.set(current.data);
       this.isRendering = false;
       current.materialized = true;
-    } else if (current.template.name && this.yield) {
-      this.materialize(current);
-    } else {
+      current.callback();
+      current.callback = () => {};
+    } else if (!current.template.name) {
       this.isRendering = false;
       current.materialized = true;
       current.callback();
+      current.callback = () => {};
+    } else if (current.template.name && !this.yield) {
+      this.isRendering = false;
+      current.materialized = false;
+      current.callback();
+      current.callback = () => {};
+    } else if (current.template.name && this.yield) {
+      this.materialize(current);
     }
   }
 
@@ -257,6 +273,7 @@ class BlazeRenderer {
       };
 
       if (!this.yield) {
+        current.materialized = false;
         return;
       }
 
@@ -269,6 +286,7 @@ class BlazeRenderer {
             this.isRendering = false;
             current.materialized = true;
             current.callback();
+            current.callback = () => {};
           } else {
             current.materialized = false;
           }
@@ -280,6 +298,7 @@ class BlazeRenderer {
             this.isRendering = false;
             current.materialized = true;
             current.callback();
+            current.callback = () => {};
           } else {
             current.materialized = false;
           }

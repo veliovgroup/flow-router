@@ -20,6 +20,7 @@ FlowRouter Extra:
  - [onNoData hook](https://github.com/VeliovGroup/flow-router#onnodata-hook) - Do something if "*data hook*" returns falsy value
  - [Data in other hooks](https://github.com/VeliovGroup/flow-router#data-in-other-hooks) - Use fetched data in other hooks
  - [Render Template](https://github.com/VeliovGroup/flow-router#render-template) - Render template into layout
+ - [Refresh](https://github.com/VeliovGroup/flow-router#refresh-route) - Force template and layout re-rendering, re-subscriptions, and generally route refresh
  - [Templating](https://github.com/VeliovGroup/flow-router#templating) - Construct your layout and templates
  - [Suggested usage](https://github.com/VeliovGroup/flow-router#suggested-usage) - Bootstrap router's configuration
  - [Other packages compatibility](https://github.com/VeliovGroup/flow-router#other-packages-compatibility) - Best packages to be used with flow-router-extra
@@ -655,6 +656,53 @@ FlowRouter.route('/post/:_id', {
   },
   data(params) {
     return PostsCollection.findOne({_id: params._id});
+  }
+});
+```
+
+### Refresh Route
+```js
+FlowRouter.refresh('layout', 'template');
+```
+ - `layout` {*String*} - [required] Name of the layout template
+ - `template` {*String*} - [required] Name of the intermediate template, simple `<template>Loading...</template>` might be a good option
+
+`FlowRouter.refresh()` will force all route's rules and hooks to re-run, including subscriptions, waitOn(s) and template render.
+Useful in cases where template logic is depends from route's hooks, example:
+```handlebars
+{{#if currentUser}}
+  {{> yield}}
+{{else}}
+  {{> loginForm}}
+{{/if}}
+```
+in example above "yielded" template may loose data context after user login action, although user login will cause `yield` template to render `data` and `waitOn` hooks will not fetch new data.
+
+Login example:
+```js
+Meteor.loginWithPassword({
+  username: 'some@email.com'
+}, 'password', error => {
+  if (error) {
+    /* show error */
+  } else {
+    /* If login form has its own `/login` route, redirect to root: */
+    if (FlowRouter._current.route.name === 'login') {
+      FlowRouter.go('/');
+    } else {
+      FlowRouter.refresh('_layout', '_loading');
+    }
+  }
+});
+```
+
+Logout example:
+```js
+Meteor.logout((error) => {
+  if (error) {
+    console.error(error);
+  } else {
+    FlowRouter.refresh('_layout', '_loading');
   }
 });
 ```

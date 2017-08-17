@@ -2,12 +2,7 @@ import { _ }        from 'meteor/underscore';
 import { Blaze }    from 'meteor/blaze';
 import { Meteor }   from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-
-const requestAnimFrame = (() => {
-  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
-    setTimeout(callback, 1000 / 60);
-  };
-})();
+import { requestAnimFrame } from './modules.js';
 
 class BlazeRenderer {
   constructor(opts = {}) {

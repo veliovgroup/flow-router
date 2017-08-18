@@ -561,7 +561,7 @@ Settings (*Experimental!*):
  - `callback` {*Function*} - [Optional] Callback triggered after template is rendered and placed into DOM. This callback has no context
 
 `this.render(template [, data, callback])`
- - `template` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of template (*which will be rendered into yield*)
+ - `template` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of template (*which will be rendered into* `body` *element, or element defined in* `FlowRouter.Renderer.rootElement`)
  - `data` {*Object*} - [Optional] Object of data context to use in template
  - `callback` {*Function*} - [Optional] Callback triggered after template is rendered and placed into DOM. This callback has no context
 

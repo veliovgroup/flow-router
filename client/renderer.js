@@ -86,6 +86,7 @@ class BlazeRenderer {
       _template = template;
       template  = template.viewName.replace('Template.', '');
     } else if (_.isObject(template)) {
+      callback = data;
       data     = template;
       template = false;
     } else if (_.isFunction(template)) {

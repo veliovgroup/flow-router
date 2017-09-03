@@ -23,7 +23,11 @@ class Router {
         if (!!~this._specialChars.indexOf(paramArr[i])){
           _param += encodeURIComponent(encodeURIComponent(paramArr[i]));
         } else {
-          _param += encodeURIComponent(paramArr[i]);
+          try {
+            _param += encodeURIComponent(paramArr[i]);
+          } catch (e) {
+            _param += paramArr[i];
+          }
         }
       }
       return _param;

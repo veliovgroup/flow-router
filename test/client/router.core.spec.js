@@ -40,6 +40,27 @@ function (test, next) {
   }, 100);
 });
 
+Tinytest.addAsync('Client - Router - define and go to route with UTF-8 fields',
+function (test, next) {
+  var rand = Random.id();
+  var pathDef = "/" + rand + "/:key";
+  var rendered = 0;
+
+  FlowRouter.route(pathDef, {
+    action: function(params) {
+      test.equal(params.key, "𒀨𒀭");
+      rendered++;
+    }
+  });
+
+  FlowRouter.go(pathDef, {key: "𒀨𒀭"});
+
+  setTimeout(function() {
+    test.equal(rendered, 1);
+    setTimeout(next, 100);
+  }, 100);
+});
+
 Tinytest.addAsync('Client - Router - parse params and query', function (test, next) {
   var rand = Random.id();
   var rendered = 0;

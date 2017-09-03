@@ -676,7 +676,7 @@ Useful in cases where template logic is depends from route's hooks, example:
   {{> loginForm}}
 {{/if}}
 ```
-in example above "yielded" template may loose data context after user login action, although user login will cause `yield` template to render `data` and `waitOn` hooks will not fetch new data.
+in example above "yielded" template may loose data context after user login action, although user login will cause `yield` template to render - `data` and `waitOn` hooks will not fetch new data.
 
 Login example:
 ```js

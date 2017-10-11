@@ -763,6 +763,14 @@ FlowRouter.triggers.enter([() => {
 </template>
 ```
 
+You can override the Regex used to separate params (default `/(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g`):
+```jsx
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+// Use dashes as separators so `/:id-:slug/` isn't translated to `id-:slug` but to `:id`-`:slug`
+FlowRouter.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]]+)+/g;
+FlowRouter.route(...);
+```
+
 ### Other packages compatibility
 This package tested and recommended to use with next packages:
  - [meteorhacks:subs-manager](https://github.com/kadirahq/subs-manager) - Manage subscriptions with caching

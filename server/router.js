@@ -4,10 +4,10 @@ import Group      from './group.js';
 import { Meteor } from 'meteor/meteor';
 
 const qs = require('qs');
-const pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
 
 class Router {
   constructor() {
+    this.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
     this._routes = [];
     this._routesMap = {};
     this.subscriptions = Function.prototype;

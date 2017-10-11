@@ -4,10 +4,10 @@ import Group      from './group.js';
 import { Meteor } from 'meteor/meteor';
 
 const qs = require('qs');
-const pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
 
 class Router {
   constructor() {
+    this.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
     this._routes = [];
     this._routesMap = {};
     this.subscriptions = Function.prototype;
@@ -50,7 +50,7 @@ class Router {
       pathDef = this._routesMap[pathDef].path;
     }
 
-    let path = pathDef.replace(pathRegExp, (key) => {
+    let path = pathDef.replace(this.pathRegExp, (key) => {
       const firstRegexpChar = key.indexOf('(');
       // get the content behind : and (\\d+/)
       key = key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);

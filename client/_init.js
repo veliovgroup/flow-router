@@ -8,6 +8,28 @@ import BlazeRenderer from './renderer.js';
 import helpersInit   from './active.route.js';
 import { requestAnimFrame } from './modules.js';
 
+if (Package['zimme:active-route']) {
+  Meteor._debug('Please remove `zimme:active-route` package, as its features is build into flow-router-extra, and will interfere.');
+  Meteor._debug('meteor remove zimme:active-route');
+}
+
+if (Package['arillo:flow-router-helpers']) {
+  Meteor._debug('Please remove `arillo:flow-router-helpers` package, as its features is build into flow-router-extra, and will interfere.');
+  Meteor._debug('meteor remove arillo:flow-router-helpers');
+}
+
+if (Package['meteorhacks:inject-data']) {
+  Meteor._debug('`meteorhacks:inject-data` is deprecated, please remove it and install its successor - `staringatlights:inject-data`');
+  Meteor._debug('meteor remove meteorhacks:inject-data');
+  Meteor._debug('meteor add staringatlights:inject-data');
+}
+
+if (Package['meteorhacks:fast-render']) {
+  Meteor._debug('`meteorhacks:fast-render` is deprecated, please remove it and install its successor - `staringatlights:fast-render`');
+  Meteor._debug('meteor remove meteorhacks:fast-render');
+  Meteor._debug('meteor add staringatlights:fast-render');
+}
+
 const FlowRouter = new Router();
 FlowRouter.Router = Router;
 FlowRouter.Route = Route;

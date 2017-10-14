@@ -24,8 +24,8 @@ Meteor.publish('readyness', function (doIt) {
   }
 });
 
-if (Package['meteorhacks:inject-data']) {
-  InjectData = Package['meteorhacks:inject-data'].InjectData;
+if (Package['staringatlights:inject-data']) {
+  InjectData = Package['staringatlights:inject-data'].InjectData;
   var urlResolve = Npm.require('url').resolve;
   GetFRData = function GetFRData(path) {
     var url = urlResolve(process.env.ROOT_URL, path);

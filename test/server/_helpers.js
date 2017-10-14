@@ -26,8 +26,8 @@ Meteor.publish('readyness', function (doIt) {
 
 if (Package['staringatlights:inject-data']) {
   InjectData = Package['staringatlights:inject-data'].InjectData;
-  var urlResolve = Npm.require('url').resolve;
-  GetFRData = function GetFRData(path) {
+  var urlResolve = require('url').resolve;
+  GetFRData = function GetFRData (path) {
     var url = urlResolve(process.env.ROOT_URL, path);
     // FastRender only servers if there is a accept header with html in it
     var options  = {

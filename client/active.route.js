@@ -147,7 +147,7 @@ const init = (FlowRouter) => {
 
       if (!(regex || name || path)) {
         const t = (type === 'Route' ? 'name' : type).toLowerCase();
-        console.error(('Invalid argument, ' + helperName + ' takes "' + t + '", ') + (t + '="' + t + '" or regex="regex"'));
+        Meteor._debug(('Invalid argument, ' + helperName + ' takes "' + t + '", ') + (t + '="' + t + '" or regex="regex"'));
         return false;
       }
 

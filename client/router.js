@@ -112,7 +112,7 @@ class Router {
   }
 
   set notFound(opts) {
-    console.warn('FlowRouter.notFound is deprecated, use FlowRouter.route(\'*\', () => { /*...*/ }) instead!');
+    Meteor._debug('FlowRouter.notFound is deprecated, use FlowRouter.route(\'*\', () => { /*...*/ }) instead!');
     opts.name = opts.name || '__notFound';
     this._notFound = this.route('*', opts);
   }
@@ -263,7 +263,7 @@ class Router {
         this._page(path);
       }
     } catch (e) {
-      console.error('Malformed URI!', path, e);
+      Meteor._debug('Malformed URI!', path, e);
     }
   }
 

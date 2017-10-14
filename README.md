@@ -1359,9 +1359,9 @@ Template.myTemplate.events({
 >![FlowRouter's Subscription Management](https://cldup.com/esLzM8cjEL.gif)
 
 #### Fast Render
-FlowRouter has built in support for [Fast Render](https://github.com/meteorhacks/fast-render).
+FlowRouter has built in support for [Fast Render](https://github.com/abecks/meteor-fast-render).
 
-- `meteor add meteorhacks:fast-render`
+- `meteor add staringatlights:fast-render`
 - Put `router.js` in a shared location. We suggest `lib/router.js`.
 
 You can exclude Fast Render support by wrapping the subscription registration in an `isClient` block:
@@ -1484,7 +1484,7 @@ FlowRouter does not have a data context. Data context has the same problem as re
 
 ### Built in Fast Render Support
 
-FlowRouter has built in [Fast Render](https://github.com/meteorhacks/fast-render) support. Just add Fast Render to your app and it'll work. Nothing to change in the router.
+FlowRouter has built in [Fast Render](https://github.com/abecks/meteor-fast-render) support. Just add Fast Render to your app and it'll work. Nothing to change in the router.
 
 For more information check [docs](#fast-render).
 

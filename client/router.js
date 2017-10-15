@@ -5,10 +5,9 @@ import { Meteor }   from 'meteor/meteor';
 import { Tracker }  from 'meteor/tracker';
 import { page, qs } from './modules.js';
 
-const pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
-
 class Router {
   constructor() {
+    this.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
     this.globals = [];
     this.subscriptions = Function.prototype;
     this.Renderer = new BlazeRenderer();
@@ -211,7 +210,7 @@ class Router {
       path += '/' + this._basePath + '/';
     }
 
-    path += pathDef.replace(pathRegExp, (key) => {
+    path += pathDef.replace(this.pathRegExp, (key) => {
       const firstRegexpChar = key.indexOf('(');
       // get the content behind : and (\\d+/)
       key = key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);

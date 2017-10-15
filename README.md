@@ -763,7 +763,7 @@ FlowRouter.triggers.enter([() => {
 </template>
 ```
 
-You can override the Regex used to separate params (default `/(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g`):
+You can change the URI Regex parser used for `params` (default `/(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g`), for more info see [#25](https://github.com/VeliovGroup/flow-router/issues/25):
 ```jsx
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // Use dashes as separators so `/:id-:slug/` isn't translated to `id-:slug` but to `:id`-`:slug`

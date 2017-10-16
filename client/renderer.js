@@ -53,6 +53,12 @@ class BlazeRenderer {
   }
 
   render(__layout, __template = false, __data = {}, __callback) {
+    if (!__layout) {
+      throw new Meteor.Error(400, '`.render()` - Requires at least one argument');
+    } else if (!_.isString(__layout) && !(__layout instanceof Blaze.Template)) {
+      throw new Meteor.Error(400, '`.render()` - First argument must be a String or instance of Blaze.Template');
+    }
+
     this.queue.push([__layout, __template, __data, __callback]);
     this.startQueue();
   }
@@ -78,7 +84,16 @@ class BlazeRenderer {
     let _layout   = false;
     let template  = __template;
     let _template = false;
-    let callback  = __callback || function () {};
+    let callback  = __callback || (() => {});
+
+    if (_.isString(layout)) {
+      _layout = typeof Template !== 'undefined' && Template !== null ? Template[layout] : void 0;
+    } else if (layout instanceof Blaze.Template) {
+      _layout = layout;
+      layout  = layout.viewName.replace('Template.', '');
+    } else {
+      layout = false;
+    }
 
     if (_.isString(template)) {
       _template = typeof Template !== 'undefined' && Template !== null ? Template[template] : void 0;
@@ -86,24 +101,24 @@ class BlazeRenderer {
       _template = template;
       template  = template.viewName.replace('Template.', '');
     } else if (_.isObject(template)) {
-      callback = data;
       data     = template;
       template = false;
     } else if (_.isFunction(template)) {
       callback = template;
       template = false;
+    } else {
+      template = false;
     }
 
     if (_.isFunction(data)) {
       callback = data;
-      data     = {};
+      data = {};
+    } else if (!_.isObject(data)) {
+      data = {};
     }
 
-    if (_.isString(layout)) {
-      _layout = typeof Template !== 'undefined' && Template !== null ? Template[layout] : void 0;
-    } else if (layout instanceof Blaze.Template) {
-      _layout = layout;
-      layout  = layout.viewName.replace('Template.', '');
+    if (!_.isFunction(callback)) {
+      callback = () => {};
     }
 
     if (!_layout) {
@@ -112,10 +127,9 @@ class BlazeRenderer {
       throw new Meteor.Error(404, 'No such layout: ' + layout);
     }
 
-    const current    = this.newState(layout, template);
-    current.data     = data;
-    current.callback = callback;
-
+    const current      = this.newState(layout, template);
+    current.data       = data;
+    current.callback   = callback;
     let updateTemplate = true;
 
     if (this.old.template.name !== template) {

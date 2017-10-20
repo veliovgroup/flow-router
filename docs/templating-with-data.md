@@ -40,16 +40,11 @@ import './layout.html';
 ```handlebars
 <!-- /imports/client/article/article.html -->
 <template name="article">
-  <h1>Hello World!</h1>
-  <p>This is index template.</p>
-</template>
-```
+  <h1>{{article.title}}</h1>
+  <p>{{article.headline}}</p>
 
-```js
-// /imports/client/article/article.js
-import { Template } from 'meteor/templating';
-import './article.html';
-/* ... */
+  {{{article.text}}}
+</template>
 ```
 
 #### Create loading template
@@ -79,7 +74,7 @@ FlowRouter.route('/article/:_id', {
   name: 'article',
   waitOn(params) {
     return [
-      import('/imports/client/article/article.js'),
+      import('/imports/client/article/article.html'),
       Meteor.subscribe('article', params._id)
     ];
   },

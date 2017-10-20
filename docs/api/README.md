@@ -1,0 +1,29 @@
+#### API:
+ - General Methods:
+ - [`.go()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/go.md)
+ - [`.route()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/route.md)
+ - [`.group()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/group.md)
+ - [`.render()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/render.md)
+ - [Global `.triggers`](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/triggers.md)
+ - Workarounds:
+ - [`.refresh()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/refresh.md)
+ - [`.reload()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/reload.md)
+ - [`.pathRegExp` option](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/pathRegExp.md)
+ - Manipulation:
+ - [`.getParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getParam.md)
+ - [`.getQueryParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getQueryParam.md)
+ - [`.setParams()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/setParams.md)
+ - [`.setQueryParams()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/setQueryParams.md)
+ - URLs and data:
+ - [`.url()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/url.md)
+ - [`.path()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/path.md)
+ - [`.current()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/current.md)
+ - [`.getRouteName()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getRouteName.md)
+ - Reactivity:
+ - [`.watchPathChange()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/watchPathChange.md)
+ - [`.withReplaceState()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/withReplaceState.md)
+ - For add-on developers:
+ - [`.onRouteRegister()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/onRouteRegister.md)
+ - Tweaking:
+ - [`.wait()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/wait.md)
+ - [`.initialize()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/initialize.md)

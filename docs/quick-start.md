@@ -16,7 +16,7 @@ __Note:__ *This package is meant to replace original FlowRouter,* `kadira:flow-r
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 ```
 
-#### Create your fist route
+#### Create your first route
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 

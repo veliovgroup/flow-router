@@ -1,4 +1,4 @@
-### Flow-Router Extra Quick Start
+### Quick Start
 
 #### Install
 ```shell
@@ -35,5 +35,39 @@ FlowRouter.route('*', {
 });
 ```
 
+#### Create a route with parameters
+```js
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+// Going to: /article/article_id/article-slug
+FlowRouter.route('/article/:_id/:slug', {
+  name: 'article',
+  action(params) {
+    // All passed parameters is available as Object:
+    console.log(params);
+    // { _id: 'article_id', slug: 'article-slug' }
+  }
+});
+```
+
+#### Create a route with query string
+```js
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+// Going to: /article/article_id?comment=123
+FlowRouter.route('/article/:_id', {
+  name: 'article',
+  action(params, qs) {
+    // All passed parameters and query string
+    // are available as Objects:
+    console.log(params);
+    // { _id: 'article_id' }
+    console.log(qs);
+    // { comment: '123' }
+  }
+});
+```
+
 #### Further reading
- - [Templating]()
+ - [Templating](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating.md)
+ - [`.action()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/action.md)

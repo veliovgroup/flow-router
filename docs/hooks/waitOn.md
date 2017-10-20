@@ -1,6 +1,6 @@
 ### waitOn hook
 
-`waiOn(params, qs, data)`
+`waitOn(params, qs, data)`
  - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
  - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
  - `ready` {*Function*} - Call when computation is ready using *Tracker*

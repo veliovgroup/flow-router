@@ -1,9 +1,8 @@
 ### whileWaiting hook
 
-`whileWaiting(params, qs, data)`
+`whileWaiting(params, qs)`
  - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
  - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
- - `data` {*Mix*} - Value returned from `.data()` hook
  - Return: {*void*}
 
 `.whileWaiting()` hook is triggered before `.waitOn()` hook, allowing to display/render text or animation saying `Loading...`.

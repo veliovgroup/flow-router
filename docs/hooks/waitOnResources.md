@@ -79,3 +79,6 @@ FlowRouter.globals.push({
   }
 });
 ```
+
+#### Further reading
+ - [`.waiOn()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waiOn.md)

@@ -47,4 +47,6 @@ FlowRouter.route('*', {
 ```
 
 #### Documentation
-Continue with our [wiki](https://github.com/VeliovGroup/flow-router/wiki)
+ - Continue with our [wiki](https://github.com/VeliovGroup/flow-router/wiki);
+ - [Quick start](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md) tutorial
+ - All docs as [single document](https://github.com/VeliovGroup/flow-router/blob/master/docs/full.md)

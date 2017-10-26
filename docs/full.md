@@ -104,6 +104,8 @@ FlowRouter.current();
 Get the current state of the router. **This API is not reactive**.
 If you need to watch the changes in the path simply use `FlowRouter.watchPathChange()`.
 
+-------
+
 #### Example
 ```js
 // route def: /apps/:appId
@@ -121,6 +123,8 @@ console.log(current);
 // }
 ```
 
+-------
+
 ### getParam method
 
 ```js
@@ -131,6 +135,8 @@ FlowRouter.getParam(paramName);
 
 Reactive function which you can use to get a parameter from the URL.
 
+-------
+
 #### Example
 ```js
 // route def: /apps/:appId
@@ -139,6 +145,8 @@ Reactive function which you can use to get a parameter from the URL.
 const appId = FlowRouter.getParam('appId');
 console.log(appId); // prints "this-is-my-app"
 ```
+
+-------
 
 ### getQueryParam method
 
@@ -158,6 +166,8 @@ const color = FlowRouter.getQueryParam('color');
 console.log(color); // prints "red"
 ```
 
+-------
+
 ### getRouteName method
 
 ```js
@@ -167,6 +177,8 @@ FlowRouter.getRouteName();
 
 Use to get the name of the route reactively.
 
+-------
+
 #### Example
 ```js
 Tracker.autorun(function () {
@@ -174,6 +186,8 @@ Tracker.autorun(function () {
   console.log('Current route name is: ', routeName);
 });
 ```
+
+-------
 
 ### go method
 
@@ -194,6 +208,8 @@ FlowRouter.go('blog'); // <-- by Route's name - /blog/
 FlowRouter.go('blogPost', { _id: 'post_id' }); // /blog/post_id
 FlowRouter.go('blogPost', { _id: 'post_id' }, { commentId: '123' }); // /blog/post_id?commentId=123
 ```
+
+-------
 
 ### group method
 
@@ -229,6 +245,8 @@ adminRoutes.route('/posts', {
 });
 ```
 
+-------
+
 #### Nested Group
 ```js
 const adminRoutes = FlowRouter.group({
@@ -247,6 +265,8 @@ superAdminRoutes.route('/post', {
 });
 ```
 
+-------
+
 #### Get group name
 ```js
 FlowRouter.current().route.group.name
@@ -256,6 +276,8 @@ This can be useful for determining if the current route is in a specific group (
 ```js
 FlowRouter.current().route.group.parent.name
 ```
+
+-------
 
 ### initialize method
 
@@ -268,6 +290,8 @@ By default, FlowRouter initializes the routing process in a `Meteor.startup()` c
 
 So, that's where `FlowRouter.wait()` comes to save you. You need to call it directly inside your JavaScript file. After that, whenever your app is ready call `FlowRouter.initialize()`.
 
+-------
+
 #### Example
 ```js
 FlowRouter.wait();
@@ -275,6 +299,8 @@ WhenEverYourAppIsReady(() => {
   FlowRouter.initialize();
 });
 ```
+
+-------
 
 ### onRouteRegister method
 
@@ -292,6 +318,8 @@ FlowRouter.onRouteRegister((route) => {
   console.log(route);
 });
 ```
+
+-------
 
 ### path method
 
@@ -314,6 +342,8 @@ console.log(path); // --> "/blog/met%20eor/abc?show=y%2Be%3Ds&color=black"
 
 If there are no `params` or `qs`, it will simply return the path as it is.
 
+-------
+
 ### pathRegExp option
 
 ```js
@@ -324,6 +354,8 @@ FlowRouter.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]]+)+/g;
  - Default - `/(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g`
 
 Use to change the URI RegEx parser used for `params`, for more info see [#25](https://github.com/VeliovGroup/flow-router/issues/25).
+
+-------
 
 ### refresh method
 
@@ -374,6 +406,8 @@ Meteor.logout((error) => {
 });
 ```
 
+-------
+
 ### reload method
 
 ```js
@@ -384,6 +418,8 @@ FlowRouter.reload();
 FlowRouter routes are idempotent. That means, even if you call `FlowRouter.go()` to the same URL multiple times, it only activates in the first run. This is also true for directly clicking on paths.
 
 So, if you really need to reload the route, this is the method you want.
+
+-------
 
 ### render method
 
@@ -413,6 +449,8 @@ So, if you really need to reload the route, this is the method you want.
  - `FlowRouter.Renderer.getMemoryElement` {*Function*} - Function which returns default in-memory element, default: `document.createElement('div')`. Use `document.createDocumentFragment()` to avoid extra parent elements
      * The default `document.createElement('div')` will cause extra wrapping `div` element
      * `document.createDocumentFragment()` won't cause extra wrapping `div` element but may lead to exceptions in Blaze engine, depends from your app implementation
+
+-------
 
 ### route method
 
@@ -448,6 +486,8 @@ FlowRouter.route('*', {
 });
 ```
 
+-------
+
 ### setParams method
 
 ```js
@@ -467,6 +507,8 @@ FlowRouter.setParams({appId: 'new-id'});
 //      /apps/new-id?show=yes&color=red
 ```
 
+-------
+
 ### setQueryParams method
 
 ```js
@@ -482,6 +524,8 @@ To remove a query param set it to `null`:
 FlowRouter.setQueryParams({ paramToRemove: null });
 ```
 
+-------
+
 ### Global Triggers
 
 ```js
@@ -496,6 +540,8 @@ FlowRouter.triggers.exit([trackRouteExit], {except: ["home"]});
 To filter routes use `only` or `except` keywords.
 You can't use both `only` and `except` at once.
 
+-------
+
 ### url method
 
 ```js
@@ -505,6 +551,8 @@ FlowRouter.url(path, params, qs);
  - `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
  - `qs` {*Object*} - Serialized query string, `{ key: 'val' }`
  - Returns {*String*} - Absolute URL using `Meteor.absoluteUrl`
+
+-------
 
 ### wait method
 
@@ -525,6 +573,8 @@ WhenEverYourAppIsReady(() => {
 });
 ```
 
+-------
+
 ### watchPathChange method
 
 ```js
@@ -541,6 +591,8 @@ Tracker.autorun(() => {
   // do something with the current context
 });
 ```
+
+-------
 
 ### withReplaceState method
 
@@ -590,6 +642,8 @@ FlowRouter.withReplaceState(() => {
  - [`.waitOnResources()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOnResources.md)
  - [`.triggersEnter()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
  - [`.data()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/data.md)
+
+-------
 
 ### data hook
 
@@ -651,12 +705,16 @@ FlowRouter.route('/post/:_id', {
 });
 ```
 
+-------
+
 ### endWaiting hook
 
 `endWaiting()` - Called with no arguments
  - Return: {*void*}
 
 `.endWaiting()` hook is triggered right after all resources in `.waitOn()` and `.waitOnResources()` hooks are ready.
+
+-------
 
 ### onNoData hook
 
@@ -679,6 +737,8 @@ FlowRouter.route('/post/:_id', {
   }
 });
 ```
+
+-------
 
 ### triggersEnter
 
@@ -729,6 +789,8 @@ FlowRouter.route('/', {
 FlowRouter.triggers.enter([cb1, cb2]);
 ```
 
+-------
+
 ### triggersExit hooks
 
 `triggersExit` is option (*not actually a hook*), it accepts array of *Function*s, each function will be called with one argument:
@@ -761,6 +823,8 @@ FlowRouter.route('/home', {
 ```js
 FlowRouter.triggers.exit([cb1, cb2]);
 ```
+
+-------
 
 ### waitOn hook
 
@@ -877,6 +941,8 @@ FlowRouter.route('/posts', {
 });
 ```
 
+-------
+
 ### waitOnResources hook
 
 `waitOnResources(params, qs)`
@@ -959,6 +1025,8 @@ FlowRouter.globals.push({
 });
 ```
 
+-------
+
 ### whileWaiting hook
 
 `whileWaiting(params, qs)`
@@ -996,6 +1064,8 @@ Returns the name of the current route
 </div>
 ```
 
+-------
+
 ### `currentRouteOption` Template Helper
 
 This adds support to get options from flow router
@@ -1015,6 +1085,8 @@ FlowRouter.route('name', {
   ...
 </div>
 ```
+
+-------
 
 ### `isActivePath` Template Helper
 
@@ -1037,6 +1109,8 @@ Returns either a configurable `String`, which defaults to `'active'`, or `false`
 <li class="{{isActivePath '/home' class='is-selected'}}">...</li>
 ```
 
+-------
+
 ### `isActiveRoute` Template Helper
 
 Template helper to check if the supplied route name matches the currently active route's name.
@@ -1058,6 +1132,7 @@ Returns either a configurable `String`, which defaults to `'active'`, or `false`
 <li class="{{isActiveRoute 'home' class='is-selected'}}">...</li>
 ```
 
+-------
 
 ### `isNotActivePath` Template Helper
 
@@ -1080,6 +1155,7 @@ Returns either a configurable `String`, which defaults to `'disabled'`, or `fals
 <li class="{{isNotActivePath '/home' class='is-disabled'}}">...</li>
 ```
 
+-------
 
 ### `isNotActiveRoute` Template Helper
 
@@ -1112,6 +1188,8 @@ The following can be used by as arguments in `isNotActivePath`, `isNotActiveRout
  - `path` {*String*} - Only available for `isActivePath` and `isNotActivePath`
  - `regex` {*String|RegExp*}
 
+-------
+
 ### `linkTo` Template Helper
 
 Custom content block for creating a link
@@ -1127,6 +1205,8 @@ Result:
 <a href="/posts/">Go to posts</a>
 ```
 
+-------
+
 ### `param` Template Helper
 
 Returns the value for a URL parameter
@@ -1134,6 +1214,8 @@ Returns the value for a URL parameter
 ```handlebars
 <div>ID of this post is <em>{{param 'id'}}</em></div>
 ```
+
+-------
 
 ### `pathFor` Template Helper
 
@@ -1147,6 +1229,8 @@ Used to build a path to your route. First parameter can be either the path defin
 <a href="{{pathFor '/post/:id/comments/:cid' id=_id cid=comment._id query='back=yes&more=true'}}">Link to comment in post with query params</a>
 ```
 
+-------
+
 ### `queryParam` Template Helper
 
 Returns the value for a query parameter
@@ -1154,6 +1238,8 @@ Returns the value for a query parameter
 ```handlebars
 <input placeholder="Search" value="{{queryParam 'query'}}">
 ```
+
+-------
 
 ### `urlFor` Template Helper
 

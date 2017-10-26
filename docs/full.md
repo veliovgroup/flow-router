@@ -104,8 +104,6 @@ FlowRouter.current();
 Get the current state of the router. **This API is not reactive**.
 If you need to watch the changes in the path simply use `FlowRouter.watchPathChange()`.
 
--------
-
 #### Example
 ```js
 // route def: /apps/:appId
@@ -134,8 +132,6 @@ FlowRouter.getParam(paramName);
  - Returns {*String*}
 
 Reactive function which you can use to get a parameter from the URL.
-
--------
 
 #### Example
 ```js
@@ -176,8 +172,6 @@ FlowRouter.getRouteName();
  - Returns {*String*}
 
 Use to get the name of the route reactively.
-
--------
 
 #### Example
 ```js
@@ -245,8 +239,6 @@ adminRoutes.route('/posts', {
 });
 ```
 
--------
-
 #### Nested Group
 ```js
 const adminRoutes = FlowRouter.group({
@@ -264,8 +256,6 @@ superAdminRoutes.route('/post', {
     action() { /* ... */ }
 });
 ```
-
--------
 
 #### Get group name
 ```js
@@ -289,8 +279,6 @@ FlowRouter.initialize();
 By default, FlowRouter initializes the routing process in a `Meteor.startup()` callback. This works for most of the applications. But, some applications have custom initializations and FlowRouter needs to initialize after that.
 
 So, that's where `FlowRouter.wait()` comes to save you. You need to call it directly inside your JavaScript file. After that, whenever your app is ready call `FlowRouter.initialize()`.
-
--------
 
 #### Example
 ```js

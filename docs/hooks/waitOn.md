@@ -114,4 +114,4 @@ FlowRouter.route('/posts', {
 ```
 
 #### Further reading
- - [`.waiOnResources()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waiOnResources.md)
+ - [`.waitOnResources()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOnResources.md)

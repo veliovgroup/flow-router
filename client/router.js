@@ -429,7 +429,7 @@ class Router {
     _.each(['show', 'replace'], (fnName) => {
       const original = self._page[fnName];
       self._page[fnName] = function (path, state, dispatch, push) {
-        if (!self.env.reload.get() && self._current.path === path) {
+        if (!path || (!self.env.reload.get() && self._current.path === path)) {
           return;
         }
         path = path.replace(/\/\/+/g, '/');

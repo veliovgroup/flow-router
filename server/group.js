@@ -52,7 +52,7 @@ class Group {
     options.triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
     options.triggersExit  = makeTriggers(options.triggersExit, this._triggersExit);
 
-    return this._router.route(pathDef, options, group);
+    return this._router.route(pathDef, _.extend(_.omit(this.options, 'triggersEnter', 'triggersExit', 'subscriptions', 'prefix', 'waitOn', 'name', 'title', 'titlePrefix', 'link', 'script', 'meta'), options), group);
   }
 
   group(options) {

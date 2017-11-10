@@ -2,7 +2,7 @@
  1. Search [issues](https://github.com/VeliovGroup/flow-router/issues?utf8=✓&q=is%3Aissue), maybe your issue is already solved
  2. Before submitting an issue make sure it's only related to `flow-router-extra` package
  3. If your issue not solved:
-     - Give expressive description
+     - Give an expressive description of what is went wrong
      - Version of `flow-router-extra` you're experiencing this issue
      - Version of `Meteor` you're experiencing this issue
      - Browser name and its version (Chrome, Firefox, Safari, etc.)?

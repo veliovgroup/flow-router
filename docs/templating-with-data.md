@@ -50,7 +50,7 @@ import './layout.html';
 #### Create loading template
 ```handlebars
 <!-- /imports/client/loading/loading.html -->
-<template name="index">
+<template name="loading">
   Loading...
 </template>
 ```

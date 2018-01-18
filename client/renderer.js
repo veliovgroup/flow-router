@@ -1,11 +1,23 @@
-import { _ }        from 'meteor/underscore';
-import { Blaze }    from 'meteor/blaze';
-import { Meteor }   from 'meteor/meteor';
-import { Template } from 'meteor/templating';
+import { _ }      from 'meteor/underscore';
+import { Meteor } from 'meteor/meteor';
 import { requestAnimFrame } from './modules.js';
+
+let Blaze;
+let Template;
+
+try {
+  Blaze    = require('meteor/blaze').Blaze;
+  Template = require('meteor/templating').Template;
+} catch (e) {
+  // we're good
+}
 
 class BlazeRenderer {
   constructor(opts = {}) {
+    if (!Blaze || !Template) {
+      return;
+    }
+
     this.rootElement  = opts.rootElement || function () {
       return document.body;
     };
@@ -53,6 +65,10 @@ class BlazeRenderer {
   }
 
   render(__layout, __template = false, __data = {}, __callback) {
+    if (!Blaze || !Template) {
+      throw new Meteor.Error(400, '`.render()` - Requires `blaze` and `templating`, or `blaze-html-templates` packages to be installed');
+    }
+
     if (!__layout) {
       throw new Meteor.Error(400, '`.render()` - Requires at least one argument');
     } else if (!_.isString(__layout) && !(__layout instanceof Blaze.Template)) {
@@ -79,6 +95,10 @@ class BlazeRenderer {
   }
 
   proceed(__layout, __template = false, __data = {}, __callback) {
+    if (!Blaze || !Template) {
+      return;
+    }
+
     let data      = __data;
     let layout    = __layout;
     let _layout   = false;
@@ -177,6 +197,10 @@ class BlazeRenderer {
   }
 
   _render(current) {
+    if (!Blaze || !Template) {
+      return;
+    }
+
     const getData = () => {
       return current.data;
     };
@@ -277,6 +301,10 @@ class BlazeRenderer {
   }
 
   materialize(current) {
+    if (!Blaze || !Template) {
+      return;
+    }
+
     if (current.template.name && !current.materialized) {
       const getData = () => {
         return current.data;

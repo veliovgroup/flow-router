@@ -1,10 +1,20 @@
 import { Meteor }       from 'meteor/meteor';
 import { _ }            from 'meteor/underscore';
-import { Template }     from 'meteor/templating';
 import { check, Match } from 'meteor/check';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
+let Template;
+try {
+  Template = require('meteor/templating').Template;
+} catch (e) {
+  // we're good
+}
+
 const init = (FlowRouter) => {
+  if (!Template) {
+    return;
+  }
+
   // Active Route
   // https://github.com/meteor-activeroute/legacy
   // zimme:active-route

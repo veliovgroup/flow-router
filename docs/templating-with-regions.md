@@ -1,5 +1,7 @@
 ### Templating with "Regions"
 
+ - __Note__: Blaze templating is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed.
+
 #### Create layout
 ```handlebars
 <!-- /imports/client/layout/layout.html -->

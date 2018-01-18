@@ -2,6 +2,8 @@
 
 `this.render()` method is available only [inside hooks](https://github.com/VeliovGroup/flow-router/tree/master/docs#hooks-in-execution-order).
 
+ - __Note__: `this.render()` method is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed.
+
 #### With Layout
 `this.render(layout, template [, data, callback])`
  - `layout` {*String*|*Blaze.Template*} - *Blaze.Template* instance or a name of layout template (*which has* `yield`)

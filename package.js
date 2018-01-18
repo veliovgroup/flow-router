@@ -50,6 +50,6 @@ Package.onTest(function(api) {
 });
 
 Npm.depends({
-  'page': '1.7.1',
+  'page': '1.8.0',
   'qs': '6.5.1'
 });

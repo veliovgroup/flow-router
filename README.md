@@ -10,7 +10,7 @@ FlowRouter Extra
 Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
 
 #### Features:
- - Not tied to Blaze, ready for [React](https://github.com/VeliovGroup/flow-router/issues?utf8=✓&q=is%3Aissue+label%3Areact+) and other templating/components engines/libs;
+ - Not dependent on Blaze, ready for [React](https://github.com/VeliovGroup/flow-router/issues?utf8=✓&q=is%3Aissue+label%3Areact+) and other templating/components engines/libs;
  - Great [tests coverage](https://github.com/VeliovGroup/flow-router/tree/master/test);
  - Up-to-date [dependencies](https://github.com/VeliovGroup/flow-router/blob/master/package.js);
  - Following semver with regular [releases](https://github.com/VeliovGroup/flow-router/releases);

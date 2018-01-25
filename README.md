@@ -36,6 +36,9 @@ FlowRouter.route('/', {
   action() {
     // Render a template using Blaze
     this.render('templateName');
+
+    // Can be used with BlazeLayout,
+    // and ReactLayout for React-based apps
   }
 });
 
@@ -44,6 +47,9 @@ FlowRouter.route('*', {
   action() {
     // Show 404 error page using Blaze
     this.render('notFound');
+
+    // Can be used with BlazeLayout,
+    // and ReactLayout for React-based apps
   }
 });
 ```

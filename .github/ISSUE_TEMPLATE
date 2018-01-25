@@ -8,12 +8,12 @@
 
 ### I have a suggestion:
   - Describe your feature / request
-  - How you going to use it? Give a usage example(s)
+  - How you're going to use it? Give a usage example(s)
 
 ### Documentation is missing something or incorrect (have typos, etc.):
   - Give an expressive description what you have changed/added and why
   - Make sure you're using correct markdown markup
-  - Make sure all code blocks starts with tripple ``` (*backtick*) and have a syntax tag, for more read [this docs](https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting)
-  - Post your addition/changes in issue, we will manage it
+  - Make sure all code blocks starts with triple ``` (*backtick*) and have a syntax tag, for more read [this docs](https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting)
+  - Post addition/changes in issue, we will manage it
 
 ## Thank you, and do not forget to get rid of this default message

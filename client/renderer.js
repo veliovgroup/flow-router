@@ -5,11 +5,9 @@ import { requestAnimFrame } from './modules.js';
 let Blaze;
 let Template;
 
-try {
-  Blaze    = require('meteor/blaze').Blaze;
-  Template = require('meteor/templating').Template;
-} catch (e) {
-  // we're good
+if (Package['templating'] && Package['blaze']) {
+  Blaze    = Package['blaze'].Blaze;
+  Template = Package['templating'].Template;
 }
 
 class BlazeRenderer {

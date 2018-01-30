@@ -18,7 +18,9 @@ Package.onUse(function (api) {
     'reactive-var',
     'ejson'
   ], ['client', 'server']);
-
+  
+  api.use(['templating', 'blaze'], 'client', { weak: true });
+  
   api.mainModule('client/_init.js', 'client');
   api.mainModule('server/_init.js', 'server');
 });

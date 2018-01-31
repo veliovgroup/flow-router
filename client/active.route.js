@@ -4,10 +4,8 @@ import { check, Match } from 'meteor/check';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
 let Template;
-try {
-  Template = require('meteor/templating').Template;
-} catch (e) {
-  // we're good
+if (Package['templating']) {
+  Template = Package['templating'].Template;
 }
 
 const init = (FlowRouter) => {

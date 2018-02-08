@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '3.4.5',
+  version: '3.4.6',
   git: 'https://github.com/VeliovGroup/flow-router'
 });
 
@@ -20,7 +20,6 @@ Package.onUse(function (api) {
   ], ['client', 'server']);
   
   api.use(['templating', 'blaze'], 'client', { weak: true });
-  
   api.mainModule('client/_init.js', 'client');
   api.mainModule('server/_init.js', 'server');
 });

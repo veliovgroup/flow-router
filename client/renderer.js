@@ -1,14 +1,27 @@
-import { _ }      from 'meteor/underscore';
-import { Meteor } from 'meteor/meteor';
+import { _ }                from 'meteor/underscore';
+import { Meteor }           from 'meteor/meteor';
 import { requestAnimFrame } from './modules.js';
 
 let Blaze;
 let Template;
 
-if (Package['templating'] && Package['blaze']) {
-  Blaze    = Package['blaze'].Blaze;
-  Template = Package['templating'].Template;
+if (Package.templating && Package.blaze) {
+  Blaze    = Package.blaze.Blaze;
+  Template = Package.templating.Template;
 }
+
+const _BlazeRemove = function (view) {
+  try {
+    Blaze.remove(view);
+  } catch (_e) {
+    try {
+      Blaze._destroyView(view);
+      view._domrange.destroy();
+    } catch (__e) {
+      view._domrange.destroy();
+    }
+  }
+};
 
 class BlazeRenderer {
   constructor(opts = {}) {
@@ -54,7 +67,7 @@ class BlazeRenderer {
 
     Template.yield.onDestroyed(function () {
       if (self.old.template.view) {
-        Blaze.remove(self.old.template.view);
+        _BlazeRemove(self.old.template.view);
         self.old.template.view = null;
         self.old.materialized = false;
       }
@@ -155,7 +168,7 @@ class BlazeRenderer {
       current.template.blaze = _template;
       this.newElement('template', current);
       if (this.old.template.view) {
-        Blaze.remove(this.old.template.view);
+        _BlazeRemove(this.old.template.view);
         this.old.template.view = null;
         this.old.materialized = false;
       }
@@ -173,7 +186,7 @@ class BlazeRenderer {
       this.newElement('layout', current);
 
       if (this.old.layout.view) {
-        Blaze.remove(this.old.layout.view);
+        _BlazeRemove(this.old.layout.view);
         this.old.layout.view = null;
       }
 
@@ -215,10 +228,8 @@ class BlazeRenderer {
         this._load(false, false, current);
       });
     } else {
-      requestAnimFrame(() => {
-        current.layout.view = Blaze.renderWithData(current.layout.blaze, getData, rootElement);
-        this._load(false, false, current);
-      });
+      current.layout.view = Blaze.renderWithData(current.layout.blaze, getData, rootElement);
+      this._load(false, false, current);
     }
   }
 
@@ -316,29 +327,25 @@ class BlazeRenderer {
       current.materialized = true;
       if (this.inMemoryRendering) {
         current.template.view = Blaze.renderWithData(current.template.blaze, getData, current.template.element, this.yield.view);
-        requestAnimFrame(() => {
-          if (this.yield) {
-            this.yield.view._domrange.parentElement.appendChild(current.template.element);
-            this.isRendering = false;
-            current.materialized = true;
-            current.callback();
-            current.callback = () => {};
-          } else {
-            current.materialized = false;
-          }
-        });
+        if (this.yield) {
+          this.yield.view._domrange.parentElement.appendChild(current.template.element);
+          this.isRendering = false;
+          current.materialized = true;
+          current.callback();
+          current.callback = () => {};
+        } else {
+          current.materialized = false;
+        }
       } else {
-        requestAnimFrame(() => {
-          if (this.yield) {
-            current.template.view = Blaze.renderWithData(current.template.blaze, getData, this.yield.view._domrange.parentElement, this.yield.view);
-            this.isRendering = false;
-            current.materialized = true;
-            current.callback();
-            current.callback = () => {};
-          } else {
-            current.materialized = false;
-          }
-        });
+        if (this.yield) {
+          current.template.view = Blaze.renderWithData(current.template.blaze, getData, this.yield.view._domrange.parentElement, this.yield.view);
+          this.isRendering = false;
+          current.materialized = true;
+          current.callback();
+          current.callback = () => {};
+        } else {
+          current.materialized = false;
+        }
       }
     }
   }

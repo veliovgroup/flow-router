@@ -1,5 +1,4 @@
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-Router = FlowRouter.Router;
+import { FlowRouter, Router } from 'meteor/ostrio:flow-router-extra';
 
 Tinytest.addAsync('Common - Router - validate path definition', function (test, next) {
   // path must start with '/'

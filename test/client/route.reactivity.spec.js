@@ -1,5 +1,4 @@
 import { FlowRouter, Route } from 'meteor/ostrio:flow-router-extra';
-Route = FlowRouter.Route;
 
 Tinytest.addAsync('Client - Route - Reactivity - getParam', function (test, done) {
   var r = new Route();

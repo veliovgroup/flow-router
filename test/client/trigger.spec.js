@@ -488,7 +488,6 @@ Tinytest.addAsync('Client - Triggers - nested group exit triggers', function (te
     },
     triggersExit: function (context) {
       test.equal(context.path, paths.pop());
-      console.log('route trigger');
       log.push('route trigger');
     }
   });

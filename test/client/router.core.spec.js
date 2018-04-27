@@ -1,12 +1,11 @@
-import { FlowRouter, Route } from 'meteor/ostrio:flow-router-extra';
-Router = FlowRouter.Router;
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Tinytest.addAsync('Client - Router - define and go to route', function (test, next) {
   var rand = Random.id();
   var rendered = 0;
 
   FlowRouter.route('/' + rand, {
-    action: function(_params) {
+    action() {
       rendered++;
     }
   });
@@ -352,14 +351,14 @@ Tinytest.add('Client - Router - setQueryParams - no route selected', function (t
 
 Tinytest.addAsync('Client - Router - notFound', function (test, done) {
   var data = [];
-  FlowRouter.notFound = {
-    subscriptions: function() {
+  FlowRouter.route('*', {
+    subscriptions() {
       data.push("subscriptions");
     },
-    action: function() {
+    action() {
       data.push("action");
     }
-  };
+  });
 
   FlowRouter.go("/" + Random.id());
   setTimeout(function() {

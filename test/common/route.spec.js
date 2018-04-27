@@ -1,7 +1,6 @@
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { FlowRouter, Router } from 'meteor/ostrio:flow-router-extra';
 
 Package['kadira:flow-router'] = Package['ostrio:flow-router-extra'];
-Router = FlowRouter.Router;
 
 Tinytest.addAsync('Common - Route - expose route options', function (test, next) {
   var pathDef = '/' + Random.id();

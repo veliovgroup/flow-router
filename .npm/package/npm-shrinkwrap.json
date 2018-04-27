@@ -7,9 +7,9 @@
       "integrity": "sha1-ihis/Kmo9Bd+Cav8YDiTmwXR7t8="
     },
     "page": {
-      "version": "1.8.4",
-      "resolved": "https://registry.npmjs.org/page/-/page-1.8.4.tgz",
-      "integrity": "sha512-UJOAbCI46mBtF+357ptJsSuqNI4IjtlI1P7L6HukdJvN4xKSAkW6mNczsGfBT/JQQQ4Z5IAgc3+1Y3g8TGGSrw=="
+      "version": "1.8.6",
+      "resolved": "https://registry.npmjs.org/page/-/page-1.8.6.tgz",
+      "integrity": "sha512-AMF34NihxNZkWtJBUr06EwlydSfeJxVnA057jpxqcie8LVCV+m1XToEzNw2R9e3bBJkZqWvwWgdIJ9QjUUWwFw=="
     },
     "path-to-regexp": {
       "version": "1.2.1",

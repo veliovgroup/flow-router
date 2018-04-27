@@ -111,7 +111,7 @@ class Router {
   }
 
   set notFound(opts) {
-    Meteor._debug('FlowRouter.notFound is deprecated, use FlowRouter.route(\'*\', () => { /*...*/ }) instead!');
+    Meteor._debug('FlowRouter.notFound is deprecated, use FlowRouter.route(\'*\', { /*...*/ }) instead!');
     opts.name = opts.name || '__notFound';
     this._notFound = this.route('*', opts);
   }

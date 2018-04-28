@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import Router     from './router.js';
 import Route      from './route.js';
 import Group      from './group.js';
+import './plugins/fast-render.js'
 
 if (Package['meteorhacks:inject-data']) {
   Meteor._debug('`meteorhacks:inject-data` is deprecated, please remove it and install its successor - `staringatlights:inject-data`');

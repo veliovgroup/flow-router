@@ -13,6 +13,7 @@ Carefully extended [flow-router](https://github.com/kadirahq/flow-router) packag
  - Not dependent on Blaze, ready for [React](https://github.com/VeliovGroup/flow-router/issues?utf8=✓&q=is%3Aissue+label%3Areact+) and other templating/components engines/libs;
  - Great [tests coverage](https://github.com/VeliovGroup/flow-router/tree/master/test);
  - Up-to-date [dependencies](https://github.com/VeliovGroup/flow-router/blob/master/package.js);
+ - Support of [Fast Render](https://github.com/abecks/meteor-fast-render) and [other great packages](https://github.com/VeliovGroup/flow-router#related-packages);
  - Following semver with regular [releases](https://github.com/VeliovGroup/flow-router/releases);
  - Great [wiki](https://github.com/VeliovGroup/flow-router/wiki);
  - Great [quick start tutorial](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md).

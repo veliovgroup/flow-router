@@ -19,7 +19,7 @@ class Router {
       const paramArr = param.split('');
       let _param   = '';
       for (let i = 0; i < paramArr.length; i++) {
-        if (!!~this._specialChars.indexOf(paramArr[i])){
+        if (~this._specialChars.indexOf(paramArr[i])){
           _param += encodeURIComponent(encodeURIComponent(paramArr[i]));
         } else {
           try {
@@ -148,11 +148,11 @@ class Router {
       const queryParams = this._qs.parse(context.querystring);
       this._current = {
         path: context.path,
-        context: context,
+        context,
         params: context.params,
-        queryParams: queryParams,
-        route: route,
-        oldRoute: oldRoute
+        queryParams,
+        route,
+        oldRoute
       };
 
       // we need to invalidate if all the triggers have been completed
@@ -207,7 +207,7 @@ class Router {
 
     // Prefix the path with the router global prefix
     if (this._basePath) {
-      path += '/' + this._basePath + '/';
+      path += `/${  this._basePath  }/`;
     }
 
     path += pathDef.replace(this.pathRegExp, (key) => {
@@ -242,7 +242,7 @@ class Router {
 
     const strQueryParams = this._qs.stringify(queryParams || {});
     if (strQueryParams) {
-      path += '?' + strQueryParams;
+      path += `?${  strQueryParams}`;
     }
 
     path = path.replace(/\/\/+/g, '/');
@@ -299,7 +299,7 @@ class Router {
     const queryParams = _.clone(this._current.queryParams);
     _.extend(queryParams, newParams);
 
-    for (let k in queryParams) {
+    for (const k in queryParams) {
       if (queryParams[k] === null || queryParams[k] === undefined) {
         delete queryParams[k];
       }
@@ -327,11 +327,9 @@ class Router {
   track(reactiveMapper) {
     return (props, onData, env) => {
       let trackerCleanup = null;
-      const handler = Tracker.nonreactive(() => {
-        return Tracker.autorun(() => {
+      const handler = Tracker.nonreactive(() => Tracker.autorun(() => {
           trackerCleanup = reactiveMapper(props, onData, env);
-        });
-      });
+        }));
 
       return () => {
         if (typeof trackerCleanup === 'function') {
@@ -376,15 +374,11 @@ class Router {
       subscriptions = _.values(globalRoute.getAllSubscriptions());
       subscriptions = subscriptions.concat(_.values(currentRoute.getAllSubscriptions()));
     } else {
-      subscriptions = _.map(args, (subName) => {
-        return globalRoute.getSubscription(subName) || currentRoute.getSubscription(subName);
-      });
+      subscriptions = _.map(args, (subName) => globalRoute.getSubscription(subName) || currentRoute.getSubscription(subName));
     }
 
     const isReady = () => {
-      const ready =  _.every(subscriptions, (sub) => {
-        return sub && sub.ready();
-      });
+      const ready =  _.every(subscriptions, (sub) => sub && sub.ready());
 
       return ready;
     };
@@ -444,7 +438,8 @@ class Router {
     this._page.base(this._basePath);
     this._page({
       decodeURLComponents: true,
-      hashbang: !!options.hashbang
+      hashbang: !!options.hashbang,
+      click: !options.disableLinkDetection
     });
 
     this._initialized = true;
@@ -637,7 +632,7 @@ class Router {
     // We need to remove the leading base path, or "/", as it will be inserted
     // automatically by `Meteor.absoluteUrl` as documented in:
     // http://docs.meteor.com/#/full/meteor_absoluteurl
-    return Meteor.absoluteUrl(this.path.apply(this, arguments).replace(new RegExp('^' + ('/' + (this._basePath || '') + '/').replace(/\/\/+/g, '/')), ''));
+    return Meteor.absoluteUrl(this.path.apply(this, arguments).replace(new RegExp(`^${  ('/' + (this._basePath || '') + '/').replace(/\/\/+/g, '/')}`), ''));
   }
 }
 

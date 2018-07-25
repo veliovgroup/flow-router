@@ -442,10 +442,12 @@ class Router {
     // this is the default behaviour and we need keep it like that
     // we are doing a hack. see .path()
     this._page.base(this._basePath);
-    this._page({
-      decodeURLComponents: true,
-      hashbang: !!options.hashbang
-    });
+    const pageOptions = Object.assign({
+      hashbang: !!options.hashbang,
+      decodeURLComponents: true
+    }, options.page || {});
+
+    this._page(pageOptions);
 
     this._initialized = true;
   }

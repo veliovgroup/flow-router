@@ -26,6 +26,8 @@ meteor add ostrio:flow-router-extra
 #### ES6 Import
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+// Full list of available classes and instances:
+// { FlowRouter, Router, Route, Group, Triggers, BlazeRenderer, RouterHelpers }
 ```
 
 #### Use

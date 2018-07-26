@@ -47,22 +47,26 @@ const init = (FlowRouter) => {
     disabledClass: 'disabled'
   });
 
-  const test = (value, pattern) => {
-    let result;
+  const test = (_value, _pattern) => {
+    let value = _value;
+    let pattern = _pattern;
     if (!value) {
       return false;
     }
+
     if (Match.test(pattern, RegExp)) {
-      result = value.search(pattern);
-      result = result > -1;
-    } else if (Match.test(pattern, String)) {
+      return value.search(pattern) > -1;
+    }
+
+    if (Match.test(pattern, String)) {
       if (config.equals('caseSensitive', false)) {
         value = value.toLowerCase();
         pattern = pattern.toLowerCase();
       }
-      result = (value === pattern);
+      return (value === pattern);
     }
-    return (result != null) ? result : false;
+
+    return false;
   };
 
   const ActiveRoute = {
@@ -114,9 +118,9 @@ const init = (FlowRouter) => {
     }
     helperName += 'Active' + type;
 
-    return (options = {}, attributes = {}) => {
-      options    = (_.isObject(options)) ? (options.hash || options) : options;
-      attributes = (_.isObject(attributes)) ? (attributes.hash || attributes) : attributes;
+    return (_options = {}, _attributes = {}) => {
+      let options    = (_.isObject(_options)) ? (_options.hash || _options) : _options;
+      let attributes = (_.isObject(_attributes)) ? (_attributes.hash || _attributes) : _attributes;
 
       if (Match.test(options, String)) {
         if (config.equals('regex', true)) {
@@ -167,16 +171,16 @@ const init = (FlowRouter) => {
         }
       }
 
-      if (regex == null) {
+      if (!_.isRegExp(regex)) {
         regex = name || path;
       }
 
       if (inverse) {
-        if (className == null) {
+        if (!_.isString(className)) {
           className = config.get('disabledClass');
         }
       } else {
-        if (className == null) {
+        if (!_.isString(className)) {
           className = config.get('activeClass');
         }
       }
@@ -220,8 +224,8 @@ const init = (FlowRouter) => {
   // arillo:flow-router-helpers
   // https://github.com/arillo/meteor-flow-router-helpers
   // License (MIT License): https://github.com/arillo/meteor-flow-router-helpers/blob/master/LICENCE
-  const subsReady = (...subs) => {
-    subs = subs.slice(0, -1);
+  const subsReady = (..._subs) => {
+    let subs = _subs.slice(0, -1);
     if (subs.length === 1) {
       return FlowRouter.subsReady();
     }
@@ -233,7 +237,9 @@ const init = (FlowRouter) => {
     }, true);
   };
 
-  const pathFor = (path, view = {hash: {}}) => {
+  const pathFor = (_path, _view = {hash: {}}) => {
+    let path = _path;
+    let view = _view;
     if (!path) {
       throw new Error('no path defined');
     }
@@ -244,12 +250,12 @@ const init = (FlowRouter) => {
       };
     }
 
-    if (path.hash && path.hash.route != null) {
+    if (path.hash && path.hash.route) {
       view = path;
       path = view.hash.route;
       delete view.hash.route;
     }
-    const query = view.hash.query ? FlowRouter._qs.parse(view.hash.query) : {};
+    const query    = view.hash.query ? FlowRouter._qs.parse(view.hash.query) : {};
     const hashBang = view.hash.hash ? view.hash.hash : '';
     return FlowRouter.path(path, view.hash, query) + (hashBang ? '#' + hashBang : '');
   };
@@ -305,7 +311,7 @@ const init = (FlowRouter) => {
     }
   }
 
-  return _.extend(ActiveRoute, FlowRouterHelpers);
+  return Object.assign({}, ActiveRoute, FlowRouterHelpers);
 };
 
 export default init;

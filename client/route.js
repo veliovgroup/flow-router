@@ -73,7 +73,7 @@ class Route {
       results.push((subscriptions[i] && subscriptions[i].ready) ? subscriptions[i].ready() : false);
     }
 
-    return !~results.indexOf(false);
+    return !results.includes(false);
   }
 
   waitOn(current = {}, next) {

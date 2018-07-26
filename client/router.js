@@ -19,7 +19,7 @@ class Router {
       const paramArr = param.split('');
       let _param   = '';
       for (let i = 0; i < paramArr.length; i++) {
-        if (!!~this._specialChars.indexOf(paramArr[i])){
+        if (this._specialChars.includes(paramArr[i])){
           _param += encodeURIComponent(encodeURIComponent(paramArr[i]));
         } else {
           try {

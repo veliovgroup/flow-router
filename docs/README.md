@@ -7,6 +7,7 @@
 - [Templating with "Regions"](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-regions.md)
 - [Templating with Data](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-data.md)
 - [Auto-scroll](https://github.com/VeliovGroup/flow-router/blob/master/docs/auto-scroll.md)
+- [React.js usage](https://github.com/VeliovGroup/flow-router/blob/master/docs/react.md)
 
 ## Hooks (*in execution order*):
 

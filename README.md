@@ -5,32 +5,36 @@
 [![GitHub stars](https://img.shields.io/github/stars/VeliovGroup/flow-router.svg)](https://github.com/VeliovGroup/flow-router/stargazers)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/VeliovGroup/flow-router.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2FVeliovGroup%2Fflow-router)
 
-FlowRouter Extra
-======
+# FlowRouter Extra
+
 Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
 
-#### Features:
- - Not dependent on Blaze, ready for [React](https://github.com/VeliovGroup/flow-router/issues?utf8=✓&q=is%3Aissue+label%3Areact+) and other templating/components engines/libs;
- - Great [tests coverage](https://github.com/VeliovGroup/flow-router/tree/master/test);
- - Up-to-date [dependencies](https://github.com/VeliovGroup/flow-router/blob/master/package.js);
- - Support of [Fast Render](https://github.com/abecks/meteor-fast-render) and [other great packages](https://github.com/VeliovGroup/flow-router#related-packages);
- - Following semver with regular [releases](https://github.com/VeliovGroup/flow-router/releases);
- - Great [wiki](https://github.com/VeliovGroup/flow-router/wiki);
- - Great [quick start tutorial](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md).
+## Features:
 
-#### Install
+- Not dependent on Blaze, ready for [React](https://github.com/VeliovGroup/flow-router/issues?utf8=✓&q=is%3Aissue+label%3Areact+) and other templating/components engines/libs;
+- Great [tests coverage](https://github.com/VeliovGroup/flow-router/tree/master/test);
+- Up-to-date [dependencies](https://github.com/VeliovGroup/flow-router/blob/master/package.js);
+- Support of [Fast Render](https://github.com/abecks/meteor-fast-render) and [other great packages](https://github.com/VeliovGroup/flow-router#related-packages);
+- Following semver with regular [releases](https://github.com/VeliovGroup/flow-router/releases);
+- Great [wiki](https://github.com/VeliovGroup/flow-router/wiki);
+- Great [quick start tutorial](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md).
+
+## Install
+
 ```shell
 meteor add ostrio:flow-router-extra
 ```
 
-#### ES6 Import
+### ES6 Import
+
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // Full list of available classes and instances:
 // { FlowRouter, Router, Route, Group, Triggers, BlazeRenderer, RouterHelpers }
 ```
 
-#### Use
+### Usage
+
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
@@ -57,22 +61,25 @@ FlowRouter.route('*', {
 });
 ```
 
-#### Documentation
- - Continue with our [wiki](https://github.com/VeliovGroup/flow-router/wiki);
- - [Quick start](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md) tutorial;
- - All docs as [single document](https://github.com/VeliovGroup/flow-router/blob/master/docs/full.md).
+### Documentation
 
-#### Related packages:
- - [ostrio:flow-router-title](https://github.com/VeliovGroup/Meteor-flow-router-title) - Reactive page title (`document.title`)
- - [ostrio:flow-router-meta](https://github.com/VeliovGroup/Meteor-flow-router-meta) - Per route `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
- - [staringatlights:fast-render](https://github.com/abecks/meteor-fast-render) - Fast Render can improve the initial load time of your app, giving you 2-10 times faster initial page loads.
- - [flean:flow-router-autoscroll](https://github.com/flean/flow-router-autoscroll) - Autoscroll for Flow Router
- - [mealsunite:flow-routing-extra](https://github.com/MealsUnite/flow-routing) - Add-on for User Accounts
- - [nxcong:flow-routing](https://github.com/cafe4it/flow-routing) - Add-on for User Accounts (alternative)
- - [forwarder:autoform-wizard-flow-router-extra](https://atmospherejs.com/forwarder/autoform-wizard-flow-router-extra) - Flow Router bindings for AutoForm Wizard
- - [nicolaslopezj:router-layer](https://github.com/nicolaslopezj/meteor-router-layer) - Helps package authors to support multiple routers
+- Continue with our [wiki](https://github.com/VeliovGroup/flow-router/wiki);
+- [Quick start](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md) tutorial;
+- All docs as [single document](https://github.com/VeliovGroup/flow-router/blob/master/docs/full.md).
+
+### Related packages:
+
+- [ostrio:flow-router-title](https://github.com/VeliovGroup/Meteor-flow-router-title) - Reactive page title (`document.title`)
+- [ostrio:flow-router-meta](https://github.com/VeliovGroup/Meteor-flow-router-meta) - Per route `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
+- [staringatlights:fast-render](https://github.com/abecks/meteor-fast-render) - Fast Render can improve the initial load time of your app, giving you 2-10 times faster initial page loads.
+- [flean:flow-router-autoscroll](https://github.com/flean/flow-router-autoscroll) - Autoscroll for Flow Router
+- [mealsunite:flow-routing-extra](https://github.com/MealsUnite/flow-routing) - Add-on for User Accounts
+- [nxcong:flow-routing](https://github.com/cafe4it/flow-routing) - Add-on for User Accounts (alternative)
+- [forwarder:autoform-wizard-flow-router-extra](https://atmospherejs.com/forwarder/autoform-wizard-flow-router-extra) - Flow Router bindings for AutoForm Wizard
+- [nicolaslopezj:router-layer](https://github.com/nicolaslopezj/meteor-router-layer) - Helps package authors to support multiple routers
 
 ### Support this project:
+
 This project wouldn't be possible without [ostr.io](https://ostr.io).
 
 Using [ostr.io](https://ostr.io) you are not only [protecting domain names](https://ostr.io/info/domain-names-protection), [monitoring websites and servers](https://ostr.io/info/monitoring), using [Prerendering for better SEO](https://ostr.io/info/prerendering) of your JavaScript website, but support our Open Source activity, and great packages like this one could be available for free.

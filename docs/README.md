@@ -6,6 +6,7 @@
 - [Templating](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating.md)
 - [Templating with "Regions"](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-regions.md)
 - [Templating with Data](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-data.md)
+- [Auto-scroll](https://github.com/VeliovGroup/flow-router/blob/master/docs/auto-scroll.md)
 
 ## Hooks (*in execution order*):
 
@@ -38,32 +39,32 @@
 
 ## API:
 
-- General Methods:
+- __General Methods:__
   - [`.go()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/go.md)
   - [`.route()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/route.md)
   - [`.group()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/group.md)
   - [`.render()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/render.md)
   - [Global `.triggers`](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/triggers.md)
-- Workarounds:
+- __Workarounds:__
   - [`.refresh()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/refresh.md)
   - [`.reload()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/reload.md)
   - [`.pathRegExp` option](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/pathRegExp.md)
-- Manipulation:
+- __Manipulation:__
   - [`.getParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getParam.md)
   - [`.getQueryParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getQueryParam.md)
   - [`.setParams()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/setParams.md)
   - [`.setQueryParams()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/setQueryParams.md)
-- URLs and data:
+- __URLs and data:__
   - [`.url()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/url.md)
   - [`.path()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/path.md)
   - [`.current()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/current.md)
   - [`.getRouteName()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getRouteName.md)
-- Reactivity:
+- __Reactivity:__
   - [`.watchPathChange()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/watchPathChange.md)
   - [`.withReplaceState()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/withReplaceState.md)
-- For add-on developers:
+- __For add-on developers:__
   - [`.onRouteRegister()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/onRouteRegister.md)
-- Tweaking:
+- __Tweaking:__
   - [`.wait()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/wait.md)
   - [`.initialize()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/initialize.md)
 
@@ -77,6 +78,8 @@
 - [nxcong:flow-routing](https://github.com/cafe4it/flow-routing) - Add-on for User Accounts (alternative)
 - [forwarder:autoform-wizard-flow-router-extra](https://atmospherejs.com/forwarder/autoform-wizard-flow-router-extra) - Flow Router bindings for AutoForm Wizard
 - [nicolaslopezj:router-layer](https://github.com/nicolaslopezj/meteor-router-layer) - Helps package authors to support multiple routers
+- [krishaamer:flow-router-breadcrumb](https://github.com/krishaamer/flow-router-breadcrumb) - Easy way to add a breadcrumb with enough flexibility to your project (`flow-router-extra` edition)
+- [nicolaslopezj:router-layer](https://github.com/krishaamer/body-class) - Easily scope CSS by automatically adding the current template and layout names as classes on the body element
 
 ## Support this project:
 

@@ -148,11 +148,11 @@ class Router {
       const queryParams = this._qs.parse(context.querystring);
       this._current = {
         path: context.path,
-        context: context,
         params: context.params,
-        queryParams: queryParams,
-        route: route,
-        oldRoute: oldRoute
+        route,
+        context,
+        oldRoute,
+        queryParams
       };
 
       // we need to invalidate if all the triggers have been completed
@@ -208,7 +208,7 @@ class Router {
 
     // Prefix the path with the router global prefix
     if (this._basePath) {
-      path += '/' + this._basePath + '/';
+      path += `/${this._basePath}/`;
     }
 
     path += pathDef.replace(this.pathRegExp, (_key) => {
@@ -243,7 +243,7 @@ class Router {
 
     const strQueryParams = this._qs.stringify(queryParams || {});
     if (strQueryParams) {
-      path += '?' + strQueryParams;
+      path += `?${strQueryParams}`;
     }
 
     path = path.replace(/\/\/+/g, '/');
@@ -300,7 +300,7 @@ class Router {
     const queryParams = _.clone(this._current.queryParams);
     _.extend(queryParams, newParams);
 
-    for (let k in queryParams) {
+    for (const k in queryParams) {
       if (queryParams[k] === null || queryParams[k] === undefined) {
         delete queryParams[k];
       }
@@ -639,7 +639,7 @@ class Router {
     // We need to remove the leading base path, or "/", as it will be inserted
     // automatically by `Meteor.absoluteUrl` as documented in:
     // http://docs.meteor.com/#/full/meteor_absoluteurl
-    return Meteor.absoluteUrl(this.path.apply(this, arguments).replace(new RegExp('^' + ('/' + (this._basePath || '') + '/').replace(/\/\/+/g, '/')), ''));
+    return Meteor.absoluteUrl(this.path.apply(this, arguments).replace(new RegExp('^' + (`/${this._basePath || ''}/`).replace(/\/\/+/g, '/')), ''));
   }
 }
 

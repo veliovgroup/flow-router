@@ -45,15 +45,16 @@ class Router {
     return new Group(this, options);
   }
 
-  path(pathDef, fields = {}, queryParams) {
+  path(_pathDef, fields = {}, queryParams) {
+    let pathDef = _pathDef;
     if (this._routesMap[pathDef]) {
       pathDef = this._routesMap[pathDef].path;
     }
 
-    let path = pathDef.replace(this.pathRegExp, (key) => {
-      const firstRegexpChar = key.indexOf('(');
+    let path = pathDef.replace(this.pathRegExp, (_key) => {
+      const firstRegexpChar = _key.indexOf('(');
       // get the content behind : and (\\d+/)
-      key = key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);
+      let key = _key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);
       // remove +?*
       key = key.replace(/[\+\*\?]+/g, '');
 

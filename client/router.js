@@ -198,7 +198,8 @@ class Router {
     return new Group(this, options);
   }
 
-  path(pathDef, fields = {}, queryParams) {
+  path(_pathDef, fields = {}, queryParams) {
+    let pathDef = _pathDef;
     if (this._routesMap[pathDef]) {
       pathDef = this._routesMap[pathDef].pathDef;
     }
@@ -210,10 +211,10 @@ class Router {
       path += '/' + this._basePath + '/';
     }
 
-    path += pathDef.replace(this.pathRegExp, (key) => {
-      const firstRegexpChar = key.indexOf('(');
+    path += pathDef.replace(this.pathRegExp, (_key) => {
+      const firstRegexpChar = _key.indexOf('(');
       // get the content behind : and (\\d+/)
-      key = key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);
+      let key = _key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);
       // remove +?*
       key = key.replace(/[\+\*\?]+/g, '');
 
@@ -432,8 +433,7 @@ class Router {
         if (!path || (!self.env.reload.get() && self._current.path === path)) {
           return;
         }
-        path = path.replace(/\/\/+/g, '/');
-        original.call(this, path, state, dispatch, push);
+        original.call(this, path.replace(/\/\/+/g, '/'), state, dispatch, push);
       };
     });
 
@@ -595,14 +595,14 @@ class Router {
   _initTriggersAPI() {
     const self = this;
     this.triggers = {
-      enter(triggers, filter) {
-        triggers = Triggers.applyFilters(triggers, filter);
+      enter(_triggers, filter) {
+        let triggers = Triggers.applyFilters(_triggers, filter);
         if (triggers.length) {
           self._triggersEnter = self._triggersEnter.concat(triggers);
         }
       },
-      exit(triggers, filter) {
-        triggers = Triggers.applyFilters(triggers, filter);
+      exit(_triggers, filter) {
+        let triggers = Triggers.applyFilters(_triggers, filter);
         if (triggers.length) {
           self._triggersExit = self._triggersExit.concat(triggers);
         }

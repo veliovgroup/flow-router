@@ -37,7 +37,7 @@ const setupFastRender = () => {
   });
 };
 
-// hack to run after eveything else on startup
+// hack to run after everything else on startup
 Meteor.startup(() => {
   Meteor.startup(() => {
     setupFastRender();

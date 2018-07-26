@@ -215,9 +215,9 @@ class Route {
       }
 
       if ((other && other.length) || (images && images.length)) {
-        if (other && other.length && typeof XMLHttpRequest != 'undefined') {
+        if (other && other.length && typeof XMLHttpRequest !== 'undefined') {
           other = other.filter((elem, index, self) => {
-            return index == self.indexOf(elem);
+            return index === self.indexOf(elem);
           });
           len += other.length;
           const prefetch = {};
@@ -232,7 +232,7 @@ class Route {
 
         if (images && images.length){
           images = images.filter((elem, index, self) => {
-            return index == self.indexOf(elem);
+            return index === self.indexOf(elem);
           });
           len += images.length;
           const imgs = {};

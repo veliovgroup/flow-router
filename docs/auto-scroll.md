@@ -1,4 +1,4 @@
-### Quick Start
+### Auto-scroll to the top of the page after navigation
 
 *FlowRouter* causes the page to remain at the same scroll position on navigation between routes (which people are often surprised by). Little snipped below would fix this behavior to more common, when each page loaded at the top of the scrolling position.
 

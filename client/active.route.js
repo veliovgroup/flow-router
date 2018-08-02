@@ -9,9 +9,6 @@ if (Package.templating) {
 }
 
 const init = (FlowRouter) => {
-  if (!Template) {
-    return;
-  }
 
   // Active Route
   // https://github.com/meteor-activeroute/legacy
@@ -216,8 +213,11 @@ const init = (FlowRouter) => {
     isNotActivePath: isActive('Path', true)
   };
 
-  for (let name in arHelpers) {
-    Template.registerHelper(name, arHelpers[name]);
+  // If blaze is in use, register global helpers
+  if (Template) {
+    for (const [name, helper] of Object.entries(arHelpers)) {
+      Template.registerHelper(name, helper);
+    }
   }
 
   // FlowRouter Helpers
@@ -306,8 +306,12 @@ const init = (FlowRouter) => {
       urlFor: urlFor
     };
   } else {
-    for (let name in frHelpers) {
-      Template.registerHelper(name, frHelpers[name]);
+    FlowRouterHelpers = frHelpers;
+    // If blaze is in use, register global helpers
+    if (Template) {
+      for (const [name, helper] of Object.entries(frHelpers)) {
+        Template.registerHelper(name, helper);
+      }
     }
   }
 

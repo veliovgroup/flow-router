@@ -1182,23 +1182,6 @@ The following can be used by as arguments in `isNotActivePath`, `isNotActiveRout
 
 -------
 
-### `linkTo` Template Helper
-
-Custom content block for creating a link
-
-```handlebars
-{{#linkTo '/posts/'}}
-  Go to posts
-{{/linkTo}}
-```
-
-Result:
-```handlebars
-<a href="/posts/">Go to posts</a>
-```
-
--------
-
 ### `param` Template Helper
 
 Returns the value for a URL parameter

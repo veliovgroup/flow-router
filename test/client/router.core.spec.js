@@ -252,8 +252,8 @@ Tinytest.addAsync('Client - Router - setQueryParams - generic', function (test, 
 
   function validate() {
     test.equal(queryParamsList.length, 2);
-    test.equal(_.pick(queryParamsList[0], "id", "cat"), {cat: "meteor", id: "200"});
-    test.equal(_.pick(queryParamsList[1], "id", "cat"), {cat: "meteor", id: "700"});
+    test.equal(_.pick(queryParamsList[0] || [], "id", "cat"), {cat: "meteor", id: "200"});
+    test.equal(_.pick(queryParamsList[1] || [], "id", "cat"), {cat: "meteor", id: "700"});
     done();
   }
 });
@@ -335,8 +335,8 @@ Tinytest.addAsync('Client - Router - setQueryParams - preserve params', function
     ]);
 
     test.equal(paramsList.length, 2);
-    test.equal(_.pick(paramsList[0], "abc"), {abc: "20"});
-    test.equal(_.pick(paramsList[1], "abc"), {abc: "20"});
+    test.equal(_.pick(paramsList[0] || [], "abc"), {abc: "20"});
+    test.equal(_.pick(paramsList[1] || [], "abc"), {abc: "20"});
     done();
   }
 });

@@ -1,5 +1,5 @@
-import { _ }          from 'meteor/underscore';
 import { Meteor }     from 'meteor/meteor';
+import { _helpers }   from './../../lib/_helpers.js';
 import { FlowRouter } from '../_init.js';
 
 if(!Package['staringatlights:fast-render']) {
@@ -9,7 +9,7 @@ if(!Package['staringatlights:fast-render']) {
 const FastRender = Package['staringatlights:fast-render'].FastRender;
 
 const setupFastRender = () => {
-  _.each(FlowRouter._routes, (route) => {
+  FlowRouter._routes.forEach((route) => {
     if (route.pathDef === '*') {
       return;
     }
@@ -18,17 +18,17 @@ const setupFastRender = () => {
       // anyone using Meteor.subscribe for something else?
       const meteorSubscribe = Meteor.subscribe;
       Meteor.subscribe = function () {
-        return _.toArray(arguments);
+        return Array.from(arguments);
       };
 
       route._subsMap = {};
       FlowRouter.subscriptions.call(route, path);
       if (route.subscriptions) {
-        route.subscriptions(_.omit(routeParams, 'query'), routeParams.query);
+        route.subscriptions(_helpers.omit(routeParams, ['query']), routeParams.query);
       }
 
-      _.each(route._subsMap, (args) => {
-        this.subscribe.apply(this, args);
+      Object.keys(route._subsMap).forEach((key) => {
+        this.subscribe.apply(this, route._subsMap[key]);
       });
 
       // restore Meteor.subscribe, ... on server side

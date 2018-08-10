@@ -1,7 +1,7 @@
-import { _ }      from 'meteor/underscore';
-import Route      from './route.js';
-import Group      from './group.js';
-import { Meteor } from 'meteor/meteor';
+import Route        from './route.js';
+import Group        from './group.js';
+import { Meteor }   from 'meteor/meteor';
+import { _helpers } from './../lib/_helpers.js';
 
 const qs = require('qs');
 
@@ -84,10 +84,10 @@ class Router {
     // object.
     // This is not to hide what's inside the route object, but to show
     // these are the public APIs
-    const routePublicApi = _.pick(currentRoute, 'name', 'pathDef', 'path');
-    routePublicApi.options = _.omit(currentRoute.options, ['triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name']);
+    const routePublicApi = _helpers.pick(currentRoute, ['name', 'pathDef', 'path']);
+    routePublicApi.options = _helpers.omit(currentRoute.options, ['triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name']);
 
-    _.each(this._onRouteCallbacks, function(cb) {
+    this._onRouteCallbacks.forEach((cb) => {
       cb(routePublicApi);
     });
   }

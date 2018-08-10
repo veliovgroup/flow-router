@@ -1,5 +1,5 @@
 import { Meteor }       from 'meteor/meteor';
-import { _ }            from 'meteor/underscore';
+import { _helpers }     from './../lib/_helpers.js';
 import { check, Match } from 'meteor/check';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
@@ -9,7 +9,6 @@ if (Package.templating) {
 }
 
 const init = (FlowRouter) => {
-
   // Active Route
   // https://github.com/meteor-activeroute/legacy
   // zimme:active-route
@@ -85,7 +84,7 @@ const init = (FlowRouter) => {
       let currentPath;
       let currentRouteName;
       let path;
-      if (!_.isEmpty(routeParams) && Match.test(routeName, String)) {
+      if (!_helpers.isEmpty(routeParams) && Match.test(routeName, String)) {
         FlowRouter.watchPathChange();
         currentPath = FlowRouter.current().path;
         path = FlowRouter.path(routeName, routeParams);
@@ -116,8 +115,8 @@ const init = (FlowRouter) => {
     helperName += 'Active' + type;
 
     return (_options = {}, _attributes = {}) => {
-      let options    = (_.isObject(_options)) ? (_options.hash || _options) : _options;
-      let attributes = (_.isObject(_attributes)) ? (_attributes.hash || _attributes) : _attributes;
+      let options    = (_helpers.isObject(_options)) ? (_options.hash || _options) : _options;
+      let attributes = (_helpers.isObject(_attributes)) ? (_attributes.hash || _attributes) : _attributes;
 
       if (Match.test(options, String)) {
         if (config.equals('regex', true)) {
@@ -134,7 +133,7 @@ const init = (FlowRouter) => {
           };
         }
       }
-      options = _.defaults(attributes, options);
+      options = _helpers.extend(options, attributes);
       const pattern = Match.ObjectIncluding({
         class: Match.Optional(String),
         className: Match.Optional(String),
@@ -168,16 +167,16 @@ const init = (FlowRouter) => {
         }
       }
 
-      if (!_.isRegExp(regex)) {
+      if (!_helpers.isRegExp(regex)) {
         regex = name || path;
       }
 
       if (inverse) {
-        if (!_.isString(className)) {
+        if (!_helpers.isString(className)) {
           className = config.get('disabledClass');
         }
       } else {
-        if (!_.isString(className)) {
+        if (!_helpers.isString(className)) {
           className = config.get('activeClass');
         }
       }
@@ -191,8 +190,8 @@ const init = (FlowRouter) => {
       if (isPath) {
         result = ActiveRoute.path(regex);
       } else {
-        options = _.defaults(attributes, attributes.data);
-        result = ActiveRoute.name(regex, _.omit(options, ['class', 'className', 'data', 'regex', 'name', 'path']));
+        options = _helpers.extend(attributes.data, attributes);
+        result = ActiveRoute.name(regex, _helpers.omit(options, ['class', 'className', 'data', 'regex', 'name', 'path']));
       }
 
       if (inverse) {
@@ -230,8 +229,8 @@ const init = (FlowRouter) => {
       return FlowRouter.subsReady();
     }
 
-    return _.reduce(subs, (memo, sub) => {
-      if (_.isString(sub)) {
+    return subs.filter((memo, sub) => {
+      if (_helpers.isString(sub)) {
         return memo && FlowRouter.subsReady(sub);
       }
     }, true);

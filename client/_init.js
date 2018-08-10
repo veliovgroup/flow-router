@@ -1,11 +1,11 @@
 import { Meteor }    from 'meteor/meteor';
-import { _ }         from 'meteor/underscore';
 import Router        from './router.js';
 import Route         from './route.js';
 import Group         from './group.js';
 import Triggers      from './triggers.js';
 import BlazeRenderer from './renderer.js';
 import helpersInit   from './active.route.js';
+import { _helpers }  from './../lib/_helpers.js';
 import { requestAnimFrame } from './modules.js';
 
 if (Package['zimme:active-route']) {
@@ -67,11 +67,11 @@ Meteor.startup(() => {
     });
 
     FlowRouter.refresh = (layout, template) => {
-      if (!layout || !_.isString(layout)) {
+      if (!layout || !_helpers.isString(layout)) {
         throw new Meteor.Error(400, '[FlowRouter.refresh(layout, template)] -> "layout" must be a String!');
       }
 
-      if (!template || !_.isString(template)) {
+      if (!template || !_helpers.isString(template)) {
         throw new Meteor.Error(400, '[FlowRouter.refresh(layout, template)] -> "template" must be a String!');
       }
 

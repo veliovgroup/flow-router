@@ -1,14 +1,14 @@
-import { _ }            from 'meteor/underscore';
 import { Router }       from './_init.js';
 import { Meteor }       from 'meteor/meteor';
 import { Promise }      from 'meteor/promise';
 import { Tracker }      from 'meteor/tracker';
+import { _helpers }     from './../lib/_helpers.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
 const makeTriggers = (triggers) => {
-  if (_.isFunction(triggers)) {
+  if (_helpers.isFunction(triggers)) {
     return [triggers];
-  } else if (!_.isArray(triggers)) {
+  } else if (!_helpers.isArray(triggers)) {
     return [];
   }
 
@@ -30,7 +30,7 @@ class Route {
     this._router          = router;
     this._action          = options.action || Function.prototype;
     this._waitOn          = options.waitOn || null;
-    this._waitFor         = _.isArray(options.waitFor) ? options.waitFor : [];
+    this._waitFor         = _helpers.isArray(options.waitFor) ? options.waitFor : [];
     this._subsMap         = {};
     this._onNoData        = options.onNoData || null;
     this._endWaiting      = options.endWaiting || null;
@@ -155,7 +155,7 @@ class Route {
     };
 
     const done = (subscription) => {
-      processSubData(_.isFunction(subscription) ? subscription() : subscription);
+      processSubData(_helpers.isFunction(subscription) ? subscription() : subscription);
     };
 
     if (current.route.globals.length) {
@@ -166,7 +166,7 @@ class Route {
             _resources.push(current.route.globals[i].waitOnResources);
           }
 
-          if (current.route.globals[i].waitOn && _.isFunction(current.route.globals[i].waitOn)) {
+          if (current.route.globals[i].waitOn && _helpers.isFunction(current.route.globals[i].waitOn)) {
             waitFor.unshift(current.route.globals[i].waitOn);
           }
         }
@@ -252,7 +252,7 @@ class Route {
       waitFor = waitFor.concat(this._waitFor);
     }
 
-    if (_.isFunction(this._waitOn)) {
+    if (_helpers.isFunction(this._waitOn)) {
       waitFor.push(this._waitOn);
     }
 
@@ -357,19 +357,20 @@ class Route {
   }
 
   _updateReactiveDict(dict, newValues) {
-    const currentKeys = _.keys(newValues);
-    const oldKeys = _.keys(dict.keyDeps);
+    const currentKeys = Object.keys(newValues);
+    const oldKeys = Object.keys(dict.keyDeps);
 
     // set new values
-    //  params is an array. So, _.each(params) does not works
+    //  params is an array. So, currentKeys.forEach() does not works
     //  to iterate params
-    _.each(currentKeys, (key) => {
+    currentKeys.forEach((key) => {
       dict.set(key, newValues[key]);
     });
 
     // remove keys which does not exisits here
-    const removedKeys = _.difference(oldKeys, currentKeys);
-    _.each(removedKeys, (key) => {
+    oldKeys.filter((i) => {
+      return currentKeys.indexOf(i) < 0;
+    }).forEach((key) => {
       dict.set(key, undefined);
     });
   }

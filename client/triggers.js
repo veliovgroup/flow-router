@@ -1,5 +1,3 @@
-import { _ } from 'meteor/underscore';
-
 // a set of utility functions for triggers
 
 const Triggers = {};
@@ -47,11 +45,11 @@ Triggers.applyFilters = (_triggers, filter) => {
 //  @negate - negate the result (triggers won't run for above names)
 Triggers.createRouteBoundTriggers = (triggers, names, negate) => {
   const namesMap = {};
-  _.each(names, (name) => {
+  names.forEach((name) => {
     namesMap[name] = true;
   });
 
-  const filteredTriggers = _.map(triggers, (originalTrigger) => {
+  const filteredTriggers = triggers.map((originalTrigger) => {
     const modifiedTrigger = (context, next) => {
       let matched = (namesMap[context.route.name]) ? 1 : -1;
       matched = (negate) ? matched * -1 : matched;

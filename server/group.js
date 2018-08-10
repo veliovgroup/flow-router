@@ -1,9 +1,9 @@
-import { _ } from 'meteor/underscore';
+import { _helpers } from './../lib/_helpers.js';
 
 const makeTrigger = (trigger) => {
-  if (_.isFunction(trigger)) {
+  if (_helpers.isFunction(trigger)) {
     return [trigger];
-  } else if (!_.isArray(trigger)) {
+  } else if (!_helpers.isArray(trigger)) {
     return [];
   }
 
@@ -52,7 +52,7 @@ class Group {
     options.triggersEnter = makeTriggers(this._triggersEnter, options.triggersEnter);
     options.triggersExit  = makeTriggers(options.triggersExit, this._triggersExit);
 
-    return this._router.route(pathDef, _.extend(_.omit(this.options, 'triggersEnter', 'triggersExit', 'subscriptions', 'prefix', 'waitOn', 'name', 'title', 'titlePrefix', 'link', 'script', 'meta'), options), group);
+    return this._router.route(pathDef, _helpers.extend(_helpers.omit(this.options, ['triggersEnter', 'triggersExit', 'subscriptions', 'prefix', 'waitOn', 'name', 'title', 'titlePrefix', 'link', 'script', 'meta']), options), group);
   }
 
   group(options) {

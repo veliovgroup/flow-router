@@ -1,5 +1,5 @@
-import { _ }                from 'meteor/underscore';
 import { Meteor }           from 'meteor/meteor';
+import { _helpers }         from './../lib/_helpers.js';
 import { requestAnimFrame } from './modules.js';
 
 let Blaze;
@@ -46,11 +46,11 @@ class BlazeRenderer {
       return document.createElement('div');
     };
 
-    if (!this.getMemoryElement || !_.isFunction(this.getMemoryElement)) {
+    if (!this.getMemoryElement || !_helpers.isFunction(this.getMemoryElement)) {
       throw new Meteor.Error(400, '{getMemoryElement} must be a function, which returns new DOM element');
     }
 
-    if (!this.rootElement || !_.isFunction(this.rootElement)) {
+    if (!this.rootElement || !_helpers.isFunction(this.rootElement)) {
       throw new Meteor.Error(400, 'You must pass function into BlazeRenderer constructor, which returns DOM element');
     }
 
@@ -82,7 +82,7 @@ class BlazeRenderer {
 
     if (!__layout) {
       throw new Meteor.Error(400, '`.render()` - Requires at least one argument');
-    } else if (!_.isString(__layout) && !(__layout instanceof Blaze.Template)) {
+    } else if (!_helpers.isString(__layout) && !(__layout instanceof Blaze.Template)) {
       throw new Meteor.Error(400, '`.render()` - First argument must be a String or instance of Blaze.Template');
     }
 
@@ -117,7 +117,7 @@ class BlazeRenderer {
     let _template = false;
     let callback  = __callback || (() => {});
 
-    if (_.isString(layout)) {
+    if (_helpers.isString(layout)) {
       _layout = typeof Template !== 'undefined' && Template !== null ? Template[layout] : void 0;
     } else if (layout instanceof Blaze.Template) {
       _layout = layout;
@@ -126,29 +126,29 @@ class BlazeRenderer {
       layout = false;
     }
 
-    if (_.isString(template)) {
+    if (_helpers.isString(template)) {
       _template = typeof Template !== 'undefined' && Template !== null ? Template[template] : void 0;
     } else if (template instanceof Blaze.Template) {
       _template = template;
       template  = template.viewName.replace('Template.', '');
-    } else if (_.isObject(template)) {
+    } else if (_helpers.isObject(template)) {
       data     = template;
       template = false;
-    } else if (_.isFunction(template)) {
+    } else if (_helpers.isFunction(template)) {
       callback = template;
       template = false;
     } else {
       template = false;
     }
 
-    if (_.isFunction(data)) {
+    if (_helpers.isFunction(data)) {
       callback = data;
       data = {};
-    } else if (!_.isObject(data)) {
+    } else if (!_helpers.isObject(data)) {
       data = {};
     }
 
-    if (!_.isFunction(callback)) {
+    if (!_helpers.isFunction(callback)) {
       callback = () => {};
     }
 

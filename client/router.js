@@ -1,8 +1,8 @@
 import { FlowRouter, Route, Group, Triggers, BlazeRenderer } from './_init.js';
-import { _ }        from 'meteor/underscore';
 import { EJSON }    from 'meteor/ejson';
 import { Meteor }   from 'meteor/meteor';
 import { Tracker }  from 'meteor/tracker';
+import { _helpers } from './../lib/_helpers.js';
 import { page, qs } from './modules.js';
 
 class Router {
@@ -237,7 +237,7 @@ class Router {
     path = path.match(/^\/{1}$/) ? path : path.replace(/\/$/, '');
 
     // explictly asked to add a trailing slash
-    if (this.env.trailingSlash.get() && _.last(path) !== '/') {
+    if (this.env.trailingSlash.get() && path[path.length - 1] !== '/') {
       path += '/';
     }
 
@@ -283,11 +283,11 @@ class Router {
     const pathDef = this._current.route.pathDef;
     const existingParams = this._current.params;
     let params = {};
-    _.each(_.keys(existingParams), (key) => {
+    Object.keys(existingParams).forEach((key) => {
       params[key] = existingParams[key];
     });
 
-    params = _.extend(params, newParams);
+    params = _helpers.extend(params, newParams);
     const queryParams = this._current.queryParams;
 
     this.go(pathDef, params, queryParams);
@@ -297,8 +297,7 @@ class Router {
   setQueryParams(newParams) {
     if (!this._current.route) {return false;}
 
-    const queryParams = _.clone(this._current.queryParams);
-    _.extend(queryParams, newParams);
+    const queryParams = _helpers.extend(_helpers.clone(this._current.queryParams), newParams);
 
     for (const k in queryParams) {
       if (queryParams[k] === null || queryParams[k] === undefined) {
@@ -319,7 +318,7 @@ class Router {
     // We can't trust outside, that's why we clone this
     // Anyway, we can't clone the whole object since it has non-jsonable values
     // That's why we clone what's really needed.
-    const current = _.clone(this._current);
+    const current = _helpers.clone(this._current);
     current.queryParams = EJSON.clone(current.queryParams);
     current.params = EJSON.clone(current.params);
     return current;
@@ -355,9 +354,9 @@ class Router {
 
   subsReady() {
     let callback = null;
-    const args = _.toArray(arguments);
+    const args = Array.from(arguments);
 
-    if (typeof _.last(args) === 'function') {
+    if (typeof args[args.length - 1] === 'function') {
       callback = args.pop();
     }
 
@@ -374,16 +373,16 @@ class Router {
 
     let subscriptions;
     if (args.length === 0) {
-      subscriptions = _.values(globalRoute.getAllSubscriptions());
-      subscriptions = subscriptions.concat(_.values(currentRoute.getAllSubscriptions()));
+      subscriptions = Object.values(globalRoute.getAllSubscriptions());
+      subscriptions = subscriptions.concat(Object.values(currentRoute.getAllSubscriptions()));
     } else {
-      subscriptions = _.map(args, (subName) => {
+      subscriptions = args.map((subName) => {
         return globalRoute.getSubscription(subName) || currentRoute.getSubscription(subName);
       });
     }
 
     const isReady = () => {
-      const ready =  _.every(subscriptions, (sub) => {
+      const ready =  subscriptions.every((sub) => {
         return sub && sub.ready();
       });
 
@@ -427,7 +426,7 @@ class Router {
     //
     // we need override both show, replace to make this work
     // since we use redirect when we are talking about withReplaceState
-    _.each(['show', 'replace'], (fnName) => {
+    ['show', 'replace'].forEach((fnName) => {
       const original = self._page[fnName];
       self._page[fnName] = function (path, state, dispatch, push) {
         if (!path || (!self.env.reload.get() && self._current.path === path)) {
@@ -574,7 +573,7 @@ class Router {
     this._page.exits = [];
     let catchAll = null;
 
-    _.each(this._routes, (route) => {
+    this._routes.forEach((route) => {
       if (route.pathDef === '*') {
         catchAll = route;
       } else {
@@ -627,10 +626,10 @@ class Router {
     // object.
     // This is not to hide what's inside the route object, but to show
     // these are the public APIs
-    const routePublicApi = _.pick(currentRoute, 'name', 'pathDef', 'path');
-    routePublicApi.options = _.omit(currentRoute.options, ['triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name']);
+    const routePublicApi = _helpers.pick(currentRoute, ['name', 'pathDef', 'path']);
+    routePublicApi.options = _helpers.omit(currentRoute.options, ['triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name']);
 
-    _.each(this._onRouteCallbacks, (cb) => {
+    this._onRouteCallbacks.forEach((cb) => {
       cb(routePublicApi);
     });
   }

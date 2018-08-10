@@ -30,3 +30,11 @@ FlowRouter.route('/:_id', {
   }
 });
 ```
+
+#### Further Reading
+ - [Fast Render Repository](https://github.com/abecks/meteor-fast-render)
+ - [`.waitOn()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOn.md)
+ - [`.subscriptions()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/original-readme.md#subscription-management)
+ - [`.data()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/data.md)
+ - [`.action()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/action.md)
+ - [`.render()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/render.md)

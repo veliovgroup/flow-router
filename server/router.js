@@ -1,7 +1,9 @@
-import Route        from './route.js';
-import Group        from './group.js';
-import { Meteor }   from 'meteor/meteor';
-import { _helpers } from './../lib/_helpers.js';
+import { Meteor } from 'meteor/meteor';
+import page from 'page';
+import Route from './route.js';
+import Group from './group.js';
+import { _helpers } from '../lib/_helpers.js';
+
 
 const qs = require('qs');
 
@@ -10,6 +12,7 @@ class Router {
     this.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
     this._routes = [];
     this._routesMap = {};
+    this._current = {};
     this.subscriptions = Function.prototype;
 
     // holds onRoute callbacks
@@ -21,8 +24,28 @@ class Router {
       },
       exit() {
         // client only
-      }
+      },
     };
+  }
+
+  matchPath(path, queryParams) {
+    const params = {};
+    const route = this._routes.find(r => {
+      const pageRoute = new page.Route(r.pathDef);
+
+      return pageRoute.match(path, params);
+    });
+    if (!route) {
+      return null;
+    }
+    this._current = {
+      path,
+      params,
+      route,
+      queryParams,
+    };
+
+    return { params, route };
   }
 
   route(pathDef, options = {}) {
@@ -51,10 +74,13 @@ class Router {
       pathDef = this._routesMap[pathDef].path;
     }
 
-    let path = pathDef.replace(this.pathRegExp, (_key) => {
+    let path = pathDef.replace(this.pathRegExp, _key => {
       const firstRegexpChar = _key.indexOf('(');
       // get the content behind : and (\\d+/)
-      let key = _key.substring(1, (firstRegexpChar > 0) ? firstRegexpChar : undefined);
+      let key = _key.substring(
+        1,
+        firstRegexpChar > 0 ? firstRegexpChar : undefined
+      );
       // remove +?*
       key = key.replace(/[\+\*\?]+/g, '');
 
@@ -68,8 +94,8 @@ class Router {
     path = path.match(/^\/{1}$/) ? path : path.replace(/\/$/, '');
 
     const strQueryParams = qs.stringify(queryParams || {});
-    if(strQueryParams) {
-      path += '?' + strQueryParams;
+    if (strQueryParams) {
+      path += `?${strQueryParams}`;
     }
 
     return path;
@@ -84,58 +110,68 @@ class Router {
     // object.
     // This is not to hide what's inside the route object, but to show
     // these are the public APIs
-    const routePublicApi = _helpers.pick(currentRoute, ['name', 'pathDef', 'path']);
-    routePublicApi.options = _helpers.omit(currentRoute.options, ['triggersEnter', 'triggersExit', 'action', 'subscriptions', 'name']);
+    const routePublicApi = _helpers.pick(currentRoute, [
+      'name',
+      'pathDef',
+      'path',
+    ]);
+    routePublicApi.options = _helpers.omit(currentRoute.options, [
+      'triggersEnter',
+      'triggersExit',
+      'action',
+      'subscriptions',
+      'name',
+    ]);
 
-    this._onRouteCallbacks.forEach((cb) => {
+    this._onRouteCallbacks.forEach(cb => {
       cb(routePublicApi);
     });
   }
-
 
   go() {
     // client only
   }
 
-
   current() {
     // client only
+    return this._current;
   }
 
   middleware() {
     // client only
   }
 
-
   getState() {
     // client only
   }
-
 
   getAllStates() {
     // client only
   }
 
+  getRouteName() {
+    return this._current.route ? this._current.route.name : undefined;
+  }
+
+  getQueryParam(key) {
+    return this._current.query ? this._current.queryParams[key] : undefined;
+  }
 
   setState() {
     // client only
   }
 
-
   removeState() {
     // client only
   }
-
 
   clearStates() {
     // client only
   }
 
-
   ready() {
     // client only
   }
-
 
   initialize() {
     // client only
@@ -149,7 +185,14 @@ class Router {
     // We need to remove the leading base path, or "/", as it will be inserted
     // automatically by `Meteor.absoluteUrl` as documented in:
     // http://docs.meteor.com/#/full/meteor_absoluteurl
-    return Meteor.absoluteUrl(this.path.apply(this, arguments).replace(new RegExp('^' + ('/' + (this._basePath || '') + '/').replace(/\/\/+/g, '/')), ''));
+    return Meteor.absoluteUrl(
+      this.path
+        .apply(this, arguments)
+        .replace(
+          new RegExp(`^${`/${this._basePath || ''}/`.replace(/\/\/+/g, '/')}`),
+          ''
+        )
+    );
   }
 }
 

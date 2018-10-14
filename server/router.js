@@ -13,6 +13,23 @@ class Router {
     this._routes = [];
     this._routesMap = {};
     this._current = {};
+    this._specialChars = ['/', '%', '+'];
+    this._encodeParam = (param) => {
+      const paramArr = param.split('');
+      let _param = '';
+      for (let i = 0; i < paramArr.length; i++) {
+        if (this._specialChars.includes(paramArr[i])) {
+          _param += encodeURIComponent(encodeURIComponent(paramArr[i]));
+        } else {
+          try {
+            _param += encodeURIComponent(paramArr[i]);
+          } catch (e) {
+            _param += paramArr[i];
+          }
+        }
+      }
+      return _param;
+    };
     this.subscriptions = Function.prototype;
 
     // holds onRoute callbacks
@@ -84,7 +101,11 @@ class Router {
       // remove +?*
       key = key.replace(/[\+\*\?]+/g, '');
 
-      return fields[key] || '';
+      if (fields[key]) {
+        return this._encodeParam(`${fields[key]}`);
+      }
+
+      return '';
     });
 
     path = path.replace(/\/\/+/g, '/'); // Replace multiple slashes with single slash

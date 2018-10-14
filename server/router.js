@@ -4,7 +4,6 @@ import Route from './route.js';
 import Group from './group.js';
 import { _helpers } from '../lib/_helpers.js';
 
-
 const qs = require('qs');
 
 class Router {
@@ -14,7 +13,7 @@ class Router {
     this._routesMap = {};
     this._current = {};
     this._specialChars = ['/', '%', '+'];
-    this._encodeParam = (param) => {
+    this._encodeParam = param => {
       const paramArr = param.split('');
       let _param = '';
       for (let i = 0; i < paramArr.length; i++) {
@@ -62,7 +61,10 @@ class Router {
       queryParams,
     };
 
-    return { params, route };
+    return {
+      params: _helpers.clone(params),
+      route: _helpers.clone(route),
+    };
   }
 
   route(pathDef, options = {}) {

@@ -44,7 +44,7 @@ class Router {
     };
   }
 
-  matchPath(path, queryParams) {
+  matchPath(path) {
     const params = {};
     const route = this._routes.find(r => {
       const pageRoute = new page.Route(r.pathDef);
@@ -54,17 +54,15 @@ class Router {
     if (!route) {
       return null;
     }
-    this._current = {
-      path,
-      params,
-      route,
-      queryParams,
-    };
 
     return {
       params: _helpers.clone(params),
       route: _helpers.clone(route),
     };
+  }
+
+  setCurrent(current) {
+    this._current = current;
   }
 
   route(pathDef, options = {}) {

@@ -182,6 +182,8 @@ class Router {
     // client only
   }
 
+  setParams(newParams) {}
+
   removeState() {
     // client only
   }

@@ -23,28 +23,11 @@ FlowRouter.route('/no-fast-render', {
 });
 
 var frGroup = FlowRouter.group({
-  prefix: "/fr"
+  prefix: '/fr'
 });
 
-frGroup.route("/have-fr", {
+frGroup.route('/have-fr', {
   subscriptions() {
     this.register('data', Meteor.subscribe('fast-render-data'));
   }
 });
-
-if(Meteor.isServer) {
-  if(!FastRenderColl.findOne()) {
-    FastRenderColl.insert({_id: "one", aa: 10});
-    FastRenderColl.insert({_id: "two", aa: 20});
-  }
-
-  Meteor.publish('fast-render-data', function () {
-    return FastRenderColl.find({}, {sort: {aa: -1}});
-  });
-
-  Meteor.publish('fast-render-data-params', function (params, queryParams) {
-    var fields = {params: params, queryParams: queryParams};
-    this.added('fast-render-coll', 'one', fields);
-    this.ready();
-  });
-}

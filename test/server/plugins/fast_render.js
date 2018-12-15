@@ -1,3 +1,18 @@
+if (!FastRenderColl.findOne()) {
+  FastRenderColl.insert({_id: "one", aa: 10});
+  FastRenderColl.insert({_id: "two", aa: 20});
+}
+
+Meteor.publish('fast-render-data', function () {
+  return FastRenderColl.find({}, {sort: {aa: -1}});
+});
+
+Meteor.publish('fast-render-data-params', function (params, queryParams) {
+  var fields = {params: params, queryParams: queryParams};
+  this.added('fast-render-coll', 'one', fields);
+  this.ready();
+});
+
 Tinytest.add('Server - Fast Render - fast render supported route', function (test) {
   var expectedFastRenderCollData = [
     [{_id: 'two', aa: 20}, {_id: 'one', aa: 10}]

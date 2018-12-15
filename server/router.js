@@ -1,7 +1,7 @@
-import { Meteor } from 'meteor/meteor';
-import page from 'page';
-import Route from './route.js';
-import Group from './group.js';
+import page         from 'page';
+import Route        from './route.js';
+import Group        from './group.js';
+import { Meteor }   from 'meteor/meteor';
 import { _helpers } from '../lib/_helpers.js';
 
 const qs = require('qs');
@@ -40,7 +40,7 @@ class Router {
       },
       exit() {
         // client only
-      },
+      }
     };
   }
 
@@ -48,7 +48,6 @@ class Router {
     const params = {};
     const route = this._routes.find(r => {
       const pageRoute = new page.Route(r.pathDef);
-
       return pageRoute.match(path, params);
     });
     if (!route) {
@@ -91,13 +90,10 @@ class Router {
       pathDef = this._routesMap[pathDef].path;
     }
 
-    let path = pathDef.replace(this.pathRegExp, _key => {
+    let path = pathDef.replace(this.pathRegExp, (_key) => {
       const firstRegexpChar = _key.indexOf('(');
       // get the content behind : and (\\d+/)
-      let key = _key.substring(
-        1,
-        firstRegexpChar > 0 ? firstRegexpChar : undefined
-      );
+      let key = _key.substring(1, firstRegexpChar > 0 ? firstRegexpChar : undefined);
       // remove +?*
       key = key.replace(/[\+\*\?]+/g, '');
 
@@ -182,7 +178,7 @@ class Router {
     // client only
   }
 
-  setParams(newParams) {}
+  setParams() {}
 
   removeState() {
     // client only
@@ -208,14 +204,7 @@ class Router {
     // We need to remove the leading base path, or "/", as it will be inserted
     // automatically by `Meteor.absoluteUrl` as documented in:
     // http://docs.meteor.com/#/full/meteor_absoluteurl
-    return Meteor.absoluteUrl(
-      this.path
-        .apply(this, arguments)
-        .replace(
-          new RegExp(`^${`/${this._basePath || ''}/`.replace(/\/\/+/g, '/')}`),
-          ''
-        )
-    );
+    return Meteor.absoluteUrl(this.path.apply(this, arguments).replace(new RegExp('^' + ('/' + (this._basePath || '') + '/').replace(/\/\/+/g, '/')), ''));
   }
 }
 

@@ -126,6 +126,8 @@ class Route {
         Promise.all(promises).then(() => {
           subWait(delay);
           promises = [];
+        }).catch((error) => {
+          Meteor._debug('[ostrio:flow-router-extra] [route.wait] Promise not resolved', error);
         });
       } else {
         subWait(delay);

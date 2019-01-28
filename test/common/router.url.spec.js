@@ -1,13 +1,14 @@
+import { Meteor }     from 'meteor/meteor';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-Tinytest.add('Common - Router - url - generic', function (test) {
-  var pathDef = '/blog/:blogId/some/:name';
-  var fields = {
+Tinytest.add('Common - Router - url - generic', (test) => {
+  const pathDef = '/blog/:blogId/some/:name';
+  const fields = {
     blogId: '1001',
     name: 'superb'
   };
-  var expectedUrl = Meteor.absoluteUrl('blog/1001/some/superb');
+  const expectedUrl = Meteor.absoluteUrl('blog/1001/some/superb');
 
-  var path = FlowRouter.url(pathDef, fields);
+  const path = FlowRouter.url(pathDef, fields);
   test.equal(path, expectedUrl);
 });

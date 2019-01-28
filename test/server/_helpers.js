@@ -1,4 +1,7 @@
+import { HTTP }   from 'meteor/http';
+import { Meteor } from 'meteor/meteor';
 Package['kadira:flow-router'] = Package['ostrio:flow-router-extra'];
+
 Meteor.publish('foo', function () {
   this.ready();
 });
@@ -24,18 +27,20 @@ Meteor.publish('readyness', function (doIt) {
   }
 });
 
+let GetFRData;
+
 if (Package['staringatlights:inject-data']) {
-  InjectData = Package['staringatlights:inject-data'].InjectData;
-  var urlResolve = require('url').resolve;
-  GetFRData = function GetFRData (path) {
-    var url = urlResolve(process.env.ROOT_URL, path);
+  const InjectData = Package['staringatlights:inject-data'].InjectData;
+  const urlResolve = require('url').resolve;
+  GetFRData = function (path) {
+    const url = urlResolve(process.env.ROOT_URL, path);
     // FastRender only servers if there is a accept header with html in it
-    var options  = {
+    const options  = {
       headers: {'accept': 'html'}
     };
-    var res = HTTP.get(url, options);
+    const res = HTTP.get(url, options);
     if (res.content) {
-      var encodedData = res.content.match(/data">(.*)<\/script/);
+      const encodedData = res.content.match(/data">(.*)<\/script/);
       if (encodedData && encodedData[1]) {
         return InjectData._decode(encodedData[1])['fast-render-data'];
       }
@@ -43,3 +48,5 @@ if (Package['staringatlights:inject-data']) {
     return {collectionData: {'fast-render-coll': {}}};
   };
 }
+
+export { GetFRData };

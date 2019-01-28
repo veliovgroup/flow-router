@@ -1,12 +1,12 @@
+import { Random }     from 'meteor/random';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-Tinytest.add('Common - Group - expose group options', function (test) {
-  var pathDef = '/' + Random.id();
-  var name = Random.id();
-  var data = {aa: 10};
-  var layout = 'blah';
+Tinytest.add('Common - Group - expose group options', (test) => {
+  const name   = Random.id();
+  const data   = {aa: 10};
+  const layout = 'blah';
 
-  var group = FlowRouter.group({
+  const group = FlowRouter.group({
     name: name,
     prefix: '/admin',
     layout: layout,
@@ -17,14 +17,14 @@ Tinytest.add('Common - Group - expose group options', function (test) {
   test.equal(group.options.layout, layout);
 });
 
-Tinytest.add('Common - Group - define route with nested prefix', function (test) {
-  var firstPrefix = Random.id();
-  var secondPrefix = Random.id();
-  var routePath = Random.id();
-  var routeName = Random.id();
+Tinytest.add('Common - Group - define route with nested prefix', (test) => {
+  const firstPrefix  = Random.id();
+  const secondPrefix = Random.id();
+  const routePath    = Random.id();
+  const routeName    = Random.id();
 
-  var firstGroup = FlowRouter.group({prefix: '/' + firstPrefix});
-  var secondGroup = firstGroup.group({prefix: '/' + secondPrefix});
+  const firstGroup  = FlowRouter.group({prefix: '/' + firstPrefix});
+  const secondGroup = firstGroup.group({prefix: '/' + secondPrefix});
 
   secondGroup.route('/' + routePath, {name: routeName});
 

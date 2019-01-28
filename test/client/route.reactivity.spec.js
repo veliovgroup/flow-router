@@ -1,30 +1,32 @@
-import { FlowRouter, Route } from 'meteor/ostrio:flow-router-extra';
+import { Route }   from 'meteor/ostrio:flow-router-extra';
+import { Meteor }  from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
 
-Tinytest.addAsync('Client - Route - Reactivity - getParam', function (test, done) {
-  var r = new Route();
-  Tracker.autorun(function(c) {
-    var param = r.getParam("id");
+Tinytest.addAsync('Client - Route - Reactivity - getParam', (test, done) => {
+  const r = new Route();
+  Tracker.autorun((c) => {
+    const param = r.getParam('id');
     if(param) {
-      test.equal(param, "hello");
+      test.equal(param, 'hello');
       c.stop();
       Meteor.defer(done);
     }
   });
 
-  setTimeout(function() {
-    var context = {
-      params: {id: "hello"},
+  setTimeout(() => {
+    const context = {
+      params: {id: 'hello'},
       queryParams: {}
     };
     r.registerRouteChange(context);
   }, 10);
 });
 
-Tinytest.addAsync('Client - Route - Reactivity - getParam on route close', function (test, done) {
-  var r = new Route();
-  var closeTriggered = false;
-  Tracker.autorun(function(c) {
-    var param = r.getParam("id");
+Tinytest.addAsync('Client - Route - Reactivity - getParam on route close', (test, done) => {
+  const r = new Route();
+  let closeTriggered = false;
+  Tracker.autorun((c) => {
+    const param = r.getParam('id');
     if(closeTriggered) {
       test.equal(param, undefined);
       c.stop();
@@ -32,37 +34,37 @@ Tinytest.addAsync('Client - Route - Reactivity - getParam on route close', funct
     }
   });
 
-  setTimeout(function() {
+  setTimeout(() => {
     closeTriggered = true;
     r.registerRouteClose();
   }, 10);
 });
 
-Tinytest.addAsync('Client - Route - Reactivity - getQueryParam', function (test, done) {
-  var r = new Route();
-  Tracker.autorun(function(c) {
-    var param = r.getQueryParam("id");
+Tinytest.addAsync('Client - Route - Reactivity - getQueryParam', (test, done) => {
+  const r = new Route();
+  Tracker.autorun((c) => {
+    const param = r.getQueryParam('id');
     if(param) {
-      test.equal(param, "hello");
+      test.equal(param, 'hello');
       c.stop();
       Meteor.defer(done);
     }
   });
 
-  setTimeout(function() {
-    var context = {
+  setTimeout(() => {
+    const context = {
       params: {},
-      queryParams: {id: "hello"}
+      queryParams: {id: 'hello'}
     };
     r.registerRouteChange(context);
   }, 10);
 });
 
-Tinytest.addAsync('Client - Route - Reactivity - getQueryParam on route close', function (test, done) {
-  var r = new Route();
-  var closeTriggered = false;
-  Tracker.autorun(function(c) {
-    var param = r.getQueryParam("id");
+Tinytest.addAsync('Client - Route - Reactivity - getQueryParam on route close', (test, done) => {
+  const r = new Route();
+  let closeTriggered = false;
+  Tracker.autorun((c) => {
+    const param = r.getQueryParam('id');
     if(closeTriggered) {
       test.equal(param, undefined);
       c.stop();
@@ -70,19 +72,19 @@ Tinytest.addAsync('Client - Route - Reactivity - getQueryParam on route close', 
     }
   });
 
-  setTimeout(function() {
+  setTimeout(() => {
     closeTriggered = true;
     r.registerRouteClose();
   }, 10);
 });
 
-Tinytest.addAsync('Client - Route - Reactivity - getRouteName rerun when route closed', function (test, done) {
-  var r = new Route();
-  r.name = "my-route";
-  var closeTriggered = false;
+Tinytest.addAsync('Client - Route - Reactivity - getRouteName rerun when route closed', (test, done) => {
+  const r = new Route();
+  r.name = 'my-route';
+  let closeTriggered = false;
 
-  Tracker.autorun(function(c) {
-    var name = r.getRouteName();
+  Tracker.autorun((c) => {
+    const name = r.getRouteName();
     test.equal(name, r.name);
 
     if(closeTriggered) {
@@ -91,34 +93,34 @@ Tinytest.addAsync('Client - Route - Reactivity - getRouteName rerun when route c
     }
   });
 
-  setTimeout(function() {
+  setTimeout(() => {
     closeTriggered = true;
     r.registerRouteClose();
   }, 10);
 });
 
-Tinytest.addAsync('Client - Route - Reactivity - watchPathChange when routeChange', function (test, done) {
-  var r = new Route();
-  var pathChangeCounts = 0;
+Tinytest.addAsync('Client - Route - Reactivity - watchPathChange when routeChange', (test, done) => {
+  const r = new Route();
+  let pathChangeCounts = 0;
 
-  var c = Tracker.autorun(function() {
+  const c = Tracker.autorun(() => {
     r.watchPathChange();
     pathChangeCounts++;
   });
 
-  var context = {
+  const context = {
     params: {},
     queryParams: {}
   };
 
-  setTimeout(function() {
+  setTimeout(() => {
     r.registerRouteChange(context);
     setTimeout(checkAfterNormalRouteChange, 50);
   }, 10);
 
   function checkAfterNormalRouteChange() {
     test.equal(pathChangeCounts, 2);
-    var lastRouteChange = true;
+    const lastRouteChange = true;
     r.registerRouteChange(context, lastRouteChange);
     setTimeout(checkAfterLastRouteChange, 10);
   }
@@ -130,21 +132,16 @@ Tinytest.addAsync('Client - Route - Reactivity - watchPathChange when routeChang
   }
 });
 
-Tinytest.addAsync('Client - Route - Reactivity - watchPathChange when routeClose', function (test, done) {
-  var r = new Route();
-  var pathChangeCounts = 0;
+Tinytest.addAsync('Client - Route - Reactivity - watchPathChange when routeClose', (test, done) => {
+  const r = new Route();
+  let pathChangeCounts = 0;
 
-  var c = Tracker.autorun(function() {
+  const c = Tracker.autorun(() => {
     r.watchPathChange();
     pathChangeCounts++;
   });
 
-  var context = {
-    params: {},
-    queryParams: {}
-  };
-
-  setTimeout(function() {
+  setTimeout(() => {
     r.registerRouteClose();
     setTimeout(checkAfterRouteClose, 10);
   }, 10);

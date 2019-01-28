@@ -1,6 +1,8 @@
+import { Mongo }      from 'meteor/mongo';
+import { Meteor }     from 'meteor/meteor';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-FastRenderColl = new Mongo.Collection('fast-render-coll');
+const FastRenderColl = new Mongo.Collection('fast-render-coll');
 
 FlowRouter.route('/the-fast-render-route', {
   subscriptions() {
@@ -22,7 +24,7 @@ FlowRouter.route('/no-fast-render', {
   }
 });
 
-var frGroup = FlowRouter.group({
+const frGroup = FlowRouter.group({
   prefix: '/fr'
 });
 
@@ -31,3 +33,5 @@ frGroup.route('/have-fr', {
     this.register('data', Meteor.subscribe('fast-render-data'));
   }
 });
+
+export { FastRenderColl };

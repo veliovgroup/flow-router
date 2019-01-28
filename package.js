@@ -1,30 +1,22 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '3.6.1',
+  version: '3.6.2',
   git: 'https://github.com/VeliovGroup/flow-router'
 });
 
-Package.onUse(function (api) {
+Package.onUse((api) => {
   api.versionsFrom('1.4');
-  api.use([
-    'modules',
-    'ecmascript',
-    'promise',
-    'modules',
-    'tracker',
-    'reactive-dict',
-    'reactive-var',
-    'ejson'
-  ], ['client', 'server']);
+  api.use(['modules', 'ecmascript', 'promise', 'tracker', 'reactive-dict', 'reactive-var', 'ejson', 'check'], ['client', 'server']);
 
   api.use(['templating', 'blaze'], 'client', { weak: true });
   api.mainModule('client/_init.js', 'client');
   api.mainModule('server/_init.js', 'server');
 });
 
-Package.onTest(function(api) {
-  api.use(['ecmascript', 'tinytest', 'underscore', 'reactive-var', 'tracker', 'check', 'mongo', 'http', 'random', 'tmeasday:html5-history-api', 'staringatlights:fast-render', 'staringatlights:inject-data', 'ostrio:flow-router-extra']);
+Package.onTest((api) => {
+  api.use(['ecmascript', 'tinytest', 'underscore', 'check', 'mongo', 'http', 'random', 'ostrio:flow-router-extra', 'staringatlights:fast-render', 'staringatlights:inject-data'], ['client', 'server']);
+  api.use(['reactive-var', 'tracker'], 'client');
 
   api.addFiles('test/common/fast_render_route.js', ['client', 'server']);
 
@@ -51,5 +43,5 @@ Package.onTest(function(api) {
 
 Npm.depends({
   'page': '1.9.0',
-  'qs': '6.5.2'
+  'qs': '6.6.0'
 });

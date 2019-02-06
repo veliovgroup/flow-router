@@ -7,7 +7,7 @@ import { page, qs } from './modules.js';
 
 class Router {
   constructor() {
-    this.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
+    this.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\|\-]+)+/g;
     this.globals = [];
     this.subscriptions = Function.prototype;
     this.Renderer = new BlazeRenderer();

@@ -7,7 +7,7 @@ FlowRouter.initialize(options);
 - `options` {*Object*}
   - `hashbang` {*Boolean*} - Enable hashbang urls like `mydomain.com/#!/mypath`, default: `false`
   - `page` {*Object*} - Options for [page.js](https://github.com/visionmedia/page.js#pageoptions)
-    - `link` {*Boolean*} - When false, `<a href>` tags in your app won't automatically call flow router and will do the browser's default page load instead. This is identical to how `react-router` behaves. You can create a `<Link />` component that calls `FlowRouter.go` in its `onClick` handler. This way, you have more control over your links. Default: `true`
+    - `click` {*Boolean*} - When false, `<a href>` tags in your app won't automatically call flow router and will do the browser's default page load instead. This is identical to how `react-router` behaves. You can create a `<Link />` component that calls `FlowRouter.go` in its `onClick` handler. This way, you have more control over your links. Default: `true`
     - Other options can be found in a [`page.js` docs](https://github.com/visionmedia/page.js#pageoptions)
 - Returns {*void*}
 

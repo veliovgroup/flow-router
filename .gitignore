@@ -1,4 +1,5 @@
-.build*
 *.browserify.js.cached
 *.browserify.js.map
+.build*
+.DS_Store
 /client/tmp

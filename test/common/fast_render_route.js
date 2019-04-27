@@ -6,20 +6,42 @@ const FastRenderColl = new Mongo.Collection('fast-render-coll');
 
 FlowRouter.route('/the-fast-render-route', {
   subscriptions() {
-    this.register('data', Meteor.subscribe('fast-render-data'));
-  }
+    if (Meteor.isServer) {
+      this.register('data', Meteor.subscribe('fast-render-data'));
+    }
+  },
+  fastRender: true,
+  waitOn() {
+    if (Meteor.isClient) {
+      return Meteor.subscribe('fast-render-data');
+    }
+  },
 });
 
 FlowRouter.route('/the-fast-render-route-params/:id', {
   subscriptions(params, queryParams) {
-    this.register('data', Meteor.subscribe('fast-render-data-params', params, queryParams));
-  }
+    if (Meteor.isServer) {
+      this.register('data', Meteor.subscribe('fast-render-data-params', params, queryParams));
+    }
+  },
+  fastRender: true,
+  waitOn(params, queryParams) {
+    if (Meteor.isClient) {
+      return Meteor.subscribe('fast-render-data-params', params, queryParams);
+    }
+  },
 });
 
 FlowRouter.route('/no-fast-render', {
   subscriptions() {
     if(Meteor.isClient) {
       this.register('data', Meteor.subscribe('fast-render-data'));
+    }
+  },
+  fastRender: true,
+  waitOn() {
+    if (Meteor.isClient) {
+      return Meteor.subscribe('fast-render-data');
     }
   }
 });
@@ -30,7 +52,15 @@ const frGroup = FlowRouter.group({
 
 frGroup.route('/have-fr', {
   subscriptions() {
-    this.register('data', Meteor.subscribe('fast-render-data'));
+    if (Meteor.isServer) {
+      this.register('data', Meteor.subscribe('fast-render-data'));
+    }
+  },
+  fastRender: true,
+  waitOn() {
+    if (Meteor.isClient) {
+      return Meteor.subscribe('fast-render-data');
+    }
   }
 });
 

@@ -11,9 +11,8 @@ Meteor.publish('fast-render-data', () => {
   return FastRenderColl.find({}, {sort: {aa: -1}});
 });
 
-Meteor.publish('fast-render-data-params', (params, queryParams) => {
-  const fields = {params: params, queryParams: queryParams};
-  this.added('fast-render-coll', 'one', fields);
+Meteor.publish('fast-render-data-params', function (params, queryParams) {
+  this.added('fast-render-coll', 'one', { params, queryParams });
   this.ready();
 });
 

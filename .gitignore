@@ -2,4 +2,6 @@
 *.browserify.js.map
 .build*
 .DS_Store
+.npm
 /client/tmp
+node_modules

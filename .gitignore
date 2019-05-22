@@ -2,6 +2,7 @@
 *.browserify.js.map
 .build*
 .DS_Store
+.eslintcache
 .npm
 /client/tmp
 node_modules

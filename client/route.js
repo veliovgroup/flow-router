@@ -116,18 +116,27 @@ class Route {
             next(current, _data);
           }
         } else {
-          wait(25);
+          wait(24);
         }
       }, delay);
     };
 
+    let waitFails = 0;
     const wait = (delay) => {
       if (promises.length) {
         Promise.all(promises).then(() => {
           subWait(delay);
           promises = [];
         }).catch((error) => {
-          Meteor._debug('[ostrio:flow-router-extra] [route.wait] Promise not resolved', error);
+          if (waitFails > 9) {
+            subWait(256);
+            waitFails = 0;
+            promises = [];
+          } else {
+            wait(128);
+            waitFails++;
+            Meteor._debug('[ostrio:flow-router-extra] [route.wait] Promise not resolved', error);
+          }
         });
       } else {
         subWait(delay);

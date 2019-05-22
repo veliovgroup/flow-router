@@ -1,4 +1,3 @@
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FVDSXRFW9VGA2)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flow-router/Lobby)
 [![GitHub issues](https://img.shields.io/github/issues/VeliovGroup/flow-router.svg)](https://github.com/VeliovGroup/flow-router/issues)
 [![GitHub forks](https://img.shields.io/github/forks/VeliovGroup/flow-router.svg)](https://github.com/VeliovGroup/flow-router/network)
@@ -6,6 +5,10 @@
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/VeliovGroup/flow-router.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2FVeliovGroup%2Fflow-router)
 
 # FlowRouter Extra
+
+<a href="https://www.patreon.com/bePatron?u=20396046">
+  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
+</a>
 
 Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
 
@@ -62,7 +65,7 @@ FlowRouter.route('*', {
 });
 ```
 
-### Documentation
+## Documentation
 
 - Continue with our [wiki](https://github.com/VeliovGroup/flow-router/wiki);
 - [Quick start](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md) tutorial;
@@ -81,8 +84,26 @@ FlowRouter.route('*', {
 - [krishaamer:flow-router-breadcrumb](https://github.com/krishaamer/flow-router-breadcrumb) - Easy way to add a breadcrumb with enough flexibility to your project (`flow-router-extra` edition)
 - [nicolaslopezj:router-layer](https://github.com/krishaamer/body-class) - Easily scope CSS by automatically adding the current template and layout names as classes on the body element
 
-### Support this project:
+## Running Tests
 
-This project wouldn't be possible without [ostr.io](https://ostr.io).
+ 1. Clone this package
+ 2. In Terminal (*Console*) go to directory where package is cloned
+ 3. Then run:
 
-Using [ostr.io](https://ostr.io) you are not only [protecting domain names](https://ostr.io/info/domain-names-protection), [monitoring websites and servers](https://ostr.io/info/monitoring), using [Prerendering for better SEO](https://ostr.io/info/prerendering) of your JavaScript website, but support our Open Source activity, and great packages like this one could be available for free.
+### Meteor/Tinytest
+
+```shell
+# Default
+meteor test-packages ./
+
+# With custom port
+meteor test-packages ./ --port 8888
+
+# With local MongoDB and custom port
+MONGO_URL="mongodb://127.0.0.1:27017/flow-router-tests" meteor test-packages ./ --port 8888
+```
+
+## Support this project:
+
+- [Become a patron](https://www.patreon.com/bePatron?u=20396046) — support my open source contributions with monthly donation
+- Use [ostr.io](https://ostr.io) — [Monitoring](https://snmp-monitoring.com), [Analytics](https://ostr.io/info/web-analytics), [WebSec](https://domain-protection.info), [Web-CRON](https://web-cron.info) and [Pre-rendering](https://prerendering.com) for a website

@@ -441,12 +441,11 @@ class Router {
     // this is the default behaviour and we need keep it like that
     // we are doing a hack. see .path()
     this._page.base(this._basePath);
-    const pageOptions = Object.assign({
+
+    this._page(Object.assign({
       hashbang: !!options.hashbang,
       decodeURLComponents: true
-    }, options.page || {});
-
-    this._page(pageOptions);
+    }, options.page || {}));
 
     this._initialized = true;
   }

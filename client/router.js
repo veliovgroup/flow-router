@@ -5,7 +5,7 @@ import { Tracker }  from 'meteor/tracker';
 import { _helpers } from './../lib/_helpers.js';
 import { page, qs } from './modules.js';
 
-let isNavigating = false;
+// let isNavigating = false;
 
 class Router {
   constructor() {
@@ -139,10 +139,10 @@ class Router {
 
     // calls when the page route being activates
     route._actionHandle = (context) => {
-      if (isNavigating) {
-        return;
-      }
-      isNavigating = true;
+      // if (isNavigating) {
+      //   return;
+      // }
+      // isNavigating = true;
       const oldRoute = this._current.route;
       this._oldRouteChain.push(oldRoute);
 
@@ -165,7 +165,7 @@ class Router {
       // if not that means, we've been redirected to another path
       // then we don't need to invalidate
       const afterAllTriggersRan = () => {
-        isNavigating = false;
+        // isNavigating = false;
         this._invalidateTracker();
       };
 
@@ -258,9 +258,9 @@ class Router {
   }
 
   go(pathDef, fields, queryParams) {
-    if (isNavigating) {
-      return;
-    }
+    // if (isNavigating) {
+    //   return;
+    // }
     const path = this.path(pathDef, fields, queryParams);
     if (!this.env.reload.get() && path === this._current.path) {
       return;
@@ -273,6 +273,9 @@ class Router {
     // REDIRECTS AND MORE COMPLEX LOGIC
     // SO WE WILL LEAVE IT COMMENTED AND
     // AS IT IS FOR NOW TO AVOID COMPATIBILITY ISSUES
+    // SEARCH FOR `isNavigating` VARIABLE ACROSS THIS
+    // FILE TO LEARN MORE.
+    // OH... CLIENT-SIDE NAVIGATION AIN'T SIMPLE THING
     // isNavigating = true;
 
     try {

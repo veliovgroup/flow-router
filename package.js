@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '3.6.3',
+  version: '3.7.0',
   git: 'https://github.com/VeliovGroup/flow-router'
 });
 
@@ -15,7 +15,7 @@ Package.onUse((api) => {
 });
 
 Package.onTest((api) => {
-  api.use(['ecmascript', 'tinytest', 'underscore', 'check', 'mongo', 'http', 'random', 'staringatlights:fast-render@3.0.8', 'staringatlights:inject-data@2.2.1', 'lamhieu:meteorx@2.0.1', 'ostrio:flow-router-extra'], ['client', 'server']);
+  api.use(['ecmascript', 'tinytest', 'underscore', 'check', 'mongo', 'http', 'random', 'staringatlights:fast-render@3.2.0', 'staringatlights:inject-data@2.3.0', 'lamhieu:meteorx@2.1.1', 'ostrio:flow-router-extra'], ['client', 'server']);
   api.use(['reactive-var', 'tracker'], 'client');
 
   api.addFiles('test/common/fast_render_route.js', ['client', 'server']);
@@ -42,6 +42,6 @@ Package.onTest((api) => {
 });
 
 Npm.depends({
-  page: '1.9.0',
-  qs: '6.5.2'
+  page: '1.11.4',
+  qs: '6.8.0'
 });

@@ -881,13 +881,14 @@ FlowRouter.route('/posts', {
     return new Promise((resolve, reject) => {
       loadPosts((err) => {
         (err) ? reject() : resolve();
-      })
+      });
     });
   }
 });
 ```
 
 #### Array of *Promises*
+
 ```js
 FlowRouter.route('/posts', {
   name: 'posts',
@@ -897,7 +898,40 @@ FlowRouter.route('/posts', {
 });
 ```
 
+#### Meteor method via *Promise*
+
+```js
+FlowRouter.route('/posts', {
+  name: 'posts',
+  conf: {
+    posts: false
+  },
+  action(params, qs, data) {
+    this.render('layout', 'posts', data);
+  },
+  waitOn() {
+    return new Promise((resolve, reject) => {
+      Meteor.call('posts.get', (error, posts) => {
+        if (error) {
+          reject();
+        } else {
+          // Use `conf` as shared object to
+          // pass it from `data()` hook to
+          // `action()` hook`
+          this.conf.posts = posts;
+          resolve();
+        }
+      });
+    });
+  },
+  data() {
+    return this.conf.posts;
+  }
+});
+```
+
 #### Dynamic `import`
+
 ```js
 FlowRouter.route('/posts', {
   name: 'posts',

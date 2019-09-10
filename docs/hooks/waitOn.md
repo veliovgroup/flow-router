@@ -1,14 +1,16 @@
 ### waitOn hook
 
 `waitOn(params, qs, ready)`
- - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
- - `ready` {*Function*} - Call when computation is ready using *Tracker*
- - Return: {*Promise*|[*Promise*]|*Subscription*|[*Subscription*]|*Tracker*|[*Tracker*]}
+
+- `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
+- `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+- `ready` {*Function*} - Call when computation is ready using *Tracker*
+- Return: {*Promise*|[*Promise*]|*Subscription*|[*Subscription*]|*Tracker*|[*Tracker*]}
 
 `.waitOn()` hook is triggered before `.action()` hook, allowing to load necessary data before rendering a template.
 
 #### Subscriptions
+
 ```js
 FlowRouter.route('/post/:_id', {
   name: 'post',
@@ -19,7 +21,9 @@ FlowRouter.route('/post/:_id', {
 ```
 
 #### *Tracker*
+
 Use reactive data sources inside `waitOn` hook. To make `waitOn` rerun on reactive data changes, wrap it to `Tracker.autorun` and return Tracker Computation object or an *Array* of Tracker Computation objects. Note: the third argument of `waitOn` is `ready` callback.
+
 ```js
 FlowRouter.route('/posts', {
   name: 'post',
@@ -34,6 +38,7 @@ FlowRouter.route('/posts', {
 ```
 
 #### Array of *Trackers*
+
 ```js
 FlowRouter.route('/posts', {
   name: 'post',
@@ -56,6 +61,7 @@ FlowRouter.route('/posts', {
 ```
 
 #### *Promises*
+
 ```js
 FlowRouter.route('/posts', {
   name: 'posts',
@@ -63,13 +69,14 @@ FlowRouter.route('/posts', {
     return new Promise((resolve, reject) => {
       loadPosts((err) => {
         (err) ? reject() : resolve();
-      })
+      });
     });
   }
 });
 ```
 
 #### Array of *Promises*
+
 ```js
 FlowRouter.route('/posts', {
   name: 'posts',
@@ -79,7 +86,40 @@ FlowRouter.route('/posts', {
 });
 ```
 
+#### Meteor method via *Promise*
+
+```js
+FlowRouter.route('/posts', {
+  name: 'posts',
+  conf: {
+    posts: false
+  },
+  action(params, qs, data) {
+    this.render('layout', 'posts', data);
+  },
+  waitOn() {
+    return new Promise((resolve, reject) => {
+      Meteor.call('posts.get', (error, posts) => {
+        if (error) {
+          reject();
+        } else {
+          // Use `conf` as shared object to
+          // pass it from `data()` hook to
+          // `action()` hook`
+          this.conf.posts = posts;
+          resolve();
+        }
+      });
+    });
+  },
+  data() {
+    return this.conf.posts;
+  }
+});
+```
+
 #### Dynamic `import`
+
 ```js
 FlowRouter.route('/posts', {
   name: 'posts',
@@ -90,6 +130,7 @@ FlowRouter.route('/posts', {
 ```
 
 #### Array of dynamic `import`(s)
+
 ```js
 FlowRouter.route('/posts', {
   name: 'posts',
@@ -104,6 +145,7 @@ FlowRouter.route('/posts', {
 ```
 
 #### Dynamic `import` and Subscription
+
 ```js
 FlowRouter.route('/posts', {
   name: 'posts',
@@ -114,4 +156,5 @@ FlowRouter.route('/posts', {
 ```
 
 #### Further reading
- - [`.waitOnResources()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOnResources.md)
+
+- [`.waitOnResources()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOnResources.md)

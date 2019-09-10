@@ -86,9 +86,9 @@ FlowRouter.route('*', {
 
 ## Running Tests
 
- 1. Clone this package
- 2. In Terminal (*Console*) go to directory where package is cloned
- 3. Then run:
+1. Clone this package
+2. In Terminal (*Console*) go to directory where package is cloned
+3. Then run:
 
 ### Meteor/Tinytest
 

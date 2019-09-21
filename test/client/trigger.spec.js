@@ -1,4 +1,5 @@
 import { FlowRouter, Route } from 'meteor/ostrio:flow-router-extra';
+import { Random } from 'meteor/random';
 
 Tinytest.addAsync('Client - Triggers - global enter triggers', function(test, next) {
   var rand = Random.id(), rand2 = Random.id();
@@ -112,18 +113,19 @@ Tinytest.addAsync('Client - Triggers - global enter triggers with "except"', fun
 });
 
 Tinytest.addAsync('Client - Triggers - global exit triggers', function (test, next) {
-  var rand = Random.id(), rand2 = Random.id();
-  var log = [];
-  var done =false;
+  const rand = Random.id();
+  const rand2 = Random.id();
+  const log = [];
+  let done = false;
 
   FlowRouter.route('/' + rand, {
-    action: function(_params) {
+    action() {
       log.push(1);
     }
   });
 
   FlowRouter.route('/' + rand2, {
-    action: function(_params) {
+    action() {
       log.push(2);
     }
   });
@@ -131,7 +133,7 @@ Tinytest.addAsync('Client - Triggers - global exit triggers', function (test, ne
   FlowRouter.go('/' + rand);
 
   FlowRouter.triggers.exit([function(context) {
-    if(done) return;
+    if (done) return;
     test.equal(context.path, '/' + rand);
     log.push(0);
   }]);
@@ -189,19 +191,20 @@ Tinytest.addAsync('Client - Triggers - global exit triggers with "only"', functi
 });
 
 Tinytest.addAsync('Client - Triggers - global exit triggers with "except"', function (test, next) {
-  var rand = Random.id(), rand2 = Random.id();
-  var log = [];
-  var done = false;
+  const rand = Random.id();
+  const rand2 = Random.id();
+  const log = [];
+  let done = false;
 
   FlowRouter.route('/' + rand, {
-    action: function(_params) {
+    action() {
       log.push(1);
     }
   });
 
   FlowRouter.route('/' + rand2, {
     name: 'foo',
-    action: function(_params) {
+    action() {
       log.push(2);
     }
   });
@@ -209,7 +212,7 @@ Tinytest.addAsync('Client - Triggers - global exit triggers with "except"', func
   FlowRouter.go('/' + rand);
 
   FlowRouter.triggers.exit([function(context) {
-    if(done) return;
+    if (done) return;
     test.equal(context.path, '/' + rand);
     log.push(9);
   }], {except: ['foo']});

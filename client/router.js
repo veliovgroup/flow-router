@@ -12,14 +12,14 @@ class Router {
     this.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
     this.globals = [];
     this.subscriptions = Function.prototype;
-    this.Renderer = new BlazeRenderer();
+    this.Renderer = new BlazeRenderer({ router: this });
 
     this._tracker = this._buildTracker();
     this._current = {};
     this._specialChars = ['/', '%', '+'];
     this._encodeParam = (param) => {
       const paramArr = param.split('');
-      let _param   = '';
+      let _param = '';
       for (let i = 0; i < paramArr.length; i++) {
         if (this._specialChars.includes(paramArr[i])){
           _param += encodeURIComponent(encodeURIComponent(paramArr[i]));

@@ -41,6 +41,7 @@ class BlazeRenderer {
     this.old          = this.newState();
     this.old.materialized = true;
 
+    this.router            = opts.router || false;
     this.inMemoryRendering = opts.inMemoryRendering || false;
     this.getMemoryElement  = opts.getMemoryElement || function () {
       return document.createElement('div');
@@ -163,22 +164,25 @@ class BlazeRenderer {
     current.callback   = callback;
     let updateTemplate = true;
 
-    if (this.old.template.name !== template) {
-      current.template.name  = template;
-      current.template.blaze = _template;
-      this.newElement('template', current);
-      if (this.old.template.view) {
-        _BlazeRemove(this.old.template.view);
-        this.old.template.view = null;
-        this.old.materialized = false;
-      }
+    const forceReRender = this.router && this.router._current && this.router._current.route && this.router._current.route.conf && this.router._current.route.conf.forceReRender === true;
+    if (template) {
+      if (forceReRender || this.old.template.name !== template) {
+        current.template.name  = template;
+        current.template.blaze = _template;
+        this.newElement('template', current);
 
-      updateTemplate = false;
-    } else {
-      current.template = this.old.template;
+        if (this.old.template.view) {
+          _BlazeRemove(this.old.template.view);
+          this.old.template.view = null;
+          this.old.materialized = false;
+        }
+        updateTemplate = false;
+      } else {
+        current.template = this.old.template;
+      }
     }
 
-    if (this.old.layout.name !== layout) {
+    if (!template || this.old.layout.name !== layout) {
       current.layout.name    = layout;
       current.layout.blaze   = _layout;
       current.template.name  = template;
@@ -264,7 +268,7 @@ class BlazeRenderer {
       return;
     }
 
-    current[type].parent  = current[type].parent ? current[type].parent : document.createElement('div');
+    current[type].parent = current[type].parent ? current[type].parent : document.createElement('div');
     if (!current[type].element) {
       current[type].element = this.getMemoryElement();
       current[type].parent.appendChild(current[type].element);

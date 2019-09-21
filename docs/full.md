@@ -3,6 +3,7 @@
 ## Quick Start
 
 #### Install
+
 ```shell
 # Remove original FlowRouter
 meteor remove kadira:flow-router
@@ -14,11 +15,13 @@ meteor add ostrio:flow-router-extra
 __Note:__ *This package is meant to replace original FlowRouter,* `kadira:flow-router` *should be removed to avoid interference and unexpected behavior.*
 
 #### ES6 Import
+
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 ```
 
 #### Create your first route
+
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
@@ -37,6 +40,33 @@ FlowRouter.route('*', {
   action() {
     // Show 404 error page
     this.render('notFound');
+  }
+});
+```
+
+#### Force template re-rendering
+
+*Introduced in `v3.7.1`*
+
+By default if same template is rendered when user navigates to a different route, including parameters or query-string change/update rendering engine will smoothly __only update__ template's data. In case if you wish to force full template rendering executing all hooks and callbacks use `{ conf: { forceReRender: true } }`, like:
+
+```js
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import '/imports/client/layout/layout.js';
+
+FlowRouter.route('/item/:_id', {
+  name: 'item',
+  conf: {
+    // without this option template won't be re-rendered
+    // upon navigation between different "item" routes
+    // e.g. when navigating from `/item/1` to `/item/2`
+    forceReRender: true
+  },
+  waitOn() {
+    return import('/imports/client/item/item.js');
+  },
+  action(params) {
+    this.render('layout', 'item', params);
   }
 });
 ```

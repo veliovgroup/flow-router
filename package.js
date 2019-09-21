@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '3.7.0',
+  version: '3.7.1',
   git: 'https://github.com/VeliovGroup/flow-router'
 });
 
@@ -42,6 +42,6 @@ Package.onTest((api) => {
 });
 
 Npm.depends({
-  page: '1.11.4',
-  qs: '6.8.0'
+  page: '1.9.0',
+  qs: '6.5.2'
 });

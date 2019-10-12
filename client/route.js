@@ -288,7 +288,7 @@ class Route {
       });
 
       whileWaitingAction();
-      wait(0);
+      wait(12);
     } else if (_resources) {
       whileWaitingAction();
       getResources();
@@ -300,16 +300,14 @@ class Route {
   }
 
   callAction(current) {
+    this._endWaiting && this._endWaiting();
     if (this._data) {
       if (this._onNoData && !this._currentData) {
-        this._endWaiting && this._endWaiting();
         this._onNoData(current.params, current.queryParams);
       } else {
-        this._endWaiting && this._endWaiting();
         this._action(current.params, current.queryParams, this._currentData);
       }
     } else {
-      this._endWaiting && this._endWaiting();
       this._action(current.params, current.queryParams, this._currentData);
     }
   }

@@ -42,6 +42,6 @@ Package.onTest((api) => {
 });
 
 Npm.depends({
-  page: '1.9.0',
+  page: '1.11.5',
   qs: '6.5.2'
 });

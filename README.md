@@ -10,18 +10,18 @@
   <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
 </a>
 
-Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package.
+Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package. This package implies [`arillo:flow-router-helpers`](https://github.com/arillo/meteor-flow-router-helpers) and [`zimme:active-route`](https://github.com/meteor-activeroute/legacy) packages in its core, for more details check ["helpers" wiki section](https://github.com/VeliovGroup/flow-router/wiki#helpers).
 
 ## Features:
 
-- Not dependent on Blaze, ready for [__React.js__](https://github.com/VeliovGroup/flow-router/blob/master/docs/react.md) and other templating/components engines/libs;
-- No `underscore` package dependency;
-- Great [tests coverage](https://github.com/VeliovGroup/flow-router/tree/master/test);
-- Up-to-date [dependencies](https://github.com/VeliovGroup/flow-router/blob/master/package.js);
-- Support of [Fast Render](https://github.com/VeliovGroup/flow-router/blob/master/docs/fast-render-integration.md) and [other great packages](https://github.com/VeliovGroup/flow-router#related-packages);
-- Following semver with regular [releases](https://github.com/VeliovGroup/flow-router/releases);
-- Great [wiki](https://github.com/VeliovGroup/flow-router/wiki);
-- Great [quick start tutorial](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md).
+- 📦 Not dependent on Blaze, ready for [__React.js__](https://github.com/VeliovGroup/flow-router/blob/master/docs/react.md) and other templating/components engines/libs;
+- 📦 No `underscore` package dependency;
+- 👨‍🔬 Great [tests coverage](https://github.com/VeliovGroup/flow-router/tree/master/test);
+- 🥑 Up-to-date [dependencies](https://github.com/VeliovGroup/flow-router/blob/master/package.js);
+- 📦 Support of [Fast Render](https://github.com/VeliovGroup/flow-router/blob/master/docs/fast-render-integration.md) and [other great packages](https://github.com/VeliovGroup/flow-router#related-packages);
+- 📋 Following semver with regular [releases](https://github.com/VeliovGroup/flow-router/releases);
+- 📋 Great [wiki](https://github.com/VeliovGroup/flow-router/wiki);
+- 📋 Great [quick start tutorial](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md).
 
 ## Install
 

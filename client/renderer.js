@@ -156,7 +156,9 @@ class BlazeRenderer {
     if (!_layout) {
       this.old.materialized = true;
       this.isRendering = false;
-      throw new Meteor.Error(404, 'No such layout template: ' + layout);
+      const error = new Meteor.Error(404, `No such layout template: ${layout}`);
+      callback(error);
+      throw error;
     }
 
     const current      = this.newState(layout, template);
@@ -169,7 +171,9 @@ class BlazeRenderer {
       if (!_template) {
         this.old.materialized = true;
         this.isRendering = false;
-        throw new Meteor.Error(404, 'No such template: ' + template);
+        const error = new Meteor.Error(404, `No such template: ${template}`);
+        current.callback(error);
+        throw error;
       }
 
       if (forceReRender || this.old.template.name !== template) {

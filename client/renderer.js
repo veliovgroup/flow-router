@@ -157,6 +157,7 @@ class BlazeRenderer {
       this.old.materialized = true;
       this.isRendering = false;
       const error = new Meteor.Error(404, `No such layout template: ${layout}`);
+      this.router.onRenderError && _helpers.isFunction(this.router.onRenderError) && this.router.onRenderError.call(this, error);
       callback(error);
       throw error;
     }
@@ -172,6 +173,7 @@ class BlazeRenderer {
         this.old.materialized = true;
         this.isRendering = false;
         const error = new Meteor.Error(404, `No such template: ${template}`);
+        this.router.onRenderError && _helpers.isFunction(this.router.onRenderError) && this.router.onRenderError.call(this, error);
         current.callback(error);
         throw error;
       }

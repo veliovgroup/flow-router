@@ -1,14 +1,10 @@
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/flow-router/Lobby)
-[![GitHub issues](https://img.shields.io/github/issues/VeliovGroup/flow-router.svg)](https://github.com/VeliovGroup/flow-router/issues)
-[![GitHub forks](https://img.shields.io/github/forks/VeliovGroup/flow-router.svg)](https://github.com/VeliovGroup/flow-router/network)
-[![GitHub stars](https://img.shields.io/github/stars/VeliovGroup/flow-router.svg)](https://github.com/VeliovGroup/flow-router/stargazers)
-[![Twitter](https://img.shields.io/twitter/url/https/github.com/VeliovGroup/flow-router.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2FVeliovGroup%2Fflow-router)
+[![support](https://img.shields.io/badge/support-GitHub-white)](https://github.com/sponsors/dr-dimitru)
+[![support](https://img.shields.io/badge/support-PayPal-white)](https://paypal.me/veliovgroup)
+<a href="https://ostr.io/info/built-by-developers-for-developers">
+  <img src="https://ostr.io/apple-touch-icon-60x60.png" height="20">
+</a>
 
 # FlowRouter Extra
-
-<a href="https://www.patreon.com/bePatron?u=20396046">
-  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
-</a>
 
 Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package. This package implies [`arillo:flow-router-helpers`](https://github.com/arillo/meteor-flow-router-helpers) and [`zimme:active-route`](https://github.com/meteor-activeroute/legacy) packages in its core, for more details check ["helpers" wiki section](https://github.com/VeliovGroup/flow-router/wiki#helpers).
 
@@ -105,5 +101,6 @@ MONGO_URL="mongodb://127.0.0.1:27017/flow-router-tests" meteor test-packages ./ 
 
 ## Support this project:
 
-- [Become a patron](https://www.patreon.com/bePatron?u=20396046) — support my open source contributions with monthly donation
+- [Sponsor via GitHub](https://github.com/sponsors/dr-dimitru)
+- [Support via PayPal](https://paypal.me/veliovgroup) — support my open source contributions once or on regular basis
 - Use [ostr.io](https://ostr.io) — [Monitoring](https://snmp-monitoring.com), [Analytics](https://ostr.io/info/web-analytics), [WebSec](https://domain-protection.info), [Web-CRON](https://web-cron.info) and [Pre-rendering](https://prerendering.com) for a website

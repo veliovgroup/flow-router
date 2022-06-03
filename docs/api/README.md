@@ -10,6 +10,7 @@
   - [`.refresh()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/refresh.md)
   - [`.reload()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/reload.md)
   - [`.pathRegExp` option](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/pathRegExp.md)
+  - [`.decodeQueryParamsOnce` option](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/decodeQueryParamsOnce.md)
 - __Manipulation:__
   - [`.getParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getParam.md)
   - [`.getQueryParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getQueryParam.md)

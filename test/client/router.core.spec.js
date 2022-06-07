@@ -199,8 +199,8 @@ Tinytest.addAsync('Client - Router - setParams - preserve query strings', (test,
   }, 50);
 
   function validate() {
-    test.equal(paramsList.length, 2);
-    test.equal(queryParamsList.length, 2);
+    test.equal(paramsList.length, 2, 'paramsList.length');
+    test.equal(queryParamsList.length, 2, 'queryParamsList.length');
 
     test.equal(_.pick(paramsList[0] || {}, 'id', 'cat'), {cat: 'meteor', id: '200 +% / ad'});
     test.equal(_.pick(paramsList[1] || {}, 'id', 'cat'), {cat: 'meteor', id: '700 +% / ad'});

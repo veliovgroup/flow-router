@@ -151,7 +151,7 @@ class Router {
       // Meteor's check doesn't play nice with it.
       // So, we need to fix it by cloning it.
       // see more: https://github.com/meteorhacks/flow-router/issues/164
-      
+
       // In addition to the above, query params also inappropriately
       // get decoded twice. The ternary below fixes this bug if the
       // "decodeQueryParamsOnce" option is set to true, so that we
@@ -161,7 +161,7 @@ class Router {
       // still-encoded path instead of the prematurely decoded
       // querystring.
       // See: https://github.com/veliovgroup/flow-router/issues/78
-      const queryParams = this._qs.parse((this.decodeQueryParamsOnce) ? (new URL(context.path, "http://example.com")).searchParams.toString() : context.querystring);
+      const queryParams = this._qs.parse((this.decodeQueryParamsOnce) ? (new URL(context.path, 'http://example.com')).searchParams.toString() : context.querystring);
       this._current = {
         path: context.path,
         params: context.params,
@@ -215,10 +215,20 @@ class Router {
     return new Group(this, options);
   }
 
-  path(_pathDef, fields = {}, queryParams) {
+  path(_pathDef, fields = {}, _queryParams = {}) {
     let pathDef = _pathDef;
+    let queryParams = _queryParams;
+
     if (this._routesMap[pathDef]) {
       pathDef = this._routesMap[pathDef].pathDef;
+    }
+
+    if (pathDef.includes('?')) {
+      const pathDefParts = pathDef.split('?');
+      pathDef = pathDefParts[0];
+      if (pathDefParts[1]) {
+        queryParams = Object.assign(this._qs.parse(pathDefParts[1]), queryParams);
+      }
     }
 
     let path = '';

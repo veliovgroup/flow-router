@@ -1,7 +1,9 @@
 import { Meteor } from 'meteor/meteor';
-import Router     from './router.js';
-import Route      from './route.js';
-import Group      from './group.js';
+
+import Router from './router.js';
+import Route from './route.js';
+import Group from './group.js';
+
 import './plugins/fast-render.js';
 
 if (Package['meteorhacks:inject-data']) {

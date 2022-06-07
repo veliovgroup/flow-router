@@ -572,7 +572,7 @@ Template.myTemplate.events({
 #### Fast Render
 FlowRouter has built in support for [Fast Render](https://github.com/abecks/meteor-fast-render).
 
-- `meteor add staringatlights:fast-render`
+- `meteor add communitypackages:fast-render`
 - Put `router.js` in a shared location. We suggest `lib/router.js`.
 
 You can exclude Fast Render support by wrapping the subscription registration in an `isClient` block:

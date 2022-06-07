@@ -5,21 +5,21 @@ To get the most out of Flow-Router Extra and [Fast-Render](https://github.com/ab
 #### Install fast-render library:
 
 ```shell
-meteor add staringatlights:fast-render
+meteor add communitypackages:fast-render
 ```
 
-__Note: make sure `staringatlights:fast-render` placed above `ostrio:flow-router-extra` in `meteor-app/.meteor/packages` file. For package developers: Make sure `staringatlights:fast-render` placed before `ostrio:flow-router-extra` in `api.use()` method:__
+__Note: make sure `communitypackages:fast-render` placed above `ostrio:flow-router-extra` in `meteor-app/.meteor/packages` file. For package developers: Make sure `communitypackages:fast-render` placed before `ostrio:flow-router-extra` in `api.use()` method:__
 
 ```plaintext
 # meteor-app/.meteor/packages
-staringatlights:fast-render
+communitypackages:fast-render
 ostrio:flow-router-extra
 ```
 
 ```js
 // meteor-package/package.js
 Package.onUse((api) => {
-  api.use(['staringatlights:fast-render', 'ostrio:flow-router-extra', /*...*/]);
+  api.use(['communitypackages:fast-render', 'ostrio:flow-router-extra', /*...*/]);
 });
 ```
 

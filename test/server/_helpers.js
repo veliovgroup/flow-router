@@ -29,8 +29,8 @@ Meteor.publish('readyness', function (doIt) {
 
 let GetFRData;
 
-if (Package['staringatlights:inject-data']) {
-  const InjectData = Package['staringatlights:inject-data'].InjectData;
+if (Package['communitypackages:inject-data']) {
+  const InjectData = Package['communitypackages:inject-data'].InjectData;
   const urlResolve = require('url').resolve;
   GetFRData = function (path) {
     const url = urlResolve(process.env.ROOT_URL, path);

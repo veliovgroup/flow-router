@@ -2,11 +2,11 @@ import { Meteor }     from 'meteor/meteor';
 import { _helpers }   from './../../lib/_helpers.js';
 import { FlowRouter } from '../_init.js';
 
-if(!Package['staringatlights:fast-render']) {
+if(!Package['communitypackages:fast-render']) {
   return;
 }
 
-const FastRender = Package['staringatlights:fast-render'].FastRender;
+const FastRender = Package['communitypackages:fast-render'].FastRender;
 
 const setupFastRender = () => {
   FlowRouter._routes.forEach((route) => {

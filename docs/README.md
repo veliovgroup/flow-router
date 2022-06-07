@@ -1,5 +1,41 @@
 # Flow-Router Extra Docs Index
 
+```shell
+meteor add ostrio:flow-router-extra
+```
+
+```js
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+// DISABLE QUERY STRING COMPATIBILITY
+// WITH OLDER FlowRouter AND Meteor RELEASES
+FlowRouter.decodeQueryParamsOnce = true;
+
+FlowRouter.route('/', {
+  name: 'index',
+  action() {
+    // Render a template using Blaze
+    this.render('templateName');
+
+    // Can be used with BlazeLayout,
+    // and ReactLayout for React-based apps
+  }
+});
+
+// Create 404 route (catch-all)
+FlowRouter.route('*', {
+  action() {
+    // Show 404 error page using Blaze
+    this.render('notFound');
+
+    // Can be used with BlazeLayout,
+    // and ReactLayout for React-based apps
+  }
+});
+```
+
+For the new apps it is recommended to set `decodeQueryParamsOnce` to `true`. This flag is here to fix [#78](https://github.com/veliovgroup/flow-router/issues/78). By default it is `false` due to its historical origin for compatibility purposes.
+
 ## General tutorials:
 
 - [Quick Start](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md)

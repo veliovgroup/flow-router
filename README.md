@@ -69,16 +69,17 @@ FlowRouter.route('*', {
 
 ### Related packages:
 
-- [ostrio:flow-router-title](https://github.com/VeliovGroup/Meteor-flow-router-title) - Reactive page title (`document.title`)
-- [ostrio:flow-router-meta](https://github.com/VeliovGroup/Meteor-flow-router-meta) - Per route `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
-- [staringatlights:fast-render](https://github.com/abecks/meteor-fast-render) - Fast Render can improve the initial load time of your app, giving you 2-10 times faster initial page loads. [`fast-render` integration tutorial](https://github.com/VeliovGroup/flow-router/blob/master/docs/fast-render-integration.md)
-- [flean:flow-router-autoscroll](https://github.com/flean/flow-router-autoscroll) - Autoscroll for Flow Router
-- [mealsunite:flow-routing-extra](https://github.com/MealsUnite/flow-routing) - Add-on for User Accounts
-- [nxcong:flow-routing](https://github.com/cafe4it/flow-routing) - Add-on for User Accounts (alternative)
-- [forwarder:autoform-wizard-flow-router-extra](https://atmospherejs.com/forwarder/autoform-wizard-flow-router-extra) - Flow Router bindings for AutoForm Wizard
-- [nicolaslopezj:router-layer](https://github.com/nicolaslopezj/meteor-router-layer) - Helps package authors to support multiple routers
-- [krishaamer:flow-router-breadcrumb](https://github.com/krishaamer/flow-router-breadcrumb) - Easy way to add a breadcrumb with enough flexibility to your project (`flow-router-extra` edition)
-- [nicolaslopezj:router-layer](https://github.com/krishaamer/body-class) - Easily scope CSS by automatically adding the current template and layout names as classes on the body element
+- [`ostrio:flow-router-title`](https://github.com/VeliovGroup/Meteor-flow-router-title) - Reactive page title (`document.title`)
+- [`ostrio:flow-router-meta`](https://github.com/VeliovGroup/Meteor-flow-router-meta) - Per route `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
+- [`communitypackages:fast-render`](https://github.com/abecks/meteor-fast-render) - Fast Render can improve the initial load time of your app, giving you 2-10 times faster initial page loads. [`fast-render` integration tutorial](https://github.com/VeliovGroup/flow-router/blob/master/docs/fast-render-integration.md)
+- [`communitypackages:inject-data`](https://github.com/Meteor-Community-Packages/meteor-inject-data) - This is the package used by `fast-render` to push data to the client with the initial HTML
+- [`flean:flow-router-autoscroll`](https://github.com/flean/flow-router-autoscroll) - Autoscroll for Flow Router
+- [`mealsunite:flow-routing-extra`](https://github.com/MealsUnite/flow-routing) - Add-on for User Accounts
+- [`nxcong:flow-routing`](https://github.com/cafe4it/flow-routing) - Add-on for User Accounts (alternative)
+- [`forwarder:autoform-wizard-flow-router-extra`](https://atmospherejs.com/forwarder/autoform-wizard-flow-router-extra) - Flow Router bindings for AutoForm Wizard
+- [`nicolaslopezj:router-layer`](https://github.com/nicolaslopezj/meteor-router-layer) - Helps package authors to support multiple routers
+- [`krishaamer:flow-router-breadcrumb`](https://github.com/krishaamer/flow-router-breadcrumb) - Easy way to add a breadcrumb with enough flexibility to your project (`flow-router-extra` edition)
+- [`krishaamer:body-class`](https://github.com/krishaamer/body-class) - Easily scope CSS by automatically adding the current template and layout names as classes on the body element
 
 ## Running Tests
 

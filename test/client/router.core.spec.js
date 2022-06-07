@@ -23,6 +23,118 @@ Tinytest.addAsync('Client - Router - define and go to route', (test, next) => {
   }, 100);
 });
 
+Tinytest.addAsync('Client - Router - define and go to route (issue #93; query string repetition) - go', (test, next) => {
+  const rand   = Random.id();
+  let rendered = 0;
+
+  FlowRouter.route('/' + rand, {
+    action() {
+      rendered++;
+    }
+  });
+
+  FlowRouter.go(`/${rand}?test=1`);
+
+  setTimeout(() => {
+    test.equal(rendered, 1);
+    test.isTrue(location.href.endsWith(`/${rand}?test=1`));
+
+    const route = FlowRouter.current();
+    const qs = {...route.queryParams};
+    qs.test = 2;
+    FlowRouter.go(route.path, {...route.params}, qs);
+
+    setTimeout(() => {
+      test.isTrue(location.href.endsWith(`/${rand}?test=2`));
+      next();
+    }, 100);
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Router - define and go to route (issue #93; query string repetition) - setQueryParams', (test, next) => {
+  const rand   = Random.id();
+  let rendered = 0;
+
+  FlowRouter.route('/' + rand, {
+    action() {
+      rendered++;
+    }
+  });
+
+  FlowRouter.go(`/${rand}?test=1`);
+
+  setTimeout(() => {
+    test.equal(rendered, 1);
+    test.isTrue(location.href.endsWith(`/${rand}?test=1`));
+
+    const route = FlowRouter.current();
+    const qs = {...route.queryParams};
+    qs.test = 2;
+    FlowRouter.setQueryParams(qs);
+
+    setTimeout(() => {
+      test.isTrue(location.href.endsWith(`/${rand}?test=2`));
+      next();
+    }, 100);
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Router - define and go to route (issue #93; query string repetition) - go - empty arguments', (test, next) => {
+  const rand   = Random.id();
+  let rendered = 0;
+
+  FlowRouter.route('/' + rand, {
+    action() {
+      rendered++;
+    }
+  });
+
+  FlowRouter.go(`/${rand}?D`);
+
+  setTimeout(() => {
+    test.equal(rendered, 1);
+    test.isTrue(location.href.endsWith(`/${rand}?D=`));
+
+    const route = FlowRouter.current();
+    const qs = {...route.queryParams};
+    qs.test = 2;
+    FlowRouter.go(route.path, {...route.params}, qs);
+
+    setTimeout(() => {
+      test.isTrue(location.href.endsWith(`/${rand}?D=&test=2`));
+      next();
+    }, 100);
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Router - define and go to route (issue #93; query string repetition) - setQueryParams - empty arguments', (test, next) => {
+  const rand   = Random.id();
+  let rendered = 0;
+
+  FlowRouter.route('/' + rand, {
+    action() {
+      rendered++;
+    }
+  });
+
+  FlowRouter.go(`/${rand}?D`);
+
+  setTimeout(() => {
+    test.equal(rendered, 1);
+    test.isTrue(location.href.endsWith(`/${rand}?D=`));
+
+    const route = FlowRouter.current();
+    const qs = {...route.queryParams};
+    qs.test = 2;
+    FlowRouter.setQueryParams(qs);
+
+    setTimeout(() => {
+      test.isTrue(location.href.endsWith(`/${rand}?D=&test=2`));
+      next();
+    }, 100);
+  }, 100);
+});
+
 Tinytest.addAsync('Client - Router - define and go to route with fields', (test, next) => {
   const rand    = Random.id();
   const pathDef = '/' + rand + '/:key';

@@ -6,7 +6,7 @@ let Blaze;
 let Template;
 
 if (Package.templating && Package.blaze) {
-  Blaze    = Package.blaze.Blaze;
+  Blaze = Package.blaze.Blaze;
   Template = Package.templating.Template;
 }
 
@@ -14,12 +14,7 @@ const _BlazeRemove = function (view) {
   try {
     Blaze.remove(view);
   } catch (_e) {
-    try {
-      Blaze._destroyView(view);
-      view._domrange.destroy();
-    } catch (__e) {
-      view._domrange.destroy();
-    }
+    Meteor._debug('[flow-router] [_BlazeRemove] exception:', _e);
   }
 };
 
@@ -29,21 +24,21 @@ class BlazeRenderer {
       return;
     }
 
-    this.rootElement  = opts.rootElement || function () {
+    this.rootElement = opts.rootElement || function () {
       return document.body;
     };
 
-    const self        = this;
-    this.isRendering  = false;
-    this.queue        = [];
-    this.yield        = null;
-    this.cache        = {};
-    this.old          = this.newState();
+    const self = this;
+    this.isRendering = false;
+    this.queue = [];
+    this.yield = null;
+    this.cache = {};
+    this.old = this.newState();
     this.old.materialized = true;
 
-    this.router            = opts.router || false;
+    this.router = opts.router || false;
     this.inMemoryRendering = opts.inMemoryRendering || false;
-    this.getMemoryElement  = opts.getMemoryElement || function () {
+    this.getMemoryElement = opts.getMemoryElement || function () {
       return document.createElement('div');
     };
 
@@ -98,10 +93,10 @@ class BlazeRenderer {
         const task = this.queue.shift();
         this.proceed.apply(this, task);
         if (this.queue.length) {
-          requestAnimFrame(this.startQueue.bind(this));
+          this.startQueue.bind(this);
         }
       } else {
-        requestAnimFrame(this.startQueue.bind(this));
+        this.startQueue.bind(this);
       }
     }
   }
@@ -162,12 +157,12 @@ class BlazeRenderer {
       throw error;
     }
 
-    const current      = this.newState(layout, template);
-    current.data       = data;
-    current.callback   = callback;
+    const current = this.newState(layout, template);
+    current.data = data;
+    current.callback = callback;
     let updateTemplate = true;
 
-    const forceReRender = this.router && this.router._current && this.router._current.route && this.router._current.route.conf && this.router._current.route.conf.forceReRender === true;
+    const forceReRender = this.router?._current?.route?.conf?.forceReRender === true;
     if (template) {
       if (!_template) {
         this.old.materialized = true;
@@ -195,9 +190,9 @@ class BlazeRenderer {
     }
 
     if (!template || this.old.layout.name !== layout) {
-      current.layout.name    = layout;
-      current.layout.blaze   = _layout;
-      current.template.name  = template;
+      current.layout.name = layout;
+      current.layout.blaze = _layout;
+      current.template.name = template;
       current.template.blaze = _template;
       this.newElement('layout', current);
 
@@ -208,8 +203,8 @@ class BlazeRenderer {
 
       this._render(current);
     } else if (template) {
-      current.layout         = this.old.layout;
-      current.template.name  = template;
+      current.layout = this.old.layout;
+      current.template.name = template;
       current.template.blaze = _template;
       this._load(updateTemplate, true, current);
     } else {

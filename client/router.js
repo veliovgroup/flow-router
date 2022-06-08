@@ -216,7 +216,7 @@ class Router {
   }
 
   path(_pathDef, fields = {}, _queryParams = {}) {
-    let pathDef = _pathDef;
+    let pathDef = _pathDef || '';
     let queryParams = _queryParams;
 
     if (this._routesMap[pathDef]) {
@@ -474,7 +474,7 @@ class Router {
         if (!path || (!self.env.reload.get() && self._current.path === path)) {
           return;
         }
-        original.call(this, path.replace(/\/\/+/g, '/'), state, dispatch, push);
+        original.call(self, path.replace(/\/\/+/g, '/'), state, dispatch, push);
       };
     });
 
@@ -484,11 +484,17 @@ class Router {
     // we are doing a hack. see .path()
     this._page.base(this._basePath);
 
-    this._page(Object.assign({
+    const pageOptions = Object.assign({
+      click: true,
+      popstate: true,
+      // dispatch: false, // not supported by FlowRouter
       hashbang: !!options.hashbang,
-      decodeURLComponents: true
-    }, options.page || {}));
+      decodeURLComponents: true,
+      window: window
+    }, options.page || {});
 
+
+    this._page.call(void 0, pageOptions);
     this._initialized = true;
   }
 

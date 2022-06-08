@@ -18,6 +18,6 @@ FlowRouter.setParams({appId: 'new-id'});
 ```
 
 #### Further reading
- - [`.setQueryParams()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/setQueryParams.md)
- - [`.getQueryParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getQueryParam.md)
- - [`.getParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getParam.md)
+ - [`.setQueryParams()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/setQueryParams.md)
+ - [`.getQueryParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getQueryParam.md)
+ - [`.getParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getParam.md)

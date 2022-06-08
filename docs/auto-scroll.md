@@ -2,7 +2,7 @@
 
 *FlowRouter* causes the page to remain at the same scroll position on navigation between routes (which people are often surprised by). Little snipped below would fix this behavior to more common, when each page loaded at the top of the scrolling position.
 
-Originated from [`#9`](https://github.com/VeliovGroup/flow-router/issues/9).
+Originated from [`#9`](https://github.com/veliovgroup/flow-router/issues/9).
 
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';

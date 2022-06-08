@@ -19,5 +19,5 @@ FlowRouter.go('blogPost', { _id: 'post_id' }, { commentId: '123' }); // /blog/po
 ```
 
 #### Further reading
- - [`.route()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/route.md)
- - [`.getRouteName()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getRouteName.md)
+ - [`.route()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/route.md)
+ - [`.getRouteName()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getRouteName.md)

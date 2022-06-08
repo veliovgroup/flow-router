@@ -7,8 +7,8 @@ FlowRouter.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]]+)+/g;
  - `pathRegExp` {*RegExp*}
  - Default - `/(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g`
 
-Use to change the URI RegEx parser used for `params`, for more info see [#25](https://github.com/VeliovGroup/flow-router/issues/25).
+Use to change the URI RegEx parser used for `params`, for more info see [#25](https://github.com/veliovgroup/flow-router/issues/25).
 
 #### Further reading
- - [`.route()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/route.md)
- - [`.group()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/group.md)
+ - [`.route()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/route.md)
+ - [`.group()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/group.md)

@@ -20,5 +20,5 @@ FlowRouter.route('/post/:_id', {
 ```
 
 #### Further reading
- - [`.waitOn()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOn.md)
- - [Templating with Data](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-data.md)
+ - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
+ - [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)

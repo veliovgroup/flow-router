@@ -21,4 +21,4 @@ FlowRouter.route('/post/:_id', {
 ```
 
 #### Further reading
- - [`.data()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/data.md)
+ - [`.data()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/data.md)

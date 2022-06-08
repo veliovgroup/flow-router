@@ -88,9 +88,9 @@ Package['kadira:flow-router'] = Package['ostrio:flow-router-extra'];
 ```
 
 #### Further reading
- - [Templating](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating.md)
- - [Templating with Data](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-data.md)
- - [`.waitOn()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOn.md)
- - [`.data()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/data.md)
- - [`.action()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/action.md)
- - [`.render()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/render.md)
+ - [Templating](https://github.com/veliovgroup/flow-router/blob/master/docs/templating.md)
+ - [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)
+ - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
+ - [`.data()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/data.md)
+ - [`.action()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/action.md)
+ - [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)

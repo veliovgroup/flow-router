@@ -16,7 +16,7 @@ Tracker.autorun(() => {
 ```
 
 #### Further reading
- - [`.current()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/current.md)
- - [`.getQueryParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getQueryParam.md)
- - [`.getParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getParam.md)
- - [`.getRouteName()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getRouteName.md)
+ - [`.current()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/current.md)
+ - [`.getQueryParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getQueryParam.md)
+ - [`.getParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getParam.md)
+ - [`.getRouteName()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getRouteName.md)

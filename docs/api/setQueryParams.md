@@ -14,6 +14,6 @@ FlowRouter.setQueryParams({ paramToRemove: null });
 ```
 
 #### Further reading
- - [`.getQueryParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getQueryParam.md)
- - [`.setParams()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/setParams.md)
- - [`.getParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getParam.md)
+ - [`.getQueryParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getQueryParam.md)
+ - [`.setParams()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/setParams.md)
+ - [`.getParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getParam.md)

@@ -81,4 +81,4 @@ FlowRouter.globals.push({
 ```
 
 #### Further reading
- - [`.waitOn()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOn.md)
+ - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)

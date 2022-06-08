@@ -26,4 +26,4 @@ WhenEverYourAppIsReady(() => {
 
 #### Further reading
 
-- [`.wait()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/wait.md)
+- [`.wait()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/wait.md)

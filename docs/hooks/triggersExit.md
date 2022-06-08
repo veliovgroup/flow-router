@@ -32,7 +32,7 @@ FlowRouter.triggers.exit([cb1, cb2]);
 ```
 
 #### Further reading
- - [`.current()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/current.md)
- - [Global `.triggers`](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/triggers.md)
- - [`.action()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/action.md)
- - [`.triggersEnter()` hooks](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
+ - [`.current()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/current.md)
+ - [Global `.triggers`](https://github.com/veliovgroup/flow-router/blob/master/docs/api/triggers.md)
+ - [`.action()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/action.md)
+ - [`.triggersEnter()` hooks](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersEnter.md)

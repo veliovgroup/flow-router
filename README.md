@@ -12,14 +12,14 @@ It exposes a great API for changing the URL and getting data from the URL. Howev
 
 ## Features:
 
-- 📦 Not dependent on Blaze, ready for [__React.js__](https://github.com/VeliovGroup/flow-router/blob/master/docs/react.md) and other templating/components engines/libs;
+- 📦 Not dependent on Blaze, ready for [__React.js__](https://github.com/veliovgroup/flow-router/blob/master/docs/react.md) and other templating/components engines/libs;
 - 📦 No `underscore` package dependency;
-- 👨‍🔬 Great [tests coverage](https://github.com/VeliovGroup/flow-router/tree/master/test);
-- 🥑 Up-to-date [dependencies](https://github.com/VeliovGroup/flow-router/blob/master/package.js);
-- 📦 Support of [Fast Render](https://github.com/VeliovGroup/flow-router/blob/master/docs/fast-render-integration.md) and [other great packages](https://github.com/VeliovGroup/flow-router#related-packages);
-- 📋 Following semver with regular [releases](https://github.com/VeliovGroup/flow-router/releases);
-- 📋 Great [wiki](https://github.com/VeliovGroup/flow-router/wiki);
-- 📋 Great [quick start tutorial](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md).
+- 👨‍🔬 Great [tests coverage](https://github.com/veliovgroup/flow-router/tree/master/test);
+- 🥑 Up-to-date [dependencies](https://github.com/veliovgroup/flow-router/blob/master/package.js);
+- 📦 Support of [Fast Render](https://github.com/veliovgroup/flow-router/blob/master/docs/fast-render-integration.md) and [other great packages](https://github.com/veliovgroup/flow-router#related-packages);
+- 📋 Following semver with regular [releases](https://github.com/veliovgroup/flow-router/releases);
+- 📋 Great [wiki](https://github.com/veliovgroup/flow-router/wiki);
+- 📋 Great [quick start tutorial](https://github.com/veliovgroup/flow-router/blob/master/docs/quick-start.md).
 
 ## Install
 
@@ -69,15 +69,15 @@ FlowRouter.route('*', {
 
 ## Documentation
 
-- Continue with our [wiki](https://github.com/VeliovGroup/flow-router/wiki);
-- [Quick start](https://github.com/VeliovGroup/flow-router/blob/master/docs/quick-start.md) tutorial;
-- All docs as [single document](https://github.com/VeliovGroup/flow-router/blob/master/docs/full.md).
+- Continue with our [wiki](https://github.com/veliovgroup/flow-router/wiki);
+- [Quick start](https://github.com/veliovgroup/flow-router/blob/master/docs/quick-start.md) tutorial;
+- All docs as [single document](https://github.com/veliovgroup/flow-router/blob/master/docs/full.md).
 
 ### Related packages:
 
-- [`ostrio:flow-router-title`](https://github.com/VeliovGroup/Meteor-flow-router-title) - Reactive page title (`document.title`)
-- [`ostrio:flow-router-meta`](https://github.com/VeliovGroup/Meteor-flow-router-meta) - Per route `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
-- [`communitypackages:fast-render`](https://github.com/Meteor-Community-Packages/meteor-fast-render) - Fast Render can improve the initial load time of your app, giving you 2-10 times faster initial page loads. [`fast-render` integration tutorial](https://github.com/VeliovGroup/flow-router/blob/master/docs/fast-render-integration.md)
+- [`ostrio:flow-router-title`](https://github.com/veliovgroup/Meteor-flow-router-title) - Reactive page title (`document.title`)
+- [`ostrio:flow-router-meta`](https://github.com/veliovgroup/Meteor-flow-router-meta) - Per route `meta` tags, `script` and `link` (CSS), set per-route stylesheets and scripts
+- [`communitypackages:fast-render`](https://github.com/Meteor-Community-Packages/meteor-fast-render) - Fast Render can improve the initial load time of your app, giving you 2-10 times faster initial page loads. [`fast-render` integration tutorial](https://github.com/veliovgroup/flow-router/blob/master/docs/fast-render-integration.md)
 - [`communitypackages:inject-data`](https://github.com/Meteor-Community-Packages/meteor-inject-data) - This is the package used by `fast-render` to push data to the client with the initial HTML
 - [`flean:flow-router-autoscroll`](https://github.com/flean/flow-router-autoscroll) - Autoscroll for Flow Router
 - [`mealsunite:flow-routing-extra`](https://github.com/MealsUnite/flow-routing) - Add-on for User Accounts

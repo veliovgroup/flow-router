@@ -59,8 +59,8 @@ FlowRouter.route('/post/:_id', {
 ```
 
 #### Further reading
- - [`.triggersEnter()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
- - [`.onNoData()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/onNoData.md)
- - [`.waitOn()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOn.md)
- - [`.render()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/render.md)
- - [Templating with Data](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-data.md)
+ - [`.triggersEnter()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
+ - [`.onNoData()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/onNoData.md)
+ - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
+ - [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)
+ - [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)

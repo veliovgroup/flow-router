@@ -96,10 +96,10 @@ FlowRouter.route('/article/:_id', {
 ```
 
 #### Further Reading
- - [`.action()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/action.md)
- - [`.data()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/data.md)
- - [`.onNoData()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/onNoData.md)
- - [`.waitOn()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOn.md)
- - [`.whileWaiting()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/whileWaiting.md)
- - [`.render()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/render.md)
- - [Templating with "Regions"](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-regions.md)
+ - [`.action()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/action.md)
+ - [`.data()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/data.md)
+ - [`.onNoData()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/onNoData.md)
+ - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
+ - [`.whileWaiting()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/whileWaiting.md)
+ - [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)
+ - [Templating with "Regions"](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-regions.md)

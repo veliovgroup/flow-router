@@ -9,4 +9,4 @@ FlowRouter.url(path, params, qs);
  - Returns {*String*} - Absolute URL using `Meteor.absoluteUrl`
 
 #### Further reading
- - [`.path()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/path.md)
+ - [`.path()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/path.md)

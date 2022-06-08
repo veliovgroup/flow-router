@@ -26,4 +26,4 @@ console.log(current);
 ```
 
 #### Further reading
- - [`.watchPathChange()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/watchPathChange.md)
+ - [`.watchPathChange()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/watchPathChange.md)

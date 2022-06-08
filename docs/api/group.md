@@ -7,7 +7,7 @@ Use group routes for better route organization.
  - `options.name` {*String*} - [Optional] Route's name
  - `options.prefix` {*String*} - [Optional] Route prefix
  - `options[prop-name]` {*Any*} - [Optional] Any property which will be available inside route call
- - `options[hook-name]` {*Function*} - [Optional] See [all available hooks](https://github.com/VeliovGroup/flow-router/tree/master/docs#hooks-in-execution-order)
+ - `options[hook-name]` {*Function*} - [Optional] See [all available hooks](https://github.com/veliovgroup/flow-router/tree/master/docs#hooks-in-execution-order)
  - Returns {*Group*}
 
 ```js
@@ -61,7 +61,7 @@ FlowRouter.current().route.group.parent.name
 ```
 
 #### Further reading
- - [`.triggersEnter()` hooks](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
- - [`.action()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/action.md)
- - [`.route()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/route.md)
- - [`.current()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/current.md)
+ - [`.triggersEnter()` hooks](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
+ - [`.action()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/action.md)
+ - [`.route()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/route.md)
+ - [`.current()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/current.md)

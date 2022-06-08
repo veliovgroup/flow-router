@@ -37,5 +37,5 @@ FlowRouter.current().queryParams;
 The former is no longer recommended, but to maintain compatibility with legacy apps, `false` is the default value for this flag. Enabling this flag manually with `true` is recommended for all new apps. For more info, see [#78](https://github.com/veliovgroup/flow-router/issues/78).
 
 #### Further reading
- - [`.getQueryParam()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/getQueryParam.md)
- - [`.current()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/current.md)
+ - [`.getQueryParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getQueryParam.md)
+ - [`.current()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/current.md)

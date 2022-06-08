@@ -48,6 +48,6 @@ Meteor.logout((error) => {
 ```
 
 #### Further reading
- - [`.go()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/go.md)
- - [`.route()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/route.md)
- - [`.group()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/group.md)
+ - [`.go()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/go.md)
+ - [`.route()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/route.md)
+ - [`.group()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/group.md)

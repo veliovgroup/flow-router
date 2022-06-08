@@ -91,7 +91,7 @@ FlowRouter.route('/', {
 ```
 
 #### Further Reading
- - [`.action()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/action.md)
- - [`.waitOn()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOn.md)
- - [`.render()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/render.md)
- - [Templating with Data](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-data.md)
+ - [`.action()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/action.md)
+ - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
+ - [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)
+ - [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)

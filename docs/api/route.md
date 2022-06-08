@@ -5,7 +5,7 @@
  - `options` {*Object*}
  - `options.name` {*String*} - Route's name
  - `options[prop-name]` {*Any*} - [Optional] Any property which will be available inside route call
- - `options[hook-name]` {*Function*} - [Optional] See [all available hooks](https://github.com/VeliovGroup/flow-router/tree/master/docs#hooks-in-execution-order)
+ - `options[hook-name]` {*Function*} - [Optional] See [all available hooks](https://github.com/veliovgroup/flow-router/tree/master/docs#hooks-in-execution-order)
  - Returns {*Route*}
 
 ```js
@@ -33,4 +33,4 @@ FlowRouter.route('*', {
 ```
 
 #### Further reading
- - [`.path()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/path.md)
+ - [`.path()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/path.md)

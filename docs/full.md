@@ -244,7 +244,7 @@ Use group routes for better route organization.
  - `options.name` {*String*} - [Optional] Route's name
  - `options.prefix` {*String*} - [Optional] Route prefix
  - `options[prop-name]` {*Any*} - [Optional] Any property which will be available inside route call
- - `options[hook-name]` {*Function*} - [Optional] See [all available hooks](https://github.com/VeliovGroup/flow-router/tree/master/docs#hooks-in-execution-order)
+ - `options[hook-name]` {*Function*} - [Optional] See [all available hooks](https://github.com/veliovgroup/flow-router/tree/master/docs#hooks-in-execution-order)
  - Returns {*Group*}
 
 ```js
@@ -371,7 +371,7 @@ FlowRouter.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]]+)+/g;
  - `pathRegExp` {*RegExp*}
  - Default - `/(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g`
 
-Use to change the URI RegEx parser used for `params`, for more info see [#25](https://github.com/VeliovGroup/flow-router/issues/25).
+Use to change the URI RegEx parser used for `params`, for more info see [#25](https://github.com/veliovgroup/flow-router/issues/25).
 
 -------
 
@@ -481,7 +481,7 @@ So, if you really need to reload the route, this is the method you want.
 
 ### render method
 
-`this.render()` method is available only [inside hooks](https://github.com/VeliovGroup/flow-router/tree/master/docs#hooks-in-execution-order).
+`this.render()` method is available only [inside hooks](https://github.com/veliovgroup/flow-router/tree/master/docs#hooks-in-execution-order).
 
  - __Note__: `this.render()` method is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed.
 
@@ -519,7 +519,7 @@ So, if you really need to reload the route, this is the method you want.
  - `options` {*Object*}
  - `options.name` {*String*} - Route's name
  - `options[prop-name]` {*Any*} - [Optional] Any property which will be available inside route call
- - `options[hook-name]` {*Function*} - [Optional] See [all available hooks](https://github.com/VeliovGroup/flow-router/tree/master/docs#hooks-in-execution-order)
+ - `options[hook-name]` {*Function*} - [Optional] See [all available hooks](https://github.com/veliovgroup/flow-router/tree/master/docs#hooks-in-execution-order)
  - Returns {*Route*}
 
 ```js
@@ -697,11 +697,11 @@ FlowRouter.withReplaceState(() => {
  - Return: {*void*}
 
 `.action()` hook is triggered right after page is navigated to route, or after (*exact order, if any of those is defined*):
- - [`.whileWaiting()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/whileWaiting.md)
- - [`.waitOn()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOn.md)
- - [`.waitOnResources()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/waitOnResources.md)
- - [`.triggersEnter()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
- - [`.data()` hook](https://github.com/VeliovGroup/flow-router/blob/master/docs/hooks/data.md)
+ - [`.whileWaiting()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/whileWaiting.md)
+ - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
+ - [`.waitOnResources()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOnResources.md)
+ - [`.triggersEnter()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
+ - [`.data()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/data.md)
 
 -------
 
@@ -804,7 +804,7 @@ FlowRouter.route('/post/:_id', {
 
 `triggersEnter` is option (*not actually a hook*), it accepts array of *Function*s, each function will be called with next arguments:
  - `context` {*Route*} - Output of `FlowRouter.current()`
- - `redirect` {*Function*} - Use to redirect to another route, same as [`FlowRouter.go()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/go.md)
+ - `redirect` {*Function*} - Use to redirect to another route, same as [`FlowRouter.go()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/go.md)
  - `stop` {*Function*} - Use to abort current route execution
  - `data` {*Mix*} - Value returned from `.data()` hook
  - Return: {*void*}

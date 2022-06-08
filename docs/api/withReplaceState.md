@@ -27,6 +27,6 @@ FlowRouter.withReplaceState(() => {
 ```
 
 #### Further reading
- - [`.go()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/go.md)
- - [`.setParams()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/setParams.md)
+ - [`.go()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/go.md)
+ - [`.setParams()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/setParams.md)
 

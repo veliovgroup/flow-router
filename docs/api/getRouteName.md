@@ -16,4 +16,4 @@ Tracker.autorun(function () {
 ```
 
 #### Further reading
- - [`.current()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/current.md)
+ - [`.current()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/current.md)

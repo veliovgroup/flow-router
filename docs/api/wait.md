@@ -18,4 +18,4 @@ WhenEverYourAppIsReady(() => {
 ```
 
 #### Further reading
- - [`.initialize()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/initialize.md)
+ - [`.initialize()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/initialize.md)

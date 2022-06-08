@@ -1,6 +1,6 @@
 ### render method
 
-`this.render()` method is available only [inside hooks](https://github.com/VeliovGroup/flow-router/tree/master/docs#hooks-in-execution-order).
+`this.render()` method is available only [inside hooks](https://github.com/veliovgroup/flow-router/tree/master/docs#hooks-in-execution-order).
 
 - __Note__: `this.render()` method is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed.
 
@@ -61,6 +61,6 @@ FlowRouter.onRenderError = function (error) {
 
 #### Further reading
 
-- [Templating](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating.md)
-- [Templating with "Regions"](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-regions.md)
-- [Templating with Data](https://github.com/VeliovGroup/flow-router/blob/master/docs/templating-with-data.md)
+- [Templating](https://github.com/veliovgroup/flow-router/blob/master/docs/templating.md)
+- [Templating with "Regions"](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-regions.md)
+- [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)

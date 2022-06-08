@@ -20,4 +20,4 @@ console.log(path); // --> "/blog/met%20eor/abc?show=y%2Be%3Ds&color=black"
 If there are no `params` or `qs`, it will simply return the path as it is.
 
 #### Further reading
- - [`.url()` method](https://github.com/VeliovGroup/flow-router/blob/master/docs/api/url.md)
+ - [`.url()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/url.md)

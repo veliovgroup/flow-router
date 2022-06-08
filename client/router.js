@@ -215,6 +215,26 @@ class Router {
     return new Group(this, options);
   }
 
+  basePath (pathStr) {
+    if (typeof pathStr === 'undefined') {
+      return this._basePath
+    }
+
+    let _basePath = pathStr || '' // in case null is passed
+
+    if (!_basePath.startsWith('/')) {
+      _basePath = `/${_basePath}`;
+    }
+
+    if (_basePath.endsWith('/')) {
+      const end = _basePath.length - 1
+      _basePath = _basePath.substring(0, end)
+    }
+
+    this._basePath = _basePath
+    return this._basePath
+  }
+
   path(_pathDef, fields = {}, queryParams) {
     let pathDef = _pathDef;
     if (this._routesMap[pathDef]) {
@@ -464,7 +484,7 @@ class Router {
         if (!path || (!self.env.reload.get() && self._current.path === path)) {
           return;
         }
-        original.call(this, path.replace(/\/\/+/g, '/'), state, dispatch, push);
+        original.call(self, path.replace(/\/\/+/g, '/'), state, dispatch, push);
       };
     });
 
@@ -474,11 +494,18 @@ class Router {
     // we are doing a hack. see .path()
     this._page.base(this._basePath);
 
-    this._page(Object.assign({
-      hashbang: !!options.hashbang,
-      decodeURLComponents: true
-    }, options.page || {}));
 
+    const pageOptions = Object.assign({
+      click: true,
+      popstate: true,
+      dispatch: false,
+      hashbang: !!options.hashbang,
+      decodeURLComponents: true,
+      window: window
+    }, options.page || {});
+
+
+    this._page.call(null, pageOptions);
     this._initialized = true;
   }
 

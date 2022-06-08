@@ -614,7 +614,11 @@ Tinytest.add('Client - Router - base path - path generation', (test) => {
   _.each(['/flow', '/flow/', 'flow/', 'flow'], function(simulatedBasePath) {
     const rand = Random.id();
     setBasePath(simulatedBasePath);
-    test.equal(FlowRouter.path('/' + rand), '/flow/' + rand);
+    test.equal(FlowRouter._basePath, '/flow')
+
+    const expected = '/flow/' + rand
+    const actual = FlowRouter.path('/' + rand)
+    test.equal(actual, expected);
   });
   resetBasePath();
 });
@@ -633,7 +637,7 @@ Tinytest.add('Client - Router - base path - url generation', (test) => {
 
 function setBasePath(path) {
   FlowRouter._initialized = false;
-  FlowRouter._basePath = path;
+  FlowRouter.basePath(path);
   FlowRouter.initialize();
 }
 

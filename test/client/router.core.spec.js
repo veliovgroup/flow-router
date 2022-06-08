@@ -178,7 +178,7 @@ Tinytest.addAsync('Client - Router - define and go to route with UTF-8 fields', 
 Tinytest.addAsync('Client - Router - parse params and query', (test, next) => {
   const rand   = Random.id();
   let rendered = 0;
-  let params   = null;
+  let params   = {}
 
   FlowRouter.route('/' + rand + '/:foo', {
     action(_params) {
@@ -283,8 +283,8 @@ Tinytest.addAsync('Client - Router - setParams - generic', (test, done) => {
 
   function validate() {
     test.equal(paramsList.length, 2);
-    test.equal(_.pick(paramsList[0], 'id', 'cat'), {cat: 'meteor', id: '200'});
-    test.equal(_.pick(paramsList[1], 'id', 'cat'), {cat: 'meteor', id: '700'});
+    test.equal(_.pick(paramsList[0] || {}, 'id', 'cat'), {cat: 'meteor', id: '200'});
+    test.equal(_.pick(paramsList[1] || {}, 'id', 'cat'), {cat: 'meteor', id: '700'});
     done();
   }
 });
@@ -342,7 +342,7 @@ Tinytest.addAsync('Client - Router - setQueryParams - using check', (test, done)
 
   FlowRouter.go(pathDef, {}, {cat: 'meteor', id: '200'});
   setTimeout(() => {
-    check(FlowRouter.current().queryParams, {cat: String, id: String});
+    test.equal(FlowRouter.current().queryParams, {cat: 'meteor', id: '200'});
     done();
   }, 50);
 });
@@ -392,7 +392,7 @@ Tinytest.addAsync('Client - Router - setQueryParams - remove query param null', 
 
   function validate() {
     test.equal(queryParamsList.length, 2);
-    test.equal(_.pick(queryParamsList[0], 'id', 'cat'), {cat: 'meteor', id: '200'});
+    test.equal(_.pick(queryParamsList[0] || {}, 'id', 'cat'), {cat: 'meteor', id: '200'});
     test.equal(queryParamsList[1], {id: '700'});
     done();
   }
@@ -417,7 +417,7 @@ Tinytest.addAsync('Client - Router - setQueryParams - remove query param undefin
 
   function validate() {
     test.equal(queryParamsList.length, 2);
-    test.equal(_.pick(queryParamsList[0], 'id', 'cat'), {cat: 'meteor', id: '200'});
+    test.equal(_.pick(queryParamsList[0] || {}, 'id', 'cat'), {cat: 'meteor', id: '200'});
     test.equal(queryParamsList[1], {id: '700'});
     done();
   }

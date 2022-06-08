@@ -6,7 +6,9 @@
 
 # FlowRouter Extra
 
-Carefully extended [flow-router](https://github.com/kadirahq/flow-router) package. This package implies [`arillo:flow-router-helpers`](https://github.com/arillo/meteor-flow-router-helpers) and [`zimme:active-route`](https://github.com/meteor-activeroute/legacy) packages in its core, for more details check ["helpers" wiki section](https://github.com/VeliovGroup/flow-router/wiki#helpers).
+Carefully extended `flow-router` package. FlowRouter is a very simple router for Meteor. It does routing for client-side apps and compatible with React, Vue, Svelte, and Blaze.
+
+It exposes a great API for changing the URL and getting data from the URL. However, inside the router, it's not reactive. Most importantly, FlowRouter is designed with performance in mind and it focuses on what it does best: __routing__.
 
 ## Features:
 
@@ -37,6 +39,10 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+// DISABLE QUERY STRING COMPATIBILITY
+// WITH OLDER FlowRouter AND Meteor RELEASES
+FlowRouter.decodeQueryParamsOnce = true;
 
 FlowRouter.route('/', {
   name: 'index',

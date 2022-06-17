@@ -93,6 +93,30 @@ Tinytest.add('Common - Router - path - optional last param missing', function (t
   test.equal(path, expectedPath);
 });
 
+Tinytest.add('Common - Router - path - both optional last param missing', function (test) {
+  var pathDef = "/blog/:id?/:action?";
+  var fields = {
+    id: "6135cb32d14df059605901fd",
+    action: ''
+  };
+  var expectedPath = "/blog/6135cb32d14df059605901fd";
+
+  var path = FlowRouter.path(pathDef, fields);
+  test.equal(path, expectedPath);
+});
+
+Tinytest.add('Common - Router - path - both optional last param exists', function (test) {
+  var pathDef = "/blog/:id?/:action?";
+  var fields = {
+    id: "6135cb32d14df059605901fd",
+    action: 'view'
+  };
+  var expectedPath = "/blog/6135cb32d14df059605901fd/view";
+
+  var path = FlowRouter.path(pathDef, fields);
+  test.equal(path, expectedPath);
+});
+
 Tinytest.add('Common - Router - path - optional last param exists', function (test) {
   var pathDef = "/blog/:blogId/some/:name?";
   var fields = {

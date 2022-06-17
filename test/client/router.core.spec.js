@@ -1,5 +1,4 @@
 import { _ }          from 'meteor/underscore';
-import { check }      from 'meteor/check';
 import { GetSub }     from './_helpers.js';
 import { Meteor }     from 'meteor/meteor';
 import { Random }     from 'meteor/random';
@@ -176,9 +175,9 @@ Tinytest.addAsync('Client - Router - define and go to route with UTF-8 fields', 
 });
 
 Tinytest.addAsync('Client - Router - parse params and query', (test, next) => {
-  const rand   = Random.id();
+  const rand = Random.id();
   let rendered = 0;
-  let params   = {}
+  let params = {};
 
   FlowRouter.route('/' + rand + '/:foo', {
     action(_params) {

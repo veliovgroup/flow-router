@@ -10,6 +10,7 @@ import { page, qs } from './modules.js';
 class Router {
   constructor() {
     this.pathRegExp = /(:[\w\(\)\\\+\*\.\?\[\]\-]+)+/g;
+    this.queryRegExp = /\?([^\/\r\n].*)/;
     this.globals = [];
     this.subscriptions = Function.prototype;
     this.Renderer = new BlazeRenderer({ router: this });
@@ -220,11 +221,11 @@ class Router {
     let queryParams = _queryParams;
 
     if (this._routesMap[pathDef]) {
-      pathDef = this._routesMap[pathDef].pathDef;
+      pathDef = _helpers.clone(this._routesMap[pathDef].pathDef);
     }
 
-    if (pathDef.includes('?')) {
-      const pathDefParts = pathDef.split('?');
+    if (this.queryRegExp.test(pathDef)) {
+      const pathDefParts = pathDef.split(this.queryRegExp);
       pathDef = pathDefParts[0];
       if (pathDefParts[1]) {
         queryParams = Object.assign(this._qs.parse(pathDefParts[1]), queryParams);
@@ -263,7 +264,7 @@ class Router {
     // but keep the root slash if it's the only one
     path = path.match(/^\/{1}$/) ? path : path.replace(/\/$/, '');
 
-    // explictly asked to add a trailing slash
+    // explicitly asked to add a trailing slash
     if (this.env.trailingSlash.get() && path[path.length - 1] !== '/') {
       path += '/';
     }

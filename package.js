@@ -17,7 +17,7 @@ Package.onUse((api) => {
             "reactive-var",
             "ejson",
             "check",
-            "zodern:types@1.0.1",
+            "zodern:types",
         ],
         ["client", "server"]
     );
@@ -41,7 +41,7 @@ Package.onTest((api) => {
             "communitypackages:inject-data@2.3.1",
             "montiapm:meteorx@2.2.0",
             "ostrio:flow-router-extra",
-            "zodern:types@1.0.1",
+            "zodern:types",
         ],
         ["client", "server"]
     );

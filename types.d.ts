@@ -15,8 +15,8 @@ type waitOn = (
     | Array<Promise<any>>
     | Meteor.SubscriptionHandle
     | Array<Meteor.SubscriptionHandle>
-    | Tracker<any>
-    | Array<Tracker<any>>
+    | typeof Tracker.autorun
+    | Array<typeof Tracker.autorun>
     | DynamicImport<string>
     | Array<DynamicImport<string>>;
 

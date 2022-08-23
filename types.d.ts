@@ -9,16 +9,15 @@ type Hook = (params: Param, qs: QueryParam) => void;
 type waitOn = (
     params: Param,
     qs: QueryParam,
-    ready: () => void
+    ready: (func: () => ReturnType<waitOn>) => void
 ) =>
     | Promise<any>
     | Array<Promise<any>>
     | Meteor.SubscriptionHandle
-    | Array<Meteor.SubscriptionHandle>
-    | typeof Tracker.autorun
-    | Array<typeof Tracker.autorun>
+    | Tracker.Computation
+    | Array<Tracker.Computation>
     | DynamicImport<string>
-    | Array<DynamicImport<string>>;
+    | Array<DynamicImport<string> | Meteor.SubscriptionHandle>;
 
 type waitOnResources = (
     params: Param,
@@ -53,7 +52,7 @@ interface Router {
             triggersEnter?: Array<Trigger>;
             action?: action;
             triggersExit?: Array<Trigger>;
-            conf: { [key: string]: any; forceReRender: boolean };
+            conf?: { [key: string]: any; forceReRender?: boolean };
             [key: string]: any;
         }
     ) => Route;

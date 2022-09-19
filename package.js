@@ -7,7 +7,7 @@ Package.describe({
 
 Package.onUse((api) => {
   api.versionsFrom('1.4');
-  api.use(['modules', 'ecmascript', 'promise', 'tracker', 'reactive-dict', 'reactive-var', 'ejson', 'check'], ['client', 'server']);
+  api.use(['modules', 'ecmascript', 'promise', 'tracker', 'reactive-dict', 'reactive-var', 'ejson', 'check', 'zodern:types'], ['client', 'server']);
 
   api.use(['templating', 'blaze'], 'client', { weak: true });
   api.mainModule('client/_init.js', 'client');
@@ -15,7 +15,7 @@ Package.onUse((api) => {
 });
 
 Package.onTest((api) => {
-  api.use(['ecmascript', 'tinytest', 'underscore', 'check', 'mongo', 'http', 'random', 'communitypackages:fast-render@4.0.6', 'communitypackages:inject-data@2.3.1', 'montiapm:meteorx@2.2.0', 'ostrio:flow-router-extra'], ['client', 'server']);
+  api.use(['ecmascript', 'tinytest', 'underscore', 'check', 'mongo', 'http', 'random', 'communitypackages:fast-render@4.0.6', 'communitypackages:inject-data@2.3.1', 'montiapm:meteorx@2.2.0', 'ostrio:flow-router-extra', 'zodern:types'], ['client', 'server']);
   api.use(['reactive-var', 'tracker'], 'client');
 
   api.addFiles('test/common/fast_render_route.js', ['client', 'server']);

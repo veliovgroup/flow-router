@@ -1,13 +1,13 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '3.8.1',
+  version: '3.9.0',
   git: 'https://github.com/veliovgroup/flow-router'
 });
 
 Package.onUse((api) => {
   api.versionsFrom('1.4');
-  api.use(['modules', 'ecmascript', 'promise', 'tracker', 'reactive-dict', 'reactive-var', 'ejson', 'check', 'zodern:types'], ['client', 'server']);
+  api.use(['modules', 'ecmascript', 'promise', 'tracker', 'reactive-dict', 'reactive-var', 'ejson', 'check', 'zodern:types@1.0.9'], ['client', 'server']);
 
   api.use(['templating', 'blaze'], 'client', { weak: true });
   api.mainModule('client/_init.js', 'client');
@@ -43,5 +43,5 @@ Package.onTest((api) => {
 
 Npm.depends({
   page: '1.9.0',
-  qs: '6.10.5'
+  qs: '6.11.0'
 });

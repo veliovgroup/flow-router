@@ -6,7 +6,7 @@
 
 # FlowRouter Extra
 
-Carefully extended `flow-router` package. FlowRouter is a very simple router for Meteor. It does routing for client-side apps and compatible with React, Vue, Svelte, and Blaze.
+Carefully extended `flow-router` package. FlowRouter is a very simple router for [Meteor.js](https://docs.meteor.com/?utm_source=dr.dimitru&utm_medium=online&utm_campaign=Q2-2022-Ambassadors). It does routing for client-side apps and compatible with React, Vue, Svelte, and Blaze.
 
 It exposes a great API for changing the URL and getting data from the URL. However, inside the router, it's not reactive. Most importantly, FlowRouter is designed with performance in mind and it focuses on what it does best: __routing__.
 

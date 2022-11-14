@@ -1,5 +1,7 @@
 # Flow-Router Extra Docs Index
 
+Client routing for [Meteor.js apps](https://docs.meteor.com/?utm_source=dr.dimitru&utm_medium=online&utm_campaign=Q2-2022-Ambassadors)
+
 ```shell
 meteor add ostrio:flow-router-extra
 ```

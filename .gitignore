@@ -6,3 +6,4 @@
 .npm
 /client/tmp
 node_modules
+.prettierignore

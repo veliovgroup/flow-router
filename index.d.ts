@@ -1,8 +1,12 @@
+import { Meteor } from "meteor/meteor";
+import { Mongo } from "meteor/mongo";
+import { Tracker } from "meteor/tracker";
+
 type Trigger = (context: ReturnType<Router["current"]>, redirect: Router["go"], stop: () => void, data: any) => void;
 
 type TriggerFilterParam = { only: string[] } | { except: string[] };
 
-type DynamicImport<T extends string> = Promise<typeof import(T)>;
+type DynamicImport = Promise<string>;
 
 type Hook = (params: Param, qs: QueryParam) => void;
 
@@ -16,8 +20,8 @@ type waitOn = (
     | Meteor.SubscriptionHandle
     | Tracker.Computation
     | Array<Tracker.Computation>
-    | DynamicImport<string>
-    | Array<DynamicImport<string> | Meteor.SubscriptionHandle>;
+    | DynamicImport
+    | Array<DynamicImport | Meteor.SubscriptionHandle>;
 
 type waitOnResources = (
     params: Param,

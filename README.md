@@ -14,6 +14,7 @@ It exposes a great API for changing the URL and getting data from the URL. Howev
 
 - 📦 Not dependent on Blaze, ready for [__React.js__](https://github.com/veliovgroup/flow-router/blob/master/docs/react.md) and other templating/components engines/libs;
 - 📦 No `underscore` package dependency;
+- 👨‍💻 TypeScript definition [`types.d.ts`](https://github.com/veliovgroup/flow-router/blob/master/types.d.ts)
 - 👨‍🔬 Great [tests coverage](https://github.com/veliovgroup/flow-router/tree/master/test);
 - 🥑 Up-to-date [dependencies](https://github.com/veliovgroup/flow-router/blob/master/package.js);
 - 📦 Support of [Fast Render](https://github.com/veliovgroup/flow-router/blob/master/docs/fast-render-integration.md) and [other great packages](https://github.com/veliovgroup/flow-router#related-packages);

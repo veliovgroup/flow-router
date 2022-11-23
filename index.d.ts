@@ -65,6 +65,7 @@ interface Router {
 
     refresh: (layout: string, template: string) => void;
     reload: () => void;
+    redirect: (path: string) => void;
     pathRegExp: RegExp;
     decodeQueryParamsOnce: boolean;
 

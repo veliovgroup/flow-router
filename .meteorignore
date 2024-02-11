@@ -1,0 +1,17 @@
+.github
+.gitignore
+.npm
+.DS_Store
+.eslintcache
+.eslintrc
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+HISTORY.md
+LICENCE
+LICENSE
+ORIGINAL FlowRouter LICENSE
+README.md
+index.test-d.ts
+/test/
+/docs/

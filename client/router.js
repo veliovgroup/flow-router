@@ -475,7 +475,9 @@ class Router {
         if (!path || (!self.env.reload.get() && self._current.path === path)) {
           return;
         }
-        original.call(self, path.replace(/\/\/+/g, '/'), state, dispatch, push);
+        const pathParts = path.split('?');
+        pathParts[0] = pathParts[0].replace(/\/\/+/g, '/');
+        original.call(self, pathParts.join('?'), state, dispatch, push);
       };
     });
 

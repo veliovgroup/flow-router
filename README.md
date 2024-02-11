@@ -68,6 +68,8 @@ FlowRouter.route('*', {
 });
 ```
 
+> NOTE: If you're using TypeScript, FlowRouter supports it. For types to work you need to install and follow the instructions of [zodern:meteor-types](https://github.com/zodern/meteor-types#meteor-apps) if you haven't done it already.
+
 ## Documentation
 
 - Continue with our [wiki](https://github.com/veliovgroup/flow-router/wiki);

@@ -60,7 +60,7 @@ interface Router {
             [key: string]: any;
         }
     ) => Route;
-    group: (options: { name: string; prefix: string; [key: string]: any }) => any;
+    group: (options: { name: string; prefix?: string; [key: string]: any }) => any;
     render: (layout: string, template: string, data?: { [key: string]: any }, callback?: () => void) => void;
 
     refresh: (layout: string, template: string) => void;

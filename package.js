@@ -1,21 +1,22 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '3.9.0',
+  version: '3.9.1',
   git: 'https://github.com/veliovgroup/flow-router'
 });
 
 Package.onUse((api) => {
   api.versionsFrom('1.4');
-  api.use(['modules', 'ecmascript', 'promise', 'tracker', 'reactive-dict', 'reactive-var', 'ejson', 'check', 'zodern:types@1.0.9'], ['client', 'server']);
+  api.use(['modules', 'ecmascript', 'promise', 'tracker', 'reactive-dict', 'reactive-var', 'ejson', 'check'], ['client', 'server']);
 
+  api.use(['zodern:types@1.0.11', 'typescript'], ['client', 'server'], { weak: true });
   api.use(['templating', 'blaze'], 'client', { weak: true });
   api.mainModule('client/_init.js', 'client');
   api.mainModule('server/_init.js', 'server');
 });
 
 Package.onTest((api) => {
-  api.use(['ecmascript', 'tinytest', 'underscore', 'check', 'mongo', 'http', 'random', 'communitypackages:fast-render@4.0.6', 'communitypackages:inject-data@2.3.1', 'montiapm:meteorx@2.2.0', 'ostrio:flow-router-extra', 'zodern:types'], ['client', 'server']);
+  api.use(['ecmascript', 'tinytest', 'underscore', 'check', 'mongo', 'http', 'random', 'communitypackages:fast-render@4.0.6', 'communitypackages:inject-data@2.3.2', 'montiapm:meteorx@2.3.1', 'ostrio:flow-router-extra', 'zodern:types', 'typescript'], ['client', 'server']);
   api.use(['reactive-var', 'tracker'], 'client');
 
   api.addFiles('test/common/fast_render_route.js', ['client', 'server']);

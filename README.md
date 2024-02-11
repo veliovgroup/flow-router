@@ -14,7 +14,7 @@ It exposes a great API for changing the URL and getting data from the URL. Howev
 
 - 📦 Not dependent on Blaze, ready for [__React.js__](https://github.com/veliovgroup/flow-router/blob/master/docs/react.md) and other templating/components engines/libs;
 - 📦 No `underscore` package dependency;
-- 👨‍💻 TypeScript definition [`types.d.ts`](https://github.com/veliovgroup/flow-router/blob/master/types.d.ts)
+- 👨‍💻 TypeScript definition [`index.d.ts`](https://github.com/veliovgroup/flow-router/blob/master/index.d.ts)
 - 👨‍🔬 Great [tests coverage](https://github.com/veliovgroup/flow-router/tree/master/test);
 - 🥑 Up-to-date [dependencies](https://github.com/veliovgroup/flow-router/blob/master/package.js);
 - 📦 Support of [Fast Render](https://github.com/veliovgroup/flow-router/blob/master/docs/fast-render-integration.md) and [other great packages](https://github.com/veliovgroup/flow-router#related-packages);
@@ -106,6 +106,10 @@ meteor test-packages ./ --port 8888
 # With local MongoDB and custom port
 MONGO_URL="mongodb://127.0.0.1:27017/flow-router-tests" meteor test-packages ./ --port 8888
 ```
+
+### Running Typescript Test
+1. Install [tsd](https://github.com/SamVerschueren/tsd) as a global package
+2. Run ```tsd``` in your terminal. Tsd will find the correct *.test.d.ts file and return with any errors.
 
 ## Support this project:
 

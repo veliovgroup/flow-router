@@ -13,5 +13,7 @@ LICENSE
 ORIGINAL FlowRouter LICENSE
 README.md
 index.test-d.ts
+package-lock.json
+package.json
 /test/
 /docs/

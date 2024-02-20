@@ -74,8 +74,8 @@ interface Router {
     setParams: (params: Param) => boolean;
     setQueryParams: (params: QueryParam) => boolean;
 
-    url: (path: string, params?: Param, qs?: QueryParam) => string;
-    path: (path: string, params?: Param, qs?: QueryParam) => string;
+    url: (path: string, params?: Param | null, qs?: QueryParam) => string;
+    path: (path: string, params?: Param | null, qs?: QueryParam) => string;
     current: () => {
         context: Context;
         oldRoute: Route;

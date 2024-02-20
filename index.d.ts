@@ -42,7 +42,7 @@ type Param = {
 type QueryParam = Param;
 
 interface Router {
-    go: (path: string, params?: { [key: string]: string }, qs?: { [key: string]: string }) => boolean;
+    go: (path: string, params?: Param | null, qs?: QueryParam) => boolean;
     route: (
         path: string,
         options?: {

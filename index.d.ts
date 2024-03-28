@@ -39,10 +39,14 @@ type Param = {
     [key: string]: string;
 };
 
+type NewParams = {
+    [key: string]: string | null
+};
+
 type QueryParam = Param;
 
 interface Router {
-    go: (path: string, params?: { [key: string]: string }, qs?: { [key: string]: string }) => boolean;
+    go: (path: string, params?: NewParams, qs?: NewParams) => boolean;
     route: (
         path: string,
         options?: {
@@ -71,11 +75,11 @@ interface Router {
 
     getParam: (param: string) => string;
     getQueryParam: (param: string) => string;
-    setParams: (params: Param) => boolean;
-    setQueryParams: (params: QueryParam) => boolean;
+    setParams: (params: NewParams) => boolean;
+    setQueryParams: (params: NewParams) => boolean;
 
-    url: (path: string, params?: Param, qs?: QueryParam) => string;
-    path: (path: string, params?: Param, qs?: QueryParam) => string;
+    url: (path: string, params?: NewParams, qs?: NewParams) => string;
+    path: (path: string, params?: NewParams, qs?: NewParams) => string;
     current: () => {
         context: Context;
         oldRoute: Route;

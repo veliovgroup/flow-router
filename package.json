@@ -4,6 +4,7 @@
     "devDependencies": {
         "@types/meteor": "^2.8.1",
         "tsd": "^0.24.1",
-        "typescript": "^4.0.3"
+        "typescript": "^4.0.3",
+        "fxparser": "^1.0.1"
     }
 }

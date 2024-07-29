@@ -6,11 +6,11 @@ Package.describe({
 });
 
 Package.onUse((api) => {
-  api.versionsFrom(['3.0']);
+  api.versionsFrom(['1.4', '2.8.0', '3.0.1']);
   api.use(['modules', 'ecmascript', 'promise', 'tracker', 'reactive-dict', 'reactive-var', 'ejson', 'check'], ['client', 'server']);
 
   api.use(['zodern:types@1.0.13', 'typescript'], ['client', 'server'], { weak: true });
-  api.use(['templating', 'blaze'], 'client', { weak: true });
+  api.use(['templating', 'blaze@2.0.0 || 3.0.0'], 'client', { weak: true });
   api.mainModule('client/_init.js', 'client');
   api.mainModule('server/_init.js', 'server');
 });

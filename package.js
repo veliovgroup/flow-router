@@ -13,6 +13,9 @@ Package.onUse((api) => {
   api.use(['templating', 'blaze'], 'client', { weak: true });
   api.mainModule('client/_init.js', 'client');
   api.mainModule('server/_init.js', 'server');
+
+  // For zodern:types to pick up our published types.
+  api.addAssets('index.d.ts', ['client', 'server']);
 });
 
 Package.onTest((api) => {

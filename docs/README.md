@@ -67,7 +67,6 @@ For the new apps it is recommended to set `decodeQueryParamsOnce` to `true`. Thi
 - [`isNotActivePath` template helper](https://github.com/veliovgroup/flow-router/blob/master/docs/helpers/isNotActivePath.md)
 - [`pathFor` template helper](https://github.com/veliovgroup/flow-router/blob/master/docs/helpers/pathFor.md)
 - [`urlFor` template helper](https://github.com/veliovgroup/flow-router/blob/master/docs/helpers/urlFor.md)
-- [`linkTo` template helper](https://github.com/veliovgroup/flow-router/blob/master/docs/helpers/linkTo.md)
 - [`param` template helper](https://github.com/veliovgroup/flow-router/blob/master/docs/helpers/param.md)
 - [`queryParam` template helper](https://github.com/veliovgroup/flow-router/blob/master/docs/helpers/queryParam.md)
 - [`currentRouteName` template helper](https://github.com/veliovgroup/flow-router/blob/master/docs/helpers/currentRouteName.md)

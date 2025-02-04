@@ -246,11 +246,11 @@ class BlazeRenderer {
 
   _load(updateTemplate, updateLayout, current) {
     if (updateLayout && current.layout.view) {
-      current.layout.view.dataVar.set(current.data);
+      current.layout.view.dataVar.set({ value: current.data ?? {} });
     }
 
     if (current.template.view && updateTemplate) {
-      current.template.view.dataVar.set(current.data);
+      current.template.view.dataVar.set({ value: current.data ?? {} });
       this.isRendering = false;
       current.materialized = true;
       current.callback();

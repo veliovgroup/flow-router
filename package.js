@@ -16,6 +16,8 @@ Package.onUse((api) => {
 
   // For zodern:types to pick up our published types.
   api.addAssets('index.d.ts', ['client', 'server']);
+
+  api.export('FlowRouter');
 });
 
 Package.onTest((api) => {

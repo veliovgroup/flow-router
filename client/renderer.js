@@ -250,7 +250,7 @@ class BlazeRenderer {
     }
 
     if (current.template.view && updateTemplate) {
-      current.layout.view.dataVar.set(current.layout.view.dataVar.get()?.value ? { value: current.data ?? {} } : current.data);
+      current.template.view.dataVar.set(current.template.view.dataVar.get()?.value ? { value: current.data ?? {} } : current.data);
       this.isRendering = false;
       current.materialized = true;
       current.callback();

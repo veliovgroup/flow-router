@@ -1,4 +1,4 @@
-import { Route }   from 'meteor/ostrio:flow-router-extra';
+import { Route }   from 'meteor/jessedev:flow-router-extra';
 import { Meteor }  from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
 

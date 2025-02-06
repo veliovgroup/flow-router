@@ -1,7 +1,7 @@
 import { Meteor }            from 'meteor/meteor';
 import { Random }            from 'meteor/random';
 import { GetSub }            from './_helpers.js';
-import { FlowRouter, Group } from 'meteor/ostrio:flow-router-extra';
+import { FlowRouter, Group } from 'meteor/jessedev:flow-router-extra';
 
 Tinytest.add('Client - Group - validate path definition', (test) => {
   // path & prefix must start with '/'

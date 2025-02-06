@@ -1,8 +1,8 @@
 import { HTTP }   from 'meteor/http';
 import { Meteor } from 'meteor/meteor';
 
-Package['ostrio:flow-router-extra'].FlowRouter.decodeQueryParamsOnce = true;
-Package['kadira:flow-router'] = Package['ostrio:flow-router-extra'];
+Package['jessedev:flow-router-extra'].FlowRouter.decodeQueryParamsOnce = true;
+Package['kadira:flow-router'] = Package['jessedev:flow-router-extra'];
 
 Meteor.publish('foo', function () {
   this.ready();

@@ -1,8 +1,8 @@
 Package.describe({
-  name: 'ostrio:flow-router-extra',
+  name: 'jessedev:flow-router-extra',
   summary: 'Carefully extended flow-router with waitOn and template context',
   version: '3.11.0',
-  git: 'https://github.com/veliovgroup/flow-router',
+  git: 'https://github.com/Jessedev1/flow-router',
 });
 
 Package.onUse((api) => {
@@ -21,7 +21,7 @@ Package.onUse((api) => {
 });
 
 Package.onTest((api) => {
-  api.use(['ecmascript', 'tinytest', 'underscore', 'check', 'mongo', 'http', 'random', 'ostrio:flow-router-extra', 'zodern:types', 'typescript'], ['client', 'server']);
+  api.use(['ecmascript', 'tinytest', 'underscore', 'check', 'mongo', 'http', 'random', 'jessedev:flow-router-extra', 'zodern:types', 'typescript'], ['client', 'server']);
   api.use(['reactive-var', 'tracker'], 'client');
 
   // Temporary disable `fast-render` tests as not compatible with meteor@3

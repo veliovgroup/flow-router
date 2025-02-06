@@ -1,5 +1,5 @@
 import { Meteor }     from 'meteor/meteor';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { FlowRouter } from 'meteor/jessedev:flow-router-extra';
 
 Tinytest.add('Common - Router - url - generic', (test) => {
   const pathDef = '/blog/:blogId/some/:name';

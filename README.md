@@ -24,13 +24,13 @@ It exposes a great API for changing the URL and getting data from the URL. Howev
 ## Install
 
 ```shell
-meteor add ostrio:flow-router-extra
+meteor add jessedev:flow-router-extra
 ```
 
 ### ES6 Import
 
 ```js
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { FlowRouter } from 'meteor/jessedev:flow-router-extra';
 // Full list of available classes and instances:
 // { FlowRouter, Router, Route, Group, Triggers, BlazeRenderer, RouterHelpers }
 ```
@@ -38,7 +38,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 ### Usage
 
 ```js
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { FlowRouter } from 'meteor/jessedev:flow-router-extra';
 
 // DISABLE QUERY STRING COMPATIBILITY
 // WITH OLDER FlowRouter AND Meteor RELEASES
@@ -118,6 +118,6 @@ MONGO_URL="mongodb://127.0.0.1:27017/flow-router-tests" meteor test-packages ./ 
 - Upload and share files using [☄️ meteor-files.com](https://meteor-files.com/?ref=github-flowrouter-repo-footer) — Continue interrupted file uploads without losing any progress. There is nothing that will stop Meteor from delivering your file to the desired destination
 - Use [▲ ostr.io](https://ostr.io?ref=github-flowrouter-repo-footer) for [Server Monitoring](https://snmp-monitoring.com), [Web Analytics](https://ostr.io/info/web-analytics?ref=github-flowrouter-repo-footer), [WebSec](https://domain-protection.info), [Web-CRON](https://web-cron.info) and [SEO Pre-rendering](https://prerendering.com) of a website
 - Star on [GitHub](https://github.com/veliovgroup/flow-router)
-- Star on [Atmosphere](https://atmospherejs.com/ostrio/flow-router-extra)
+- Star on [Atmosphere](https://atmospherejs.com/jessedev/flow-router-extra)
 - [Sponsor via GitHub](https://github.com/sponsors/dr-dimitru)
 - [Support via PayPal](https://paypal.me/veliovgroup)

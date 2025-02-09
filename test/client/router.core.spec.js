@@ -2,7 +2,7 @@ import { _ }          from 'meteor/underscore';
 import { GetSub }     from './_helpers.js';
 import { Meteor }     from 'meteor/meteor';
 import { Random }     from 'meteor/random';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { FlowRouter } from 'meteor/jessedev:flow-router-extra';
 
 Tinytest.addAsync('Client - Router - define and go to route', (test, next) => {
   const rand   = Random.id();

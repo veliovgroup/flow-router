@@ -1,4 +1,4 @@
-import { Triggers } from 'meteor/ostrio:flow-router-extra';
+import { Triggers } from 'meteor/jessedev:flow-router-extra';
 
 Tinytest.addAsync(
 'Triggers - runTriggers - run all and after',

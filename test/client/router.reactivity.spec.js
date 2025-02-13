@@ -1,7 +1,7 @@
-import { FlowRouter } from 'meteor/jessedev:flow-router-extra';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Tinytest.addAsync(
-'Client - Router - Reactivity - detectChange only once',
+'Client - Router - Reactivity - detectChange only once', 
 function (test, done) {
   var route = "/" + Random.id();
   var name = Random.id();
@@ -26,7 +26,7 @@ function (test, done) {
 });
 
 Tinytest.addAsync(
-'Client - Router - Reactivity - detectChange in the action',
+'Client - Router - Reactivity - detectChange in the action', 
 function (test, done) {
   var route = "/" + Random.id();
   var name = Random.id();
@@ -45,7 +45,7 @@ function (test, done) {
 });
 
 Tinytest.addAsync(
-'Client - Router - Reactivity - detect prev routeChange after new action',
+'Client - Router - Reactivity - detect prev routeChange after new action', 
 function (test, done) {
   var route1 = "/" + Random.id();
   var name1 = Random.id();

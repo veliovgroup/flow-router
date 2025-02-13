@@ -135,7 +135,7 @@ class Route {
           } else {
             wait(128);
             waitFails++;
-            Meteor._debug('[jessedev:flow-router-extra] [route.wait] Promise not resolved', error);
+            Meteor._debug('[ostrio:flow-router-extra] [route.wait] Promise not resolved', error);
           }
         });
       } else {

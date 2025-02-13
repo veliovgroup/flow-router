@@ -1,4 +1,4 @@
-import { FlowRouter, Route } from 'meteor/jessedev:flow-router-extra';
+import { FlowRouter, Route } from 'meteor/ostrio:flow-router-extra';
 import { Random } from 'meteor/random';
 
 Tinytest.addAsync('Client - Triggers - global enter triggers', function(test, next) {
@@ -748,7 +748,7 @@ Tinytest.addAsync('Client - Triggers - stop callback from enter', function(test,
 });
 
 Tinytest.addAsync(
-'Client - Triggers - invalidate inside an autorun',
+'Client - Triggers - invalidate inside an autorun', 
 function(test, next) {
   var rand = Random.id(), rand2 = Random.id();
   var log = [];

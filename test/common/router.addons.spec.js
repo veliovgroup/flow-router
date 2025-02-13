@@ -1,4 +1,4 @@
-import { FlowRouter, Router } from 'meteor/jessedev:flow-router-extra';
+import { FlowRouter, Router } from 'meteor/ostrio:flow-router-extra';
 
 Tinytest.addAsync('Common - Addons - onRouteRegister basic usage', function (test, done) {
   var name = Random.id();

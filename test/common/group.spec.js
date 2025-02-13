@@ -1,5 +1,5 @@
 import { Random }     from 'meteor/random';
-import { FlowRouter } from 'meteor/jessedev:flow-router-extra';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Tinytest.add('Common - Group - expose group options', (test) => {
   const name   = Random.id();

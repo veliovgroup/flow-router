@@ -1,4 +1,4 @@
-import { FlowRouter, Router } from 'meteor/jessedev:flow-router-extra';
+import { FlowRouter, Router } from 'meteor/ostrio:flow-router-extra';
 
 Tinytest.add('Client - import page.js', (test) => {
   test.isTrue(!!Router.prototype._page);

@@ -1,6 +1,6 @@
 import { Mongo }      from 'meteor/mongo';
 import { Meteor }     from 'meteor/meteor';
-import { FlowRouter } from 'meteor/jessedev:flow-router-extra';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 const FastRenderColl = new Mongo.Collection('fast-render-coll');
 

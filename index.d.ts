@@ -8,7 +8,7 @@ type TriggerFilterParam = { only: string[] } | { except: string[] };
 
 type DynamicImport = Promise<string>;
 
-type Hook = (params: Param, qs: QueryParam) => void;
+type Hook = (params: Param, qs: QueryParam) => void | Promise<void>;
 
 type waitOn = (
     params: Param,
@@ -31,7 +31,7 @@ type waitOnResources = (
     other: string[];
 };
 
-type data = (params: Param, qs: QueryParam) => Mongo.CursorStatic | Object | Object[] | false | null | void;
+type data = (params: Param, qs: QueryParam) => Mongo.CursorStatic | Object | Object[] | false | null | void | Promise<Mongo.CursorStatic | Object | Object[] | false | null | void>;
 
 type action = (params: Param, qs: QueryParam, data: any) => void;
 

@@ -76,7 +76,7 @@ class Route {
     return !results.includes(false);
   }
 
-  waitOn(current = {}, next) {
+  async waitOn(current = {}, next) {
     let _data         = null;
     let _isWaiting    = false;
     let _preloaded    = 0;
@@ -105,10 +105,10 @@ class Route {
     };
 
     const subWait = (delay) => {
-      timer = Meteor.setTimeout(() => {
+      timer = Meteor.setTimeout(async () => {
         if (this.checkSubscriptions(subscriptions)) {
           Meteor.clearTimeout(timer);
-          _data = getData();
+          _data = await getData();
           if (_resources) {
             whileWaitingAction();
             getResources();
@@ -196,10 +196,10 @@ class Route {
       }
     };
 
-    const getData = () => {
+    const getData = async () => {
       if (this._data) {
         if (!_data) {
-          _data = this._currentData = this._data(current.params, current.queryParams);
+          _data = this._currentData = await this._data(current.params, current.queryParams);
         } else {
           _data = this._currentData;
         }
@@ -207,8 +207,8 @@ class Route {
       return _data;
     };
 
-    const getResources = () => {
-      _data      = getData();
+    const getResources = async () => {
+      _data      = await getData();
       let len    = 0;
       let items;
       let images = [];
@@ -293,22 +293,22 @@ class Route {
       whileWaitingAction();
       getResources();
     } else if (this._data) {
-      next(current, getData());
+      next(current, await getData());
     } else {
       next(current);
     }
   }
 
-  callAction(current) {
+  async callAction(current) {
     this._endWaiting && this._endWaiting();
     if (this._data) {
       if (this._onNoData && !this._currentData) {
-        this._onNoData(current.params, current.queryParams);
+        await this._onNoData(current.params, current.queryParams);
       } else {
-        this._action(current.params, current.queryParams, this._currentData);
+        await this._action(current.params, current.queryParams, this._currentData);
       }
     } else {
-      this._action(current.params, current.queryParams, this._currentData);
+      await this._action(current.params, current.queryParams, this._currentData);
     }
   }
 

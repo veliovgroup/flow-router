@@ -1,10 +1,11 @@
 ### go method
 
 `.go(path, params, qs)`
- - `path` {*String*} - Path or Route's name
- - `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `{ key: 'val' }`
- - Returns {*true*}
+
+- `path` {*String*} - Path or Route's name
+- `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
+- `qs` {*Object*} - Serialized GET-query string, `{ key: 'val' }`
+- Returns {*true*}
 
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -19,5 +20,6 @@ FlowRouter.go('blogPost', { _id: 'post_id' }, { commentId: '123' }); // /blog/po
 ```
 
 #### Further reading
- - [`.route()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/route.md)
- - [`.getRouteName()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getRouteName.md)
+
+- [`.route()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/route.md)
+- [`.getRouteName()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getRouteName.md)

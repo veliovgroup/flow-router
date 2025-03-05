@@ -13,5 +13,6 @@ To filter routes use `only` or `except` keywords.
 You can't use both `only` and `except` at once.
 
 #### Further reading
- - [`.triggersEnter()` hooks](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
- - [`.triggersExit()` hooks](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersExit.md)
+
+- [`.triggersEnter()` hooks](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
+- [`.triggersExit()` hooks](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersExit.md)

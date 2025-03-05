@@ -3,12 +3,13 @@
 ```js
 FlowRouter.refresh('layout', 'template');
 ```
- - `layout` {*String*} - [required] Name of the layout template
- - `template` {*String*} - [required] Name of the intermediate template, simple `<template>Loading...</template>` might be a good option
 
+- `layout` {*String*} - [required] Name of the layout template
+- `template` {*String*} - [required] Name of the intermediate template, simple `<template>Loading...</template>` might be a good option
 
 `FlowRouter.refresh()` will force all route's rules and hooks to re-run, including subscriptions, waitOn(s) and template render.
 Useful in cases where template logic depends from route's hooks, example:
+
 ```handlebars
 {{#if currentUser}}
   {{> yield}}
@@ -16,9 +17,11 @@ Useful in cases where template logic depends from route's hooks, example:
   {{> loginForm}}
 {{/if}}
 ```
+
 in example above "yielded" template may loose data context after user login action, although user login will cause `yield` template to render - `data` and `waitOn` hooks will not fetch new data.
 
 #### Login example
+
 ```js
 Meteor.loginWithPassword({
   username: 'some@email.com'
@@ -37,6 +40,7 @@ Meteor.loginWithPassword({
 ```
 
 #### Logout example
+
 ```js
 Meteor.logout((error) => {
   if (error) {
@@ -48,6 +52,7 @@ Meteor.logout((error) => {
 ```
 
 #### Further reading
- - [`.go()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/go.md)
- - [`.route()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/route.md)
- - [`.group()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/group.md)
+
+- [`.go()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/go.md)
+- [`.route()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/route.md)
+- [`.group()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/group.md)

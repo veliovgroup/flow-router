@@ -1,8 +1,10 @@
 ### Templating with Data
 
- - __Note__: Blaze templating is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed.
+> [!NOTE]
+> Blaze templating is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed
 
 #### Create layout
+
 ```handlebars
 <!-- /imports/client/layout/layout.html -->
 <template name="layout">
@@ -30,6 +32,7 @@ import './layout.html';
 ```
 
 #### Create notFound (404) template
+
 ```handlebars
 <!-- /imports/client/notFound/notFound.html -->
 <template name="notFound">
@@ -39,6 +42,7 @@ import './layout.html';
 ```
 
 #### Create article template
+
 ```handlebars
 <!-- /imports/client/article/article.html -->
 <template name="article">
@@ -50,6 +54,7 @@ import './layout.html';
 ```
 
 #### Create loading template
+
 ```handlebars
 <!-- /imports/client/loading/loading.html -->
 <template name="loading">
@@ -58,11 +63,12 @@ import './layout.html';
 ```
 
 #### Create article route
- 1. Create article route
- 2. Using `waitOn` hook wait for template and subscription to be ready
- 3. Using `action` hook to render article template into layout 
- 4. Using `data` hook fetch data from Collection
- 5. If article doesn't exists (*bad* `_id` *is provided*) - render 404 template using `onNoData` hook
+
+1. Create article route
+2. Using `waitOn` hook wait for template and methods/subscription to be ready
+3. Using `action` hook to render article template into layout
+4. Using `data` hook fetch data from Collection
+5. If article doesn't exists (*bad* `_id` *is provided*) - render 404 template using `onNoData` hook
 
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -77,7 +83,7 @@ FlowRouter.route('/article/:_id', {
   waitOn(params) {
     return [
       import('/imports/client/article/article.html'),
-      Meteor.subscribe('article', params._id)
+      Meteor.subscribe('article', params._id) // OMIT IF METHOD IS USED TO FETCH ARTICLE
     ];
   },
   whileWaiting() {
@@ -86,8 +92,11 @@ FlowRouter.route('/article/:_id', {
   action(params, qs, article) {
     this.render('layout', 'article', { article });
   },
-  data(params) {
-    return ArticlesCollection.findOne({ _id: params._id });
+  async data(params) {
+    // USE SUBSCRIPTION:
+    return await ArticlesCollection.findOneAsync({ _id: params._id });
+    // OR USE METHOD
+    return await Meteor.callAsync('article.get', params._id);
   },
   onNoData() {
     this.render('notFound');
@@ -96,10 +105,11 @@ FlowRouter.route('/article/:_id', {
 ```
 
 #### Further Reading
- - [`.action()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/action.md)
- - [`.data()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/data.md)
- - [`.onNoData()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/onNoData.md)
- - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
- - [`.whileWaiting()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/whileWaiting.md)
- - [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)
- - [Templating with "Regions"](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-regions.md)
+
+- [`.action()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/action.md)
+- [`.data()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/data.md)
+- [`.onNoData()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/onNoData.md)
+- [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
+- [`.whileWaiting()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/whileWaiting.md)
+- [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)
+- [Templating with "Regions"](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-regions.md)

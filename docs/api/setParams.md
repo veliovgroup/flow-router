@@ -3,8 +3,9 @@
 ```js
 FlowRouter.setParams(params);
 ```
- - `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
- - Returns {*true*}
+
+- `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
+- Returns {*true*}
 
 Change the current Route's `params` with the new values and re-route to the new path.
 
@@ -18,6 +19,7 @@ FlowRouter.setParams({appId: 'new-id'});
 ```
 
 #### Further reading
- - [`.setQueryParams()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/setQueryParams.md)
- - [`.getQueryParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getQueryParam.md)
- - [`.getParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getParam.md)
+
+- [`.setQueryParams()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/setQueryParams.md)
+- [`.getQueryParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getQueryParam.md)
+- [`.getParam()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/getParam.md)

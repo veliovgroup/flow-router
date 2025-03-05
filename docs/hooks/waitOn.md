@@ -88,6 +88,8 @@ FlowRouter.route('/posts', {
 
 #### Meteor method via *Promise*
 
+*Deprecated, since v3.12.0 `Meteor.callAsync` can get called inside `async data()` hook to retrieve data from a method*
+
 ```js
 FlowRouter.route('/posts', {
   name: 'posts',

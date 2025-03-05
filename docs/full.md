@@ -483,7 +483,8 @@ So, if you really need to reload the route, this is the method you want.
 
 `this.render()` method is available only [inside hooks](https://github.com/veliovgroup/flow-router/tree/master/docs#hooks-in-execution-order).
 
- - __Note__: `this.render()` method is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed.
+> [!NOTE]
+> `this.render()` method is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed
 
 #### With Layout
 `this.render(layout, template [, data, callback])`
@@ -721,8 +722,8 @@ FlowRouter.route('/post/:_id', {
   waitOn(params) {
     return Meteor.subscribe('post', params._id);
   },
-  data(params, qs) {
-    return PostsCollection.findOne({_id: params._id});
+  async data(params, qs) {
+    return await PostsCollection.findOneAsync({_id: params._id});
   }
 });
 ```
@@ -737,8 +738,8 @@ FlowRouter.route('/post/:_id', {
   waitOn(params) {
     return Meteor.subscribe('post', params._id);
   },
-  data(params, qs) {
-    return PostsCollection.findOne({_id: params._id});
+  async data(params, qs) {
+    return await PostsCollection.findOneAsync({_id: params._id});
   }
 });
 ```
@@ -756,8 +757,8 @@ Returned value from `data` hook, will be passed into all other hooks as third ar
 ```jsx
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  data(params) {
-    return PostsCollection.findOne({_id: params._id});
+  async data(params) {
+    return await PostsCollection.findOneAsync({_id: params._id});
   },
   triggersEnter: [(context, redirect, stop, data) => {
     console.log(data);
@@ -789,10 +790,11 @@ FlowRouter.route('/post/:_id', {
 ```js
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  data(params) {
-    return PostsCollection.findOne({_id: params._id});
+  async data(params) {
+    return await PostsCollection.findOneAsync({_id: params._id});
   },
-  onNoData(params, qs){
+  async onNoData(params, qs){
+    await import('/imports/client/page-404.js');
     this.render('_layout', '_404');
   }
 });
@@ -969,6 +971,8 @@ FlowRouter.route('/posts', {
 ```
 
 #### Meteor method via *Promise*
+
+*Deprecated, since v3.12.0 `Meteor.callAsync` can get called inside `async data()` hook to retrieve data from a method*
 
 ```js
 FlowRouter.route('/posts', {
@@ -1148,7 +1152,8 @@ FlowRouter.route('/post/:_id', {
 
 ## Template Helpers
 
- - __Note__: Template Helpers are available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed.
+> [!NOTE]
+> Template helpers are available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed
 
 ### `currentRouteName` Template Helper
 

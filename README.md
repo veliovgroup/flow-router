@@ -48,10 +48,14 @@ FlowRouter.route('/', {
   name: 'index',
   action() {
     // Render a template using Blaze
-    this.render('templateName');
+    this.render('layoutName', 'index');
 
     // Can be used with BlazeLayout,
     // and ReactLayout for React-based apps
+  },
+  waitOn() {
+    // Dynamically load JS per route
+    return [import('/imports/client/index.js')];
   }
 });
 
@@ -67,11 +71,12 @@ FlowRouter.route('*', {
 });
 ```
 
-> NOTE: If you're using TypeScript, FlowRouter supports it. For types to work you need to install and follow the instructions of [zodern:meteor-types](https://github.com/zodern/meteor-types#meteor-apps) if you haven't done it already.
+> [!TIP]
+> If you're using TypeScript, FlowRouter supports it. For types to work you need to install and follow the instructions of [`zodern:meteor-types`](https://github.com/zodern/meteor-types#meteor-apps)
 
 ## Documentation
 
-- Continue with our [wiki](https://github.com/veliovgroup/flow-router/wiki);
+- Continue with our [wiki](https://github.com/veliovgroup/flow-router/wiki) or [README index](https://github.com/veliovgroup/flow-router/blob/master/docs/README.md);
 - [Quick start](https://github.com/veliovgroup/flow-router/blob/master/docs/quick-start.md) tutorial;
 - All docs as [single document](https://github.com/veliovgroup/flow-router/blob/master/docs/full.md).
 
@@ -110,7 +115,7 @@ MONGO_URL="mongodb://127.0.0.1:27017/flow-router-tests" meteor test-packages ./ 
 
 ### Running Typescript Test
 
-1. Install [tsd](https://github.com/SamVerschueren/tsd) as a global package;
+1. Install [`tsd`](https://github.com/SamVerschueren/tsd) as a global package;
 2. Run `tsd` in your terminal. `tsd` will find the correct `*.test.d.ts` file and return with any errors.
 
 ## Support this project:

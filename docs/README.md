@@ -36,7 +36,8 @@ FlowRouter.route('*', {
 });
 ```
 
-For the new apps it is recommended to set `decodeQueryParamsOnce` to `true`. This flag is here to fix [#78](https://github.com/veliovgroup/flow-router/issues/78). By default it is `false` due to its historical origin for compatibility purposes.
+> [!IMPORTANT]
+> For the new apps it is recommended to set `decodeQueryParamsOnce` to `true`. This flag is here to fix [#78](https://github.com/veliovgroup/flow-router/issues/78). By default it is `false` due to its historical origin for compatibility purposes
 
 ## General tutorials:
 
@@ -46,6 +47,7 @@ For the new apps it is recommended to set `decodeQueryParamsOnce` to `true`. Thi
 - [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)
 - [Auto-scroll](https://github.com/veliovgroup/flow-router/blob/master/docs/auto-scroll.md)
 - [React.js usage](https://github.com/veliovgroup/flow-router/blob/master/docs/react.md)
+- [Usage in real application](https://github.com/veliovgroup/meteor-files-website/tree/master/imports/client/router)
 
 ## Hooks (*in execution order*):
 
@@ -123,6 +125,9 @@ For the new apps it is recommended to set `decodeQueryParamsOnce` to `true`. Thi
 
 ## Support this project:
 
-This project wouldn't be possible without [ostr.io](https://ostr.io).
-
-Using [ostr.io](https://ostr.io) you are not only [protecting domain names](https://ostr.io/info/domain-names-protection), [monitoring websites and servers](https://ostr.io/info/monitoring), using [Prerendering for better SEO](https://ostr.io/info/prerendering) of your JavaScript website, but support our Open Source activity, and great packages like this one could be available for free.
+- Upload and share files using [☄️ meteor-files.com](https://meteor-files.com/?ref=github-flowrouter-repo-footer) — Continue interrupted file uploads without losing any progress. There is nothing that will stop Meteor from delivering your file to the desired destination
+- Use [▲ ostr.io](https://ostr.io?ref=github-flowrouter-repo-footer) for [Server Monitoring](https://snmp-monitoring.com), [Web Analytics](https://ostr.io/info/web-analytics?ref=github-flowrouter-repo-footer), [WebSec](https://domain-protection.info), [Web-CRON](https://web-cron.info) and [SEO Pre-rendering](https://prerendering.com) of a website
+- Star on [GitHub](https://github.com/veliovgroup/flow-router)
+- Star on [Atmosphere](https://atmospherejs.com/ostrio/flow-router-extra)
+- [Sponsor via GitHub](https://github.com/sponsors/dr-dimitru)
+- [Support via PayPal](https://paypal.me/veliovgroup)

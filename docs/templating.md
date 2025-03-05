@@ -1,6 +1,7 @@
 ### Templating
 
-- __Note__: Blaze templating is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed.
+> [!NOTE]
+> Blaze templating is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed
 
 #### Create layout
 

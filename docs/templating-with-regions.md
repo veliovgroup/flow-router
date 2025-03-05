@@ -1,8 +1,10 @@
 ### Templating with "Regions"
 
- - __Note__: Blaze templating is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed.
+> [!NOTE]
+> Blaze templating is available only if application has `templating` and `blaze`, or `blaze-html-templates` packages installed
 
 #### Create layout
+
 ```handlebars
 <!-- /imports/client/layout/layout.html -->
 <template name="layout">
@@ -30,6 +32,7 @@ import './layout.html';
 ```
 
 #### Create index template
+
 ```handlebars
 <!-- /imports/client/index/index.html -->
 <template name="index">
@@ -46,6 +49,7 @@ import './index.html';
 ```
 
 #### Create sidebar template
+
 ```handlebars
 <!-- /imports/client/sidebar/sidebar.html -->
 <template name="sidebar">
@@ -58,6 +62,7 @@ import './index.html';
 ```
 
 #### Create footer template
+
 ```handlebars
 <!-- /imports/client/footer/footer.html -->
 <template name="footer">
@@ -66,6 +71,7 @@ import './index.html';
 ```
 
 #### Create index route
+
 ```js
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // Import layout template statically as it will be used a lot
@@ -91,7 +97,8 @@ FlowRouter.route('/', {
 ```
 
 #### Further Reading
- - [`.action()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/action.md)
- - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
- - [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)
- - [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)
+
+- [`.action()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/action.md)
+- [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
+- [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)
+- [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)

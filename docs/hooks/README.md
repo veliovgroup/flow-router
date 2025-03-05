@@ -1,4 +1,6 @@
-# Hooks (*in execution order*):
+# Hooks
+
+*Hooks below are listed in execution order*
 
 - [`.whileWaiting()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/whileWaiting.md)
 - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)

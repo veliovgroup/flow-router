@@ -1,7 +1,8 @@
 ### RouterHelpers Class
 
 Use template helpers right from JavaScript code.
-```jsx
+
+```js
 import { RouterHelpers } from 'meteor/ostrio:flow-router-extra';
 
 RouterHelpers.name('home');

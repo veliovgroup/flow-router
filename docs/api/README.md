@@ -1,4 +1,4 @@
-# API:
+# API
 
 - __General Methods:__
   - [`.go()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/go.md)

@@ -1,12 +1,12 @@
 ### data hook
 
 `data(params, qs)`
- - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
- - Return: {*Mongo.Cursor*|*Object*|[*Object*]|*false*|*null*|*void*}
 
+- `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
+- `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+- Return: {*Mongo.Cursor*|*Object*|[*Object*]|*false*|*null*|*void*}
 
-`.data()` is triggered right after all resources in `.waitOn()` and `.waitOnResources()` hooks are ready.
+`.data()` is triggered right after all resources in `.waitOn()` and `.waitOnResources()` hooks are ready. __This hook can be async__
 
 ```js
 FlowRouter.route('/post/:_id', {
@@ -14,13 +14,14 @@ FlowRouter.route('/post/:_id', {
   waitOn(params) {
     return Meteor.subscribe('post', params._id);
   },
-  data(params, qs) {
-    return PostsCollection.findOne({_id: params._id});
+  async data(params, qs) {
+    return await PostsCollection.findOneAsync({ _id: params._id });
   }
 });
 ```
 
 #### Passing data into a *Template*
+
 ```js
 FlowRouter.route('/post/:_id', {
   name: 'post',
@@ -30,8 +31,8 @@ FlowRouter.route('/post/:_id', {
   waitOn(params) {
     return Meteor.subscribe('post', params._id);
   },
-  data(params, qs) {
-    return PostsCollection.findOne({_id: params._id});
+  async data(params, qs) {
+    return await PostsCollection.findOneAsync({ _id: params._id });
   }
 });
 ```
@@ -45,12 +46,14 @@ FlowRouter.route('/post/:_id', {
 ```
 
 #### Data in other hooks
+
 Returned value from `data` hook, will be passed into all other hooks as third argument and to `triggersEnter` hooks as fourth argument
-```jsx
+
+```js
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  data(params) {
-    return PostsCollection.findOne({_id: params._id});
+  async data(params) {
+    return await PostsCollection.findOneAsync({ _id: params._id });
   },
   triggersEnter: [(context, redirect, stop, data) => {
     console.log(data);
@@ -59,8 +62,9 @@ FlowRouter.route('/post/:_id', {
 ```
 
 #### Further reading
- - [`.triggersEnter()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
- - [`.onNoData()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/onNoData.md)
- - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
- - [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)
- - [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)
+
+- [`.triggersEnter()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/triggersEnter.md)
+- [`.onNoData()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/onNoData.md)
+- [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
+- [`.render()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/render.md)
+- [Templating with Data](https://github.com/veliovgroup/flow-router/blob/master/docs/templating-with-data.md)

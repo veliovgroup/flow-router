@@ -3,12 +3,14 @@
 ```js
 FlowRouter.current();
 ```
- - Returns {*Object*}
+
+- Returns {*Object*}
 
 Get the current state of the router. **This API is not reactive**.
 If you need to watch the changes in the path simply use `FlowRouter.watchPathChange()`.
 
 #### Example
+
 ```js
 // route def: /apps/:appId
 // url: /apps/this-is-my-app?show=yes&color=red
@@ -26,4 +28,5 @@ console.log(current);
 ```
 
 #### Further reading
- - [`.watchPathChange()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/watchPathChange.md)
+
+- [`.watchPathChange()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/watchPathChange.md)

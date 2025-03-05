@@ -3,11 +3,13 @@
 ```js
 FlowRouter.getRouteName();
 ```
- - Returns {*String*}
+
+- Returns {*String*}
 
 Use to get the name of the route reactively.
 
 #### Example
+
 ```js
 Tracker.autorun(function () {
   const routeName = FlowRouter.getRouteName();
@@ -16,4 +18,5 @@ Tracker.autorun(function () {
 ```
 
 #### Further reading
- - [`.current()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/current.md)
+
+- [`.current()` method](https://github.com/veliovgroup/flow-router/blob/master/docs/api/current.md)

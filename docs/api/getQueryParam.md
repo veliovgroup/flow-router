@@ -3,8 +3,9 @@
 ```js
 FlowRouter.getQueryParam(queryKey);
 ```
- - `queryKey` {*String*}
- - Returns {*String*}
+
+- `queryKey` {*String*}
+- Returns {*String*}
 
 Reactive function which you can use to get a value from the query string.
 

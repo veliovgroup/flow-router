@@ -21,7 +21,7 @@ FlowRouter.triggers.enter([scrollToTop]);
 With jQuery animation:
 
 ```js
-import { $ }          from 'meteor/jquery';
+import { $ } from 'meteor/jquery';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 const scrollToTop = () => {

@@ -9,6 +9,7 @@
 `.data()` is triggered right after all resources in `.waitOn()` and `.waitOnResources()` hooks are ready. __This hook can be async__
 
 ```js
+// USE data() HOOK WITH PUBLISH / SUBSCRIBE
 FlowRouter.route('/post/:_id', {
   name: 'post',
   waitOn(params) {
@@ -16,6 +17,14 @@ FlowRouter.route('/post/:_id', {
   },
   async data(params, qs) {
     return await PostsCollection.findOneAsync({ _id: params._id });
+  }
+});
+
+// USE data() HOOK WITH METEOR METHOD
+FlowRouter.route('/post/:_id', {
+  name: 'post',
+  async data(params, qs) {
+    return await Meteor.callAsync('post.get', params._id);
   }
 });
 ```

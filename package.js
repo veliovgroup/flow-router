@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
-  summary: 'Carefully extended flow-router with waitOn and template context',
-  version: '3.11.0',
+  summary: 'The router for modern JavaScript apps, with support for Blaze, Vue, React, Svelte',
+  version: '3.12.0',
   git: 'https://github.com/veliovgroup/flow-router',
 });
 
@@ -50,5 +50,5 @@ Package.onTest((api) => {
 
 Npm.depends({
   page: '1.9.0',
-  qs: '6.11.0',
+  qs: '6.14.0',
 });

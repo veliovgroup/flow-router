@@ -19,26 +19,24 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: cache dependencies
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-20-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-20-
+            ${{ runner.os }}-node-22-
 
       # we use mtest to run tinytest headless
       - run: npm install -g mtest
 
       - name: Setup meteor
-        uses: meteorengineer/setup-meteor@v1
+        uses: meteorengineer/setup-meteor@v2
         with:
-          meteor-release: '3.1.0'
+          meteor-release: '3.1.2'
 
       - run: |
           meteor npm install
           meteor npm run test:once
-
-      

@@ -1,6 +1,6 @@
-import { Meteor } from "meteor/meteor";
-import { Mongo } from "meteor/mongo";
-import { Tracker } from "meteor/tracker";
+import type { Meteor } from "meteor/meteor";
+import type { Mongo } from "meteor/mongo";
+import type { Tracker } from "meteor/tracker";
 
 type Trigger = (context: ReturnType<Router["current"]>, redirect: Router["go"], stop: () => void, data: any) => void;
 

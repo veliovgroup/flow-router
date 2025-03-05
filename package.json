@@ -2,11 +2,12 @@
     "name": "ostrio-flow-router-extra",
     "types": "index.d.ts",
     "scripts": {
-        "test:once": "mtest --package ostrio:flow-router-extra --port=8888 --once",
-        "test:watch": "mtest --package ostrio:flow-router-extra --port=8888",
+        "test:once": "mtest --package ./ --port=8888 --once",
+        "test:watch": "mtest --package ./ --port=8888",
         "test:browser": "meteor test-packages ./ --port 8888"
     },
     "devDependencies": {
-        "@zodern/mtest": "^0.5.1"
+        "@zodern/mtest": "^0.5.1",
+        "tsd": "^0.31.2"
     }
 }

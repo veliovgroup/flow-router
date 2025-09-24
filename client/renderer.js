@@ -1,5 +1,5 @@
-import { Meteor }           from 'meteor/meteor';
-import { _helpers }         from './../lib/_helpers.js';
+import { Meteor } from 'meteor/meteor';
+import { _helpers } from './../lib/_helpers.js';
 import { requestAnimFrame } from './modules.js';
 
 let Blaze;
@@ -281,6 +281,7 @@ class BlazeRenderer {
       current[type].parent.appendChild(current[type].element);
       current[type].element._parentElement = current[type].parent;
     }
+    return;
   }
 
   newState(layout = false, template = false) {

@@ -1,14 +1,14 @@
-import { Meteor }     from 'meteor/meteor';
-import { _helpers }   from './../../lib/_helpers.js';
+import { Meteor } from 'meteor/meteor';
+import { _helpers } from './../../lib/_helpers.js';
 import { FlowRouter } from '../_init.js';
 
-if(!Package['communitypackages:fast-render']) {
-  return;
-}
-
-const FastRender = Package['communitypackages:fast-render'].FastRender;
-
 const setupFastRender = () => {
+  if(!Package['communitypackages:fast-render']) {
+    return;
+  }
+
+  const FastRender = Package['communitypackages:fast-render'].FastRender;
+
   FlowRouter._routes.forEach((route) => {
     if (route.pathDef === '*') {
       return;

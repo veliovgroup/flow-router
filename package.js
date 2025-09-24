@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'The router for modern JavaScript apps, with support for Blaze, Vue, React, Svelte',
-  version: '3.12.0',
+  version: '3.12.1',
   git: 'https://github.com/veliovgroup/flow-router',
 });
 

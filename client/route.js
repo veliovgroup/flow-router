@@ -84,7 +84,6 @@ class Route {
     let waitFor       = [];
     let promises      = [];
     let subscriptions = [];
-    let timer;
     let trackers      = [];
 
     const placeIn = (d) => {
@@ -101,45 +100,6 @@ class Route {
       if (!_isWaiting) {
         this._whileWaiting && this._whileWaiting(current.params, current.queryParams);
         _isWaiting = true;
-      }
-    };
-
-    const subWait = (delay) => {
-      timer = Meteor.setTimeout(async () => {
-        if (this.checkSubscriptions(subscriptions)) {
-          Meteor.clearTimeout(timer);
-          _data = await getData();
-          if (_resources) {
-            whileWaitingAction();
-            getResources();
-          } else {
-            next(current, _data);
-          }
-        } else {
-          wait(24);
-        }
-      }, delay);
-    };
-
-    let waitFails = 0;
-    const wait = (delay) => {
-      if (promises.length) {
-        Promise.all(promises).then(() => {
-          subWait(delay);
-          promises = [];
-        }).catch((error) => {
-          if (waitFails > 9) {
-            subWait(256);
-            waitFails = 0;
-            promises = [];
-          } else {
-            wait(128);
-            waitFails++;
-            Meteor._debug('[ostrio:flow-router-extra] [route.wait] Promise not resolved', error);
-          }
-        });
-      } else {
-        subWait(delay);
       }
     };
 
@@ -288,7 +248,35 @@ class Route {
       });
 
       whileWaitingAction();
-      wait(12);
+
+      // Wait for promises
+      if (promises.length) {
+        try {
+          await Promise.all(promises);
+        } catch (error) {
+          Meteor._debug('[ostrio:flow-router-extra] [route.waitOn] Promise rejected:', error);
+        }
+        promises = [];
+      }
+
+      // Reactively wait for subscriptions — re-runs only when sub.ready() changes
+      if (subscriptions.length) {
+        await new Promise((resolve) => {
+          const computation = Tracker.autorun(() => {
+            if (this.checkSubscriptions(subscriptions)) {
+              Meteor.defer(() => computation.stop());
+              resolve();
+            }
+          });
+        });
+      }
+
+      _data = await getData();
+      if (_resources) {
+        getResources();
+      } else {
+        next(current, _data);
+      }
     } else if (_resources) {
       whileWaitingAction();
       getResources();

@@ -2,6 +2,7 @@ import { Meteor }       from 'meteor/meteor';
 import { _helpers }     from './../lib/_helpers.js';
 import { check, Match } from 'meteor/check';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { qs }           from './modules.js';
 
 let Template;
 if (Package.templating) {
@@ -254,7 +255,7 @@ const init = (FlowRouter) => {
       path = view.hash.route;
       delete view.hash.route;
     }
-    const query    = view.hash.query ? FlowRouter._qs.parse(view.hash.query) : {};
+    const query    = view.hash.query ? qs.parse(view.hash.query) : {};
     const hashBang = view.hash.hash ? view.hash.hash : '';
     return FlowRouter.path(path, view.hash, query) + (hashBang ? '#' + hashBang : '');
   };

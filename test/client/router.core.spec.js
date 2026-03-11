@@ -483,11 +483,11 @@ Tinytest.addAsync('Client - Router - notFound', (test, done) => {
 
 Tinytest.addAsync('Client - Router - withReplaceState - enabled', (test, done) => {
   const pathDef = '/' + Random.id() + '/:id';
-  const originalRedirect = FlowRouter._page.replace;
+  const originalReplace = FlowRouter._microRouter.replace.bind(FlowRouter._microRouter);
   let callCount = 0;
-  FlowRouter._page.replace = function(path) {
+  FlowRouter._microRouter.replace = function(path) {
     callCount++;
-    originalRedirect.call(FlowRouter._page, path);
+    originalReplace(path);
   };
 
   FlowRouter.route(pathDef, {
@@ -495,7 +495,7 @@ Tinytest.addAsync('Client - Router - withReplaceState - enabled', (test, done) =
     action(params) {
       test.equal(params.id, 'awesome');
       test.equal(callCount, 1);
-      FlowRouter._page.replace = originalRedirect;
+      FlowRouter._microRouter.replace = originalReplace;
       // We don't use Meteor.defer here since it carries
       // Meteor.Environment vars too
       // Which breaks our test below
@@ -510,11 +510,11 @@ Tinytest.addAsync('Client - Router - withReplaceState - enabled', (test, done) =
 
 Tinytest.addAsync('Client - Router - withReplaceState - disabled', (test, done) => {
   const pathDef = '/' + Random.id() + '/:id';
-  const originalRedirect = FlowRouter._page.replace;
+  const originalReplace = FlowRouter._microRouter.replace.bind(FlowRouter._microRouter);
   let callCount = 0;
-  FlowRouter._page.replace = function(path) {
+  FlowRouter._microRouter.replace = function(path) {
     callCount++;
-    originalRedirect.call(FlowRouter._page, path);
+    originalReplace(path);
   };
 
   FlowRouter.route(pathDef, {
@@ -522,7 +522,7 @@ Tinytest.addAsync('Client - Router - withReplaceState - disabled', (test, done) 
     action(params) {
       test.equal(params.id, 'awesome');
       test.equal(callCount, 0);
-      FlowRouter._page.replace = originalRedirect;
+      FlowRouter._microRouter.replace = originalReplace;
       Meteor.defer(done);
     }
   });

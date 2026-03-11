@@ -1,12 +1,14 @@
-import page          from 'page';
-import Route          from './route.js';
-import Group          from './group.js';
-import { _helpers }   from '../lib/_helpers.js';
-import { RouterBase } from '../lib/router-base.js';
+import Route                            from './route.js';
+import Group                            from './group.js';
+import { _helpers }                     from '../lib/_helpers.js';
+import { RouterBase }                   from '../lib/router-base.js';
+import { pathToRegExp, matchPath }      from '../lib/micro-router.js';
 
 class Router extends RouterBase {
   constructor() {
     super();
+    // Pre-compiled route patterns cache (populated lazily in matchPath)
+    this._compiledRoutes = new WeakMap();
   }
 
   _getGroupClass() {
@@ -14,20 +16,20 @@ class Router extends RouterBase {
   }
 
   matchPath(path) {
-    const params = {};
-    const route = this._routes.find(r => {
-      const pageRoute = new page.Route(r.pathDef);
-      return pageRoute.match(path, params);
-    });
-
-    if (!route) {
-      return null;
+    for (const route of this._routes) {
+      if (!this._compiledRoutes.has(route)) {
+        this._compiledRoutes.set(route, pathToRegExp(route.pathDef));
+      }
+      const compiled = this._compiledRoutes.get(route);
+      const params = matchPath(compiled, path);
+      if (params) {
+        return {
+          params: _helpers.clone(params),
+          route:  _helpers.clone(route),
+        };
+      }
     }
-
-    return {
-      params: _helpers.clone(params),
-      route:  _helpers.clone(route),
-    };
+    return null;
   }
 
   setCurrent(current) {

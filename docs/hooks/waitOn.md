@@ -158,13 +158,14 @@ FlowRouter.route('/posts', {
 ```
 
 #### *async* support
+
 ```js
 FlowRouter.route('/posts', {
-	name: 'posts',
-	async waitOn() {
-		await import('/imports/client/posts.js');
-		return Meteor.subscribe('Posts');
-	}
+  name: 'posts',
+  async waitOn() {
+    await import('/imports/client/posts.js');
+    return Meteor.subscribe('Posts');
+  }
 });
 ```
 

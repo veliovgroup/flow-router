@@ -1,4 +1,3 @@
-import { _ }          from 'meteor/underscore';
 import { GetSub }     from './_helpers.js';
 import { Meteor }     from 'meteor/meteor';
 import { Random }     from 'meteor/random';
@@ -328,8 +327,8 @@ Tinytest.addAsync('Client - Router - setParams - generic', (test, done) => {
 
   function validate() {
     test.equal(paramsList.length, 2);
-    test.equal(_.pick(paramsList[0] || {}, 'id', 'cat'), {cat: 'meteor', id: '200'});
-    test.equal(_.pick(paramsList[1] || {}, 'id', 'cat'), {cat: 'meteor', id: '700'});
+    test.equal({ id: (paramsList[0] || {}).id, cat: (paramsList[0] || {}).cat }, {cat: 'meteor', id: '200'});
+    test.equal({ id: (paramsList[1] || {}).id, cat: (paramsList[1] || {}).cat }, {cat: 'meteor', id: '700'});
     done();
   }
 });
@@ -359,8 +358,8 @@ Tinytest.addAsync('Client - Router - setParams - preserve query strings', (test,
     test.equal(paramsList.length, 2, 'paramsList.length');
     test.equal(queryParamsList.length, 2, 'queryParamsList.length');
 
-    test.equal(_.pick(paramsList[0] || {}, 'id', 'cat'), {cat: 'meteor', id: '200 +% / ad'});
-    test.equal(_.pick(paramsList[1] || {}, 'id', 'cat'), {cat: 'meteor', id: '700 +% / ad'});
+    test.equal({ id: (paramsList[0] || {}).id, cat: (paramsList[0] || {}).cat }, {cat: 'meteor', id: '200 +% / ad'});
+    test.equal({ id: (paramsList[1] || {}).id, cat: (paramsList[1] || {}).cat }, {cat: 'meteor', id: '700 +% / ad'});
     test.equal(queryParamsList, [{aa: '20 +%'}, {aa: '20 +%'}]);
     done();
   }
@@ -412,8 +411,8 @@ Tinytest.addAsync('Client - Router - setQueryParams - generic', (test, done) => 
 
   function validate() {
     test.equal(queryParamsList.length, 2);
-    test.equal(_.pick(queryParamsList[0] || [], 'id', 'cat'), {cat: 'meteor', id: '200'});
-    test.equal(_.pick(queryParamsList[1] || [], 'id', 'cat'), {cat: 'meteor', id: '700'});
+    test.equal({ id: (queryParamsList[0] || {}).id, cat: (queryParamsList[0] || {}).cat }, {cat: 'meteor', id: '200'});
+    test.equal({ id: (queryParamsList[1] || {}).id, cat: (queryParamsList[1] || {}).cat }, {cat: 'meteor', id: '700'});
     done();
   }
 });
@@ -437,7 +436,7 @@ Tinytest.addAsync('Client - Router - setQueryParams - remove query param null', 
 
   function validate() {
     test.equal(queryParamsList.length, 2);
-    test.equal(_.pick(queryParamsList[0] || {}, 'id', 'cat'), {cat: 'meteor', id: '200'});
+    test.equal({ id: (queryParamsList[0] || {}).id, cat: (queryParamsList[0] || {}).cat }, {cat: 'meteor', id: '200'});
     test.equal(queryParamsList[1], {id: '700'});
     done();
   }
@@ -462,7 +461,7 @@ Tinytest.addAsync('Client - Router - setQueryParams - remove query param undefin
 
   function validate() {
     test.equal(queryParamsList.length, 2);
-    test.equal(_.pick(queryParamsList[0] || {}, 'id', 'cat'), {cat: 'meteor', id: '200'});
+    test.equal({ id: (queryParamsList[0] || {}).id, cat: (queryParamsList[0] || {}).cat }, {cat: 'meteor', id: '200'});
     test.equal(queryParamsList[1], {id: '700'});
     done();
   }
@@ -495,8 +494,8 @@ Tinytest.addAsync('Client - Router - setQueryParams - preserve params', (test, d
     ]);
 
     test.equal(paramsList.length, 2);
-    test.equal(_.pick(paramsList[0] || [], 'abc'), {abc: '20'});
-    test.equal(_.pick(paramsList[1] || [], 'abc'), {abc: '20'});
+    test.equal({ abc: (paramsList[0] || {}).abc }, {abc: '20'});
+    test.equal({ abc: (paramsList[1] || {}).abc }, {abc: '20'});
     done();
   }
 });
@@ -594,7 +593,7 @@ Tinytest.addAsync('Client - Router - withTrailingSlash - enabled', (test, next) 
 
   setTimeout(() => {
     test.equal(rendered, 1);
-    test.equal(_.last(location.href), '/');
+    test.equal(location.href[location.href.length - 1], '/');
     setTimeout(next, 100);
   }, 100);
 });
@@ -770,7 +769,7 @@ Tinytest.addAsync('Client - Router - base path - route action called', (test, do
 });
 
 Tinytest.add('Client - Router - base path - path generation', (test) => {
-  _.each(['/flow', '/flow/', 'flow/', 'flow'], function(simulatedBasePath) {
+  ['/flow', '/flow/', 'flow/', 'flow'].forEach((simulatedBasePath) => {
     const rand = Random.id();
     setBasePath(simulatedBasePath);
     test.equal(FlowRouter.path('/' + rand), '/flow/' + rand);
@@ -779,7 +778,7 @@ Tinytest.add('Client - Router - base path - path generation', (test) => {
 });
 
 Tinytest.add('Client - Router - base path - url generation', (test) => {
-  _.each(['/flow', '/flow/', 'flow/', 'flow'], function(simulatedBasePath) {
+  ['/flow', '/flow/', 'flow/', 'flow'].forEach((simulatedBasePath) => {
     const rand = Random.id();
     setBasePath(simulatedBasePath);
 

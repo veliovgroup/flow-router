@@ -81,6 +81,7 @@ class Route {
     let _isWaiting    = false;
     let _preloaded    = 0;
     let _resources    = false;
+    let timer;
     let waitFor       = [];
     let promises      = [];
     let subscriptions = [];

@@ -290,7 +290,12 @@ Often released together: **`ostrio:flow-router-extra`**, **`ostrio:flow-router-t
 
 ---
 
-## Learned preferences (historical)
+## Learned User Preferences
 
 - Prefer **`import`/`export`** over globals.
 - Prefer **`async`/`await`** in **`Meteor.startup`** when wiring initialization.
+
+## Learned Workspace Facts
+
+- Blaze **`client/renderer.js`** / **`client/modules.js`** use **`requestAnimationFrame`** to chunk queued route renders and defer attaching in-memory layout to the live DOM; still appropriate (not deprecated); trimming legacy `webkit`/`moz` rAF prefixes is optional cleanup.
+- **`ostrio:flow-router-meta`** and **`ostrio:flow-router-title`** hook private **`router._notfoundRoute`** / **`router._current`** and **`notFound`** / **`notfound`** option shape; changes to 404 or not-found internals in **`client/router.js`** must stay compatible with those integrations.

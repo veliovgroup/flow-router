@@ -27,6 +27,11 @@ It exposes a great API for changing the URL and getting data from the URL. Howev
 meteor add ostrio:flow-router-extra
 ```
 
+### Compatibility
+
+- Meteor `>=1.4`, including latest Meteor `3.4`;
+- Compatible with `ostrio:flow-router-title@3.5.0` and `ostrio:flow-router-meta@2.4.0`.
+
 ### ES6 Import
 
 ```js
@@ -72,13 +77,35 @@ FlowRouter.route('*', {
 ```
 
 > [!TIP]
-> If you're using TypeScript, FlowRouter supports it. For types to work you need to install and follow the instructions of [`zodern:meteor-types`](https://github.com/zodern/meteor-types#meteor-apps)
+> TypeScript: add [`zodern:types`](https://github.com/zodern/meteor-types) to the app (`meteor add zodern:types`), enable TypeScript per [Meteor docs](https://docs.meteor.com/guide/typescript.html), then run a build so `.meteor/local/types` is generated. This package ships [`index.d.ts`](https://github.com/veliovgroup/flow-router/blob/master/index.d.ts) and [`package-types.json`](https://github.com/veliovgroup/flow-router/blob/master/package-types.json) for `meteor/ostrio:flow-router-extra` imports.
 
 ## Documentation
 
 - Continue with our [wiki](https://github.com/veliovgroup/flow-router/wiki) or [README index](https://github.com/veliovgroup/flow-router/blob/master/docs/README.md);
 - [Quick start](https://github.com/veliovgroup/flow-router/blob/master/docs/quick-start.md) tutorial;
 - All docs as [single document](https://github.com/veliovgroup/flow-router/blob/master/docs/full.md).
+
+### AGENTS.md
+
+The repo ships [`AGENTS.md`](https://github.com/veliovgroup/flow-router/blob/master/AGENTS.md): a compact **implementation map** for `ostrio:flow-router-extra` (routes, groups, catch-all, hooks, globals, `RouterHelpers`, debugging, testing). It complements narrative API docs under `docs/` with file pointers and conventions maintainers rely on.
+
+### SKILLS.md
+
+- This repo ships a bundled skill at **`.agents/skills/meteor-flow-router/SKILL.md`** (covers **`ostrio:flow-router-extra`**, **`ostrio:flow-router-meta`**, **`ostrio:flow-router-title`**). Install into your project with the [Skills CLI](https://www.npmjs.com/package/skills) (`npx skills`):
+
+```bash
+# From a Meteor app repo (install into that app’s .agents/skills for Cursor, etc.)
+npx skills add veliovgroup/flow-router --skill meteor-flow-router --agent cursor --yes
+
+# Only list skills discovered in the Flow Router repo (no install)
+npx skills add veliovgroup/flow-router --list
+
+# Local clone of flow-router (path can be absolute or ./relative)
+npx skills add ./flow-router --skill meteor-flow-router --agent cursor --yes
+
+# User-global Cursor skills dir (~/.cursor/skills)
+npx skills add veliovgroup/flow-router --skill meteor-flow-router --agent cursor --global --yes
+```
 
 ### Related packages:
 

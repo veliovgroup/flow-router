@@ -3,7 +3,7 @@ import { EJSON }    from 'meteor/ejson';
 import { Meteor }   from 'meteor/meteor';
 import { Tracker }  from 'meteor/tracker';
 import { _helpers } from './../lib/_helpers.js';
-import { qs, requestAnimFrame } from './modules.js';
+import { qs } from './modules.js';
 import { MicroRouter } from '../lib/micro-router.js';
 
 class Router {

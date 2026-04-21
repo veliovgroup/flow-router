@@ -108,7 +108,7 @@ FlowRouter.route('/article/:_id', {
     // { comment: '123' }
 
     // Pass params and query string to Template's context
-    this.render('article', _.extend(params, qs));
+    this.render('article', Object.assign({}, params, qs));
   }
 });
 ```

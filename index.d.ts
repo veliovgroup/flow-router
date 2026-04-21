@@ -45,7 +45,9 @@ type NewParams = {
 
 type QueryParam = Param;
 
-interface Router {
+export interface Router {
+    /** Max time (ms) for each `waitOn` promise phase and subscription poll phase; default `120000`. Overridable per route via `maxWaitFor`. When exceeded, `waitOn` stops waiting but `action` still runs; navigating away aborts `waitOn` and skips `action` for the left route. */
+    maxWaitFor: number;
     go: (path: string, params?: NewParams, qs?: NewParams) => boolean;
     route: (
         path: string,
@@ -61,6 +63,8 @@ interface Router {
             action?: action;
             triggersExit?: Array<Trigger>;
             conf?: { [key: string]: any; forceReRender?: boolean };
+            /** Max time (ms) for this route’s `waitOn` promise and subscription waits; defaults to `FlowRouter.maxWaitFor`. On timeout, `action` still runs. */
+            maxWaitFor?: number;
             [key: string]: any;
         }
     ) => Route;
@@ -96,7 +100,14 @@ interface Router {
     onRouteRegister: (callback: (route: Route) => void) => void;
 
     wait: () => void;
-    initialize: (options: { hashbang: boolean; page: { click: boolean } }) => void;
+    initialize: (options: {
+        hashbang?: boolean;
+        page?: { click: boolean };
+        click?: boolean;
+        popstate?: boolean;
+        /** Sets `FlowRouter.maxWaitFor` (ms) for routes that do not set `maxWaitFor`. Default `120000`. */
+        maxWaitFor?: number;
+    }) => void;
 
     triggers: {
         enter: (triggers: Trigger[], filter?: TriggerFilterParam) => void;
@@ -114,6 +125,30 @@ interface Route {
     pathDef: string;
     render: () => void;
 }
+
+/** `new Router()` instance API (same object shape as `FlowRouter` before `.Router` / `.Route` are attached). */
+export interface RouterConstructor {
+    new (): Router;
+}
+
+/** Route class instance (see `FlowRouter.route()` return type). */
+export interface RouteConstructor {
+    new (...args: any[]): Route;
+}
+
+/** Route group constructor (see `FlowRouter.group()`). */
+export interface GroupConstructor {
+    new (...args: any[]): any;
+}
+
+/**
+ * Client singleton: full router + `FlowRouter.Router` / `FlowRouter.Route` constructors
+ * (used by companion packages such as `ostrio:flow-router-meta`).
+ */
+export type FlowRouterSingleton = Router & {
+    Router: RouterConstructor;
+    Route: RouteConstructor;
+};
 
 type Context = {
     canonicalPath: string;
@@ -133,5 +168,23 @@ interface Helpers {
     configure: (options: { activeClass: string; caseSensitive: boolean; disabledClass: string; regex: string }) => void;
 }
 
-export const FlowRouter: Router;
+/** Router class (instantiate only inside the package; apps use `FlowRouter`). */
+export const Router: RouterConstructor;
+/** Route class (for advanced / package authors). */
+export const Route: RouteConstructor;
+/** Group class. */
+export const Group: GroupConstructor;
+/** Trigger helpers (`applyFilters`, etc.). Server build exposes an empty object. */
+export const Triggers: Record<string, (...args: any[]) => any>;
+/**
+ * Blaze renderer when `templating` + `blaze` are present; otherwise a no-op stub.
+ * Server build exports an empty object — use only from client router code.
+ */
+export const BlazeRenderer: new (opts?: Record<string, unknown>) => unknown;
+
+/** Default `FlowRouter.maxWaitFor` and route `maxWaitFor` fallback (ms). */
+export declare const MAX_WAIT_FOR_MS: number;
+
+export const FlowRouter: FlowRouterSingleton;
+/** Client-only: not exported from server `mainModule`. Import from isomorphic modules only if guarded with `Meteor.isClient`. */
 export const RouterHelpers: Helpers;

@@ -1,5 +1,10 @@
 import { expectError, expectType } from "tsd";
-import { FlowRouter } from ".";
+import type { RouterConstructor } from ".";
+import { FlowRouter, MAX_WAIT_FOR_MS } from ".";
+
+expectType<number>(MAX_WAIT_FOR_MS);
+
+expectType<RouterConstructor>(FlowRouter.Router);
 
 FlowRouter.route("/", {
     name: "home",

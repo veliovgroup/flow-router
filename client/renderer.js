@@ -93,10 +93,10 @@ class BlazeRenderer {
         const task = this.queue.shift();
         this.proceed.apply(this, task);
         if (this.queue.length) {
-          this.startQueue.bind(this);
+          requestAnimFrame(() => this.startQueue());
         }
       } else {
-        this.startQueue.bind(this);
+        requestAnimFrame(() => this.startQueue());
       }
     }
   }

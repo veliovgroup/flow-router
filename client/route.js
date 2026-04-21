@@ -84,7 +84,6 @@ class Route {
     let waitFor       = [];
     let promises      = [];
     let subscriptions = [];
-    let timer;
     let trackers      = [];
 
     const placeIn = (d) => {
@@ -295,7 +294,35 @@ class Route {
       });
 
       whileWaitingAction();
-      wait(12);
+
+      // Wait for promises
+      if (promises.length) {
+        try {
+          await Promise.all(promises);
+        } catch (error) {
+          Meteor._debug('[ostrio:flow-router-extra] [route.waitOn] Promise rejected:', error);
+        }
+        promises = [];
+      }
+
+      // Reactively wait for subscriptions — re-runs only when sub.ready() changes
+      if (subscriptions.length) {
+        await new Promise((resolve) => {
+          const computation = Tracker.autorun(() => {
+            if (this.checkSubscriptions(subscriptions)) {
+              Meteor.defer(() => computation.stop());
+              resolve();
+            }
+          });
+        });
+      }
+
+      _data = await getData();
+      if (_resources) {
+        getResources();
+      } else {
+        next(current, _data);
+      }
     } else if (_resources) {
       whileWaitingAction();
       getResources();

@@ -103,6 +103,52 @@ class Route {
       }
     };
 
+    const subWait = (delay) => {
+      timer = Meteor.setTimeout(async () => {
+        if (this.checkSubscriptions(subscriptions)) {
+          Meteor.clearTimeout(timer);
+          _data = await getData();
+          if (_resources) {
+            whileWaitingAction();
+            getResources();
+          } else {
+            next(current, _data);
+          }
+        } else {
+          wait(24);
+        }
+      }, delay);
+    };
+
+    let waitFails = 0;
+    const wait = (delay) => {
+      if (promises.length) {
+        const pendingPromises = promises.slice();
+        promises = [];
+
+        Promise.all(pendingPromises).then((resultSet) => {
+          resultSet.forEach((result) => {
+            processSubData(result);
+          });
+          waitFails = 0;
+          wait(delay);
+        }).catch((error) => {
+          promises = pendingPromises.concat(promises);
+          if (waitFails > 9) {
+            subWait(256);
+            waitFails = 0;
+            promises = [];
+          } else {
+            wait(128);
+            waitFails++;
+            Meteor._debug('[ostrio:flow-router-extra] [route.wait] Promise not resolved', error);
+          }
+        });
+      } else {
+        subWait(delay);
+      }
+    };
+
     const processSubData = (subData) => {
       if (subData instanceof Array) {
         for (let i = subData.length - 1; i >= 0; i--) {

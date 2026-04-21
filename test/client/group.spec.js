@@ -56,6 +56,41 @@ Tinytest.addAsync('Client - Group - define and go to route without prefix', (tes
   }, 100);
 });
 
+Tinytest.addAsync('Client - Group - async waitOn delays route action', (test, next) => {
+  const prefix = Random.id();
+  const rand   = Random.id();
+  const events = [];
+  const group  = FlowRouter.group({
+    prefix: '/' + prefix,
+    async waitOn() {
+      events.push('waitOn:start');
+      await new Promise((resolve) => {
+        Meteor.setTimeout(() => {
+          events.push('waitOn:end');
+          resolve();
+        }, 40);
+      });
+    }
+  });
+
+  group.route('/' + rand, {
+    action() {
+      events.push('action');
+    }
+  });
+
+  FlowRouter.go('/' + prefix + '/' + rand);
+
+  Meteor.setTimeout(() => {
+    test.equal(events, ['waitOn:start']);
+
+    Meteor.setTimeout(() => {
+      test.equal(events, ['waitOn:start', 'waitOn:end', 'action']);
+      next();
+    }, 100);
+  }, 10);
+});
+
 Tinytest.addAsync('Client - Group - subscribe', (test, next) => {
   const rand  = Random.id();
   const group = FlowRouter.group({

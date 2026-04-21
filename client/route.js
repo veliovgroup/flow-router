@@ -124,10 +124,17 @@ class Route {
     let waitFails = 0;
     const wait = (delay) => {
       if (promises.length) {
-        Promise.all(promises).then(() => {
-          subWait(delay);
-          promises = [];
+        const pendingPromises = promises.slice();
+        promises = [];
+
+        Promise.all(pendingPromises).then((resultSet) => {
+          resultSet.forEach((result) => {
+            processSubData(result);
+          });
+          waitFails = 0;
+          wait(delay);
         }).catch((error) => {
+          promises = pendingPromises.concat(promises);
           if (waitFails > 9) {
             subWait(256);
             waitFails = 0;

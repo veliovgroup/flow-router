@@ -898,6 +898,12 @@ FlowRouter.triggers.exit([cb1, cb2]);
 
 `.waitOn()` hook is triggered before `.action()` hook, allowing to load necessary data before rendering a template.
 
+#### `maxWaitFor` (route and router)
+
+- **Per route:** `FlowRouter.route(path, { maxWaitFor, waitOn, action, … })` — max time in **milliseconds** for resolving **`waitOn` promises** (including `async waitOn`) and for waiting until every returned subscription-like handle’s **`ready()`** is true (polled every 24ms).
+- **Router default:** `FlowRouter.maxWaitFor` defaults to **`120000`** (same as package export **`MAX_WAIT_FOR_MS`**). Set via **`FlowRouter.initialize({ maxWaitFor })`** or assign **`FlowRouter.maxWaitFor = …`**. Routes **without** an explicit **`maxWaitFor`** use **`FlowRouter.maxWaitFor`** at the time **`waitOn`** runs.
+- If **`maxWaitFor`** elapses while promises or subscriptions are still pending, **`waitOn` ends** and the route still runs **`triggersEnter`** / **`action`** (timeout is logged). **Navigation away** aborts `waitOn` and skips **`action`** for the route being left.
+
 #### Subscriptions
 ```js
 FlowRouter.route('/post/:_id', {

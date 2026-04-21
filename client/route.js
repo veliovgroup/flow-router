@@ -4,6 +4,7 @@ import { Promise }      from 'meteor/promise';
 import { Tracker }      from 'meteor/tracker';
 import { _helpers }     from './../lib/_helpers.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { MAX_WAIT_FOR_MS } from './../lib/constants.js';
 
 const makeTriggers = (triggers) => {
   if (_helpers.isFunction(triggers)) {
@@ -40,6 +41,9 @@ class Route {
     this._triggersEnter   = options.triggersEnter ? makeTriggers(options.triggersEnter) : [];
     this._subscriptions   = options.subscriptions || Function.prototype;
     this._waitOnResources = options.waitOnResources || null;
+    if (options.maxWaitFor !== undefined) {
+      this._maxWaitFor = options.maxWaitFor;
+    }
 
     this._params          = new ReactiveDict();
     this._queryParams     = new ReactiveDict();
@@ -86,6 +90,22 @@ class Route {
     let promises      = [];
     let subscriptions = [];
     let trackers      = [];
+    let waitOnAborted = false;
+    let pollTimer     = null;
+    let subscriptionWaitFinish = null;
+
+    const abortWaitOn = () => {
+      waitOnAborted = true;
+      if (pollTimer) {
+        Meteor.clearTimeout(pollTimer);
+        pollTimer = null;
+      }
+      if (subscriptionWaitFinish) {
+        const finish = subscriptionWaitFinish;
+        subscriptionWaitFinish = null;
+        finish();
+      }
+    };
 
     const placeIn = (d) => {
       if (Object.prototype.toString.call(d) === '[object Promise]' || d.then && Object.prototype.toString.call(d.then) === '[object Function]') {
@@ -280,6 +300,7 @@ class Route {
       });
 
       let triggerExitIndex = this._triggersExit.push(() => {
+        abortWaitOn();
         stopSubs();
         for (let i = trackers.length - 1; i >= 0; i--) {
           if (trackers[i].stop) {
@@ -296,26 +317,108 @@ class Route {
 
       whileWaitingAction();
 
-      // Wait for promises
-      if (promises.length) {
-        try {
-          await Promise.all(promises);
-        } catch (error) {
-          Meteor._debug('[ostrio:flow-router-extra] [route.waitOn] Promise rejected:', error);
-        }
-        promises = [];
+      let maxSubWaitMs = MAX_WAIT_FOR_MS;
+      if (typeof this._maxWaitFor === 'number' && this._maxWaitFor >= 0) {
+        maxSubWaitMs = this._maxWaitFor;
+      } else if (typeof this._router.maxWaitFor === 'number' && this._router.maxWaitFor >= 0) {
+        maxSubWaitMs = this._router.maxWaitFor;
       }
 
-      // Reactively wait for subscriptions — re-runs only when sub.ready() changes
-      if (subscriptions.length) {
-        await new Promise((resolve) => {
-          const computation = Tracker.autorun(() => {
-            if (this.checkSubscriptions(subscriptions)) {
-              Meteor.defer(() => computation.stop());
-              resolve();
-            }
+      // Wait for promises; each resolution may yield subs/trackers/more promises (same as legacy wait())
+      const promiseWaitStart = Date.now();
+      while (promises.length) {
+        if (waitOnAborted) {
+          return;
+        }
+        const remaining = maxSubWaitMs - (Date.now() - promiseWaitStart);
+        if (remaining <= 0) {
+          Meteor._debug('[ostrio:flow-router-extra] [route.waitOn] Promise wait timed out');
+          break;
+        }
+        const pendingPromises = promises.slice();
+        promises = [];
+        let timeoutId;
+        try {
+          const timeoutPromise = new Promise((_, reject) => {
+            timeoutId = Meteor.setTimeout(() => {
+              reject(Object.assign(new Error('timeout'), { code: 'WAITON_TIMEOUT' }));
+            }, remaining);
           });
+          const resultSet = await Promise.race([
+            Promise.all(pendingPromises).then((r) => {
+              if (timeoutId) {
+                Meteor.clearTimeout(timeoutId);
+              }
+              return r;
+            }),
+            timeoutPromise,
+          ]);
+          if (waitOnAborted) {
+            return;
+          }
+          resultSet.forEach((result) => {
+            processSubData(result);
+          });
+        } catch (error) {
+          if (timeoutId) {
+            Meteor.clearTimeout(timeoutId);
+          }
+          if (error && error.code === 'WAITON_TIMEOUT') {
+            Meteor._debug('[ostrio:flow-router-extra] [route.waitOn] Promise wait timed out');
+            break;
+          }
+          Meteor._debug('[ostrio:flow-router-extra] [route.waitOn] Promise rejected:', error);
+          break;
+        }
+      }
+
+      if (waitOnAborted) {
+        return;
+      }
+
+      // Wait until every handle reports ready (legacy subWait polled; plain { ready() } is not reactive)
+      if (subscriptions.length) {
+        const pollStartedAt = Date.now();
+
+        await new Promise((resolve) => {
+          let settled = false;
+          const finish = () => {
+            if (settled) {
+              return;
+            }
+            settled = true;
+            subscriptionWaitFinish = null;
+            if (pollTimer) {
+              Meteor.clearTimeout(pollTimer);
+              pollTimer = null;
+            }
+            resolve();
+          };
+
+          subscriptionWaitFinish = finish;
+
+          const poll = () => {
+            if (waitOnAborted) {
+              finish();
+              return;
+            }
+            if (Date.now() - pollStartedAt > maxSubWaitMs) {
+              Meteor._debug('[ostrio:flow-router-extra] [route.waitOn] Subscription wait timed out (stale or never ready)');
+              finish();
+              return;
+            }
+            if (this.checkSubscriptions(subscriptions)) {
+              finish();
+              return;
+            }
+            pollTimer = Meteor.setTimeout(poll, 24);
+          };
+          poll();
         });
+      }
+
+      if (waitOnAborted) {
+        return;
       }
 
       _data = await getData();

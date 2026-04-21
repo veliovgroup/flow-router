@@ -67,6 +67,85 @@ Tinytest.addAsync('Client - Router - define and go to route with async waitOn', 
   }, 10);
 });
 
+Tinytest.addAsync('Client - Router - waitOn aborts when navigating away', (test, next) => {
+  const randA = Random.id();
+  const randB = Random.id();
+  const awaited = { ready() { return false; } };
+  let aAction = 0;
+  let bAction = 0;
+
+  FlowRouter.route('/' + randA, {
+    waitOn() {
+      return awaited;
+    },
+    action() {
+      aAction++;
+    }
+  });
+
+  FlowRouter.route('/' + randB, {
+    action() {
+      bAction++;
+    }
+  });
+
+  Meteor.setTimeout(() => {
+    awaited.ready = () => { return true; };
+  }, 50);
+
+  FlowRouter.go('/' + randA);
+  Meteor.setTimeout(() => {
+    FlowRouter.go('/' + randB);
+    Meteor.setTimeout(() => {
+      test.equal(aAction, 0);
+      test.equal(bAction, 1);
+      next();
+    }, 150);
+  }, 1);
+});
+
+Tinytest.addAsync('Client - Router - waitOn stale subscription times out (maxWaitFor)', (test, next) => {
+  const rand = Random.id();
+  let actionCount = 0;
+
+  FlowRouter.route('/' + rand, {
+    maxWaitFor: 80,
+    waitOn() {
+      return { ready() { return false; } };
+    },
+    action() {
+      actionCount++;
+    }
+  });
+
+  FlowRouter.go('/' + rand);
+  Meteor.setTimeout(() => {
+    test.equal(actionCount, 1);
+    next();
+  }, 250);
+});
+
+Tinytest.addAsync('Client - Router - waitOn stale promise times out (maxWaitFor)', (test, next) => {
+  const rand = Random.id();
+  let actionCount = 0;
+
+  FlowRouter.route('/' + rand, {
+    maxWaitFor: 80,
+    waitOn() {
+      return new Promise(() => {});
+    },
+    action() {
+      actionCount++;
+    }
+  });
+
+  FlowRouter.go('/' + rand);
+  Meteor.setTimeout(() => {
+    test.equal(actionCount, 1);
+    next();
+  }, 250);
+});
+
 Tinytest.addAsync('Client - Router - define and go to route (issue #93; query string repetition) - go', (test, next) => {
   const rand   = Random.id();
   let rendered = 0;

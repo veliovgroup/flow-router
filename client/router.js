@@ -5,6 +5,7 @@ import { Tracker }  from 'meteor/tracker';
 import { _helpers } from './../lib/_helpers.js';
 import { qs } from './modules.js';
 import { MicroRouter } from '../lib/micro-router.js';
+import { MAX_WAIT_FOR_MS } from '../lib/constants.js';
 
 class Router {
   constructor() {
@@ -19,6 +20,7 @@ class Router {
     this._current = {};
     this._onEveryPath = new Tracker.Dependency();
 
+    this.maxWaitFor = MAX_WAIT_FOR_MS;
     this._globalRoute = new Route(this);
     this._onRouteCallbacks = [];
 
@@ -348,6 +350,10 @@ class Router {
   initialize(options = {}) {
     if (this._initialized) {
       throw new Error('FlowRouter is already initialized');
+    }
+
+    if (options.maxWaitFor !== undefined) {
+      this.maxWaitFor = options.maxWaitFor;
     }
 
     this._updateCallbacks();

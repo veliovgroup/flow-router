@@ -54,4 +54,5 @@ Meteor.startup(() => {
 
 const RouterHelpers = helpersInit(FlowRouter);
 
+export { MAX_WAIT_FOR_MS } from '../lib/constants.js';
 export { FlowRouter, Router, Route, Group, Triggers, BlazeRenderer, RouterHelpers };

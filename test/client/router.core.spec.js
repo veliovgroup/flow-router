@@ -22,6 +22,52 @@ Tinytest.addAsync('Client - Router - define and go to route', (test, next) => {
   }, 100);
 });
 
+Tinytest.addAsync('Client - Router - define and go to route with async waitOn', (test, next) => {
+  const rand = Random.id();
+  const events = [];
+  let isReady = false;
+  const handle = {
+    ready() {
+      return isReady;
+    }
+  };
+
+  FlowRouter.route('/' + rand, {
+    async waitOn() {
+      events.push('waitOn:start');
+      await new Promise((resolve) => {
+        Meteor.setTimeout(() => {
+          events.push('waitOn:resolved');
+          resolve();
+        }, 20);
+      });
+      Meteor.setTimeout(() => {
+        isReady = true;
+        events.push('subscription:ready');
+      }, 40);
+      return handle;
+    },
+    action() {
+      events.push('action');
+    }
+  });
+
+  FlowRouter.go('/' + rand);
+
+  Meteor.setTimeout(() => {
+    test.equal(events, ['waitOn:start']);
+
+    Meteor.setTimeout(() => {
+      test.equal(events, ['waitOn:start', 'waitOn:resolved']);
+    }, 30);
+
+    Meteor.setTimeout(() => {
+      test.equal(events, ['waitOn:start', 'waitOn:resolved', 'subscription:ready', 'action']);
+      next();
+    }, 120);
+  }, 10);
+});
+
 Tinytest.addAsync('Client - Router - define and go to route (issue #93; query string repetition) - go', (test, next) => {
   const rand   = Random.id();
   let rendered = 0;

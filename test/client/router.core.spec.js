@@ -529,6 +529,7 @@ Tinytest.addAsync('Client - Router - notFound', (test, done) => {
 
 Tinytest.addAsync('Client - Router - withReplaceState - enabled', (test, done) => {
   const pathDef = '/' + Random.id() + '/:id';
+  const name = Random.id();
   const originalReplace = FlowRouter._microRouter.replace.bind(FlowRouter._microRouter);
   let callCount = 0;
   FlowRouter._microRouter.replace = function(path) {
@@ -556,6 +557,7 @@ Tinytest.addAsync('Client - Router - withReplaceState - enabled', (test, done) =
 
 Tinytest.addAsync('Client - Router - withReplaceState - disabled', (test, done) => {
   const pathDef = '/' + Random.id() + '/:id';
+  const name = Random.id();
   const originalReplace = FlowRouter._microRouter.replace.bind(FlowRouter._microRouter);
   let callCount = 0;
   FlowRouter._microRouter.replace = function(path) {

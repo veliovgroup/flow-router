@@ -52,7 +52,7 @@ import {
 - Types: **`index.d.ts`** + **`package-types.json`**. Apps: **`meteor add zodern:types`**, [Meteor TS guide](https://docs.meteor.com/guide/typescript.html), generate types so `meteor/ostrio:flow-router-extra` resolves.
 - **Isomorphic imports:** gate **`RouterHelpers`** (and client-only APIs) with **`Meteor.isClient`** or split modules — server bundle does not export `RouterHelpers`.
 - **`index.test-d.ts`:** keep in sync whenever **`index.d.ts`**, **`package.js`**, or public exports (`client/_init.js`, `server/_init.js`) change — extend assertions so **`tsd`** stays green.
-- **Run type tests** from package root: **`meteor tsd`** (or **`npx tsd`**; same **`index.test-d.ts`** vs **`index.d.ts`**).
+- **Run type tests** from package root: **`npm run test:tsd`** / **`npx tsd`** (same **`index.test-d.ts`** vs **`index.d.ts`**).
 
 ---
 
@@ -295,8 +295,11 @@ Often released together: **`ostrio:flow-router-extra`**, **`ostrio:flow-router-t
 
 - Prefer **`import`/`export`** over globals.
 - Prefer **`async`/`await`** in **`Meteor.startup`** when wiring initialization.
+- Changelog / release notes: preserve commit emojis, highlight new features, split into **`⚠️ major changes`**, **`Changes`**, **`✨ New`**, **`📦 Dependencies`** (prod vs dev).
 
 ## Learned Workspace Facts
 
 - Blaze **`client/renderer.js`** / **`client/modules.js`** use **`requestAnimationFrame`** to chunk queued route renders and defer attaching in-memory layout to the live DOM; still appropriate (not deprecated); trimming legacy `webkit`/`moz` rAF prefixes is optional cleanup.
 - **`ostrio:flow-router-meta`** and **`ostrio:flow-router-title`** hook private **`router._notfoundRoute`** / **`router._current`** and **`notFound`** / **`notfound`** option shape; changes to 404 or not-found internals in **`client/router.js`** must stay compatible with those integrations.
+- Companion packages using **`tsd`** with **`meteor/ostrio:flow-router-extra`**: add a local **`tsd-stubs`** **`Router`** shim, wire **`paths`** under **`package.json` → `tsd.compilerOptions`**, and prefer **`import('meteor/ostrio:flow-router-extra').Router`** inside **`declare module`** (avoid `import type` inside the block); **`index.test-d.ts`** may need **`/// <reference path="./index.d.ts" />`** so tsd loads ambient package typings.
+- **`maxWaitFor`**: when the time limit is hit during **`waitOn`**, the route still proceeds to **`action`**; **navigating away** aborts **`waitOn`** and skips **`action`** for the route being left.

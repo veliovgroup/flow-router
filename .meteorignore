@@ -1,9 +1,11 @@
 .github
+.agents/
 .gitignore
 .npm
 .DS_Store
 .eslintcache
 .eslintrc
+AGENTS.md
 CHANGELOG.md
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md

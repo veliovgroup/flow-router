@@ -51,7 +51,8 @@ import {
 
 - Types: **`index.d.ts`** + **`package-types.json`**. Apps: **`meteor add zodern:types`**, [Meteor TS guide](https://docs.meteor.com/guide/typescript.html), generate types so `meteor/ostrio:flow-router-extra` resolves.
 - **Isomorphic imports:** gate **`RouterHelpers`** (and client-only APIs) with **`Meteor.isClient`** or split modules — server bundle does not export `RouterHelpers`.
-- **This repo:** `npx tsd` (**`index.test-d.ts`**).
+- **`index.test-d.ts`:** keep in sync whenever **`index.d.ts`**, **`package.js`**, or public exports (`client/_init.js`, `server/_init.js`) change — extend assertions so **`tsd`** stays green.
+- **Run type tests** from package root: **`meteor tsd`** (or **`npx tsd`**; same **`index.test-d.ts`** vs **`index.d.ts`**).
 
 ---
 

@@ -112,7 +112,7 @@ From **`meteor/ostrio:flow-router-extra`**: **`name`**, **`path`**, **`pathFor`*
 
 ### Testing (router package)
 
-**`meteor test-packages ./`** from package root; **`npx tsd`** against **`index.test-d.ts`** in router repo.
+**`meteor test-packages ./`** from package root; **`meteor tsd`** or **`npx tsd`** against **`index.test-d.ts`** — update **`index.test-d.ts`** when **`index.d.ts`** / package exports change.
 
 ---
 

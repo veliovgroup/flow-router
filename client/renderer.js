@@ -162,7 +162,13 @@ class BlazeRenderer {
     current.callback = callback;
     let updateTemplate = true;
 
-    const forceReRender = this.router?._current?.route?.conf?.forceReRender === true;
+    const forceReRender = !!(
+      this.router &&
+      this.router._current &&
+      this.router._current.route &&
+      this.router._current.route.conf &&
+      this.router._current.route.conf.forceReRender === true
+    );
     if (template) {
       if (!_template) {
         this.old.materialized = true;
@@ -246,11 +252,13 @@ class BlazeRenderer {
 
   _load(updateTemplate, updateLayout, current) {
     if (updateLayout && current.layout.view) {
-      current.layout.view.dataVar.set(current.layout.view.dataVar.get()?.value ? { value: current.data ?? {} } : current.data);
+      const layoutDataVar = current.layout.view.dataVar.get();
+      current.layout.view.dataVar.set(layoutDataVar && layoutDataVar.value ? { value: (current.data || {}) } : current.data);
     }
 
     if (current.template.view && updateTemplate) {
-      current.template.view.dataVar.set(current.template.view.dataVar.get()?.value ? { value: current.data ?? {} } : current.data);
+      const templateDataVar = current.template.view.dataVar.get();
+      current.template.view.dataVar.set(templateDataVar && templateDataVar.value ? { value: (current.data || {}) } : current.data);
       this.isRendering = false;
       current.materialized = true;
       current.callback();

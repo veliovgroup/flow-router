@@ -1,10 +1,10 @@
 ### setQueryParams method
 
 ```js
-FlowRouter.setQueryParams(qs);
+FlowRouter.setQueryParams(queryParams);
 ```
 
-- `qs` {*String*} - Serialized query string, `{ key: 'val' }`
+- `queryParams` {*Object*} - Query params object, `{ key: 'val' }`
 - Returns {*true*}
 
 #### Unset parameter

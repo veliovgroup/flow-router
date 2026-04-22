@@ -57,7 +57,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // Going to: /article/article_id/article-slug
 FlowRouter.route('/article/:_id/:slug', {
   name: 'article',
-  action(params, qs, articleObject) {
+  action(params, queryParams, articleObject) {
     // Pass fetched article data to template
     this.render('article', articleObject);
   },
@@ -88,7 +88,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // Going to: /article/article_id/article-slug
 FlowRouter.route('/article/:_id/:slug', {
   name: 'article',
-  action(params, qs, articleObject) {
+  action(params, queryParams, articleObject) {
     // Pass fetched article data to template
     this.render('article', articleObject);
   },
@@ -112,16 +112,16 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // Going to: /article/article_id?comment=123
 FlowRouter.route('/article/:_id', {
   name: 'article',
-  action(params, qs) {
+  action(params, queryParams) {
     // All passed parameters and query string
     // are available as Objects:
     console.log(params);
     // { _id: 'article_id' }
-    console.log(qs);
+    console.log(queryParams);
     // { comment: '123' }
 
     // Pass params and query string to Template's context
-    this.render('article', { ...params, ...qs });
+    this.render('article', { ...params, ...queryParams });
   }
 });
 ```

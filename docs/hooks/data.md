@@ -1,9 +1,9 @@
 ### data hook
 
-`data(params, qs)`
+`data(params, queryParams)`
 
 - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
-- `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+- `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
 - Return: {*Mongo.Cursor*|*Object*|[*Object*]|*false*|*null*|*void*}
 
 `.data()` is triggered right after all resources in `.waitOn()` and `.waitOnResources()` hooks are ready. __This hook can be async__
@@ -15,7 +15,7 @@ FlowRouter.route('/post/:_id', {
   waitOn(params) {
     return Meteor.subscribe('post', params._id);
   },
-  async data(params, qs) {
+  async data(params, queryParams) {
     return await PostsCollection.findOneAsync({ _id: params._id });
   }
 });
@@ -23,7 +23,7 @@ FlowRouter.route('/post/:_id', {
 // USE data() HOOK WITH METEOR METHOD
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  async data(params, qs) {
+  async data(params, queryParams) {
     return await Meteor.callAsync('post.get', params._id);
   }
 });
@@ -34,13 +34,13 @@ FlowRouter.route('/post/:_id', {
 ```js
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  action(params, qs, post) {
+  action(params, queryParams, post) {
     this.render('_layout', 'post', { post });
   },
   waitOn(params) {
     return Meteor.subscribe('post', params._id);
   },
-  async data(params, qs) {
+  async data(params, queryParams) {
     return await PostsCollection.findOneAsync({ _id: params._id });
   }
 });

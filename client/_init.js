@@ -48,7 +48,6 @@ FlowRouter.Route = Route;
 Meteor.startup(() => {
   if(!FlowRouter._askedToWait && !FlowRouter._initialized) {
     FlowRouter.initialize();
-
   }
 });
 

@@ -89,7 +89,7 @@ FlowRouter.route('/article/:_id', {
   whileWaiting() {
     this.render('layout', 'loading');
   },
-  action(params, qs, article) {
+  action(params, queryParams, article) {
     this.render('layout', 'article', { article });
   },
   async data(params) {

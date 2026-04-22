@@ -8,11 +8,16 @@ type TriggerFilterParam = { only: string[] } | { except: string[] };
 
 type DynamicImport = Promise<string>;
 
-type Hook = (params: Param, qs: QueryParam) => void | Promise<void>;
+type QueryValue = string | number | boolean | null | undefined | QueryParams | QueryValue[];
+type QueryParams = {
+    [key: string]: QueryValue;
+};
+
+type Hook = (params: Param, queryParams: QueryParams) => void | Promise<void>;
 
 type waitOn = (
     params: Param,
-    qs: QueryParam,
+    queryParams: QueryParams,
     ready: (func: () => ReturnType<waitOn>) => void
 ) =>
     | Promise<any>
@@ -25,15 +30,15 @@ type waitOn = (
 
 type waitOnResources = (
     params: Param,
-    qs: QueryParam
+    queryParams: QueryParams
 ) => {
     images: string[];
     other: string[];
 };
 
-type data = (params: Param, qs: QueryParam) => Mongo.CursorStatic | Object | Object[] | false | null | void | Promise<Mongo.CursorStatic | Object | Object[] | false | null | void>;
+type data = (params: Param, queryParams: QueryParams) => Mongo.CursorStatic | Object | Object[] | false | null | void | Promise<Mongo.CursorStatic | Object | Object[] | false | null | void>;
 
-type action = (params: Param, qs: QueryParam, data: any) => void;
+type action = (params: Param, queryParams: QueryParams, data: any) => void;
 
 type Param = {
     [key: string]: string;
@@ -43,12 +48,10 @@ type NewParams = {
     [key: string]: string | null
 };
 
-type QueryParam = Param;
-
 export interface Router {
     /** Max time (ms) for each `waitOn` promise phase and subscription poll phase; default `120000`. Overridable per route via `maxWaitFor`. When exceeded, `waitOn` stops waiting but `action` still runs; navigating away aborts `waitOn` and skips `action` for the left route. */
     maxWaitFor: number;
-    go: (path: string, params?: NewParams, qs?: NewParams) => boolean;
+    go: (path: string, params?: NewParams, queryParams?: QueryParams) => boolean;
     route: (
         path: string,
         options?: {
@@ -80,16 +83,16 @@ export interface Router {
     getParam: (param: string) => string;
     getQueryParam: (param: string) => string;
     setParams: (params: NewParams) => boolean;
-    setQueryParams: (params: NewParams) => boolean;
+    setQueryParams: (params: QueryParams) => boolean;
 
-    url: (path: string, params?: NewParams, qs?: NewParams) => string;
-    path: (path: string, params?: NewParams, qs?: NewParams) => string;
+    url: (path: string, params?: NewParams, queryParams?: QueryParams) => string;
+    path: (path: string, params?: NewParams, queryParams?: QueryParams) => string;
     current: () => {
         context: Context;
         oldRoute: Route;
         params: Param;
         path: string;
-        queryParams: QueryParam;
+        queryParams: QueryParams;
         route: Route;
     };
     getRouteName: () => string;

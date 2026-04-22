@@ -1,12 +1,12 @@
 ### path method
 
 ```js
-FlowRouter.path(path, params, qs);
+FlowRouter.path(path, params, queryParams);
 ```
 
 - `path` {*String*} - Path or Route's name
 - `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
-- `qs` {*Object*} - Serialized query string, `{ key: 'val' }`
+- `queryParams` {*Object*} - Query params object, `{ key: 'val' }`
 - Returns {*String*} - URI
 
 ```js
@@ -18,7 +18,7 @@ const path = FlowRouter.path(pathDef, params, queryParams);
 console.log(path); // --> "/blog/met%20eor/abc?show=y%2Be%3Ds&color=black"
 ```
 
-If there are no `params` or `qs`, it will simply return the path as it is.
+If there are no `params` or `queryParams`, it will simply return the path as it is.
 
 #### Further reading
 

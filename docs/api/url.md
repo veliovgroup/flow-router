@@ -1,12 +1,12 @@
 ### url method
 
 ```js
-FlowRouter.url(path, params, qs);
+FlowRouter.url(path, params, queryParams);
 ```
 
 - `path` {*String*} - Path or Route's name
 - `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
-- `qs` {*Object*} - Serialized query string, `{ key: 'val' }`
+- `queryParams` {*Object*} - Query params object, `{ key: 'val' }`
 - Returns {*String*} - Absolute URL using `Meteor.absoluteUrl`
 
 #### Further reading

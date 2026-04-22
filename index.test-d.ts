@@ -57,8 +57,11 @@ FlowRouter.go('singlePost', { id: '12345' });
 
 expectType<string>(FlowRouter.path('singlePost', { id: 'a' }));
 expectType<string>(FlowRouter.url('singlePost', { id: 'a' }));
+expectType<string>(FlowRouter.path('singlePost', { id: 'a' }, { filter: { tags: ['flow', 'router'] }, page: 2 }));
+expectType<string>(FlowRouter.url('singlePost', { id: 'a' }, { includeDrafts: false }));
 expectType<boolean>(FlowRouter.setParams({ id: '1' }));
 expectType<boolean>(FlowRouter.setQueryParams({ q: null }));
+expectType<boolean>(FlowRouter.setQueryParams({ filter: { status: 'active' }, tags: ['a', 'b'] }));
 
 // getParam is always string at type level
 expectType<string>(FlowRouter.getParam('id'));
@@ -69,3 +72,4 @@ expectType<string>(RouterHelpers.pathFor('home', {}));
 
 // Should error when a number is given instead of string | null
 expectError(FlowRouter.go('singlePost', { id: 12345 }));
+expectError(FlowRouter.path('singlePost', { id: 'a' }, { bad: Symbol('x') }));

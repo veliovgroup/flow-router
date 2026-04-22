@@ -6,7 +6,7 @@ FlowRouter.watchPathChange();
 
 - Returns {*void*}
 
-Reactively watch the changes in the path. If you need to simply get the `params` or `qs` use methods like `FlowRouter.getQueryParam()`.
+Reactively watch the changes in the path. If you need to simply get the `params` or `queryParams` use methods like `FlowRouter.getQueryParam()`.
 
 ```js
 Tracker.autorun(() => {

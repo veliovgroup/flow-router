@@ -31,7 +31,6 @@ Longer file maps and maintainer detail: [reference.md](reference.md) (links to c
 ## `ostrio:flow-router-extra` — identity
 
 - **Singleton:** **`FlowRouter`** is a **`Router`** instance with **`FlowRouter.Router`** / **`FlowRouter.Route`** attached.
-- **Npm:** only **`qs`** (path/query).
 - **Types:** **`index.d.ts`** + **`package-types.json`** (`typesEntry`). Apps: **`meteor add zodern:types`**, [Meteor TS guide](https://docs.meteor.com/guide/typescript.html); gate **`RouterHelpers`** and other client-only APIs with **`Meteor.isClient`** or split modules — server bundle does not export **`RouterHelpers`**.
 - **Canonical API narrative:** repo **`docs/`** (often excluded from app bundle via **`.meteorignore`**).
 
@@ -112,7 +111,7 @@ From **`meteor/ostrio:flow-router-extra`**: **`name`**, **`path`**, **`pathFor`*
 
 ### Testing (router package)
 
-**`meteor test-packages ./`** from package root; **`meteor tsd`** or **`npx tsd`** against **`index.test-d.ts`** — update **`index.test-d.ts`** when **`index.d.ts`** / package exports change.
+**`meteor test-packages ./`** from package root; **`meteor npm run test:tsd`** or **`meteor npm exec tsd`** against **`index.test-d.ts`** — update **`index.test-d.ts`** when **`index.d.ts`** / package exports change.
 
 ---
 

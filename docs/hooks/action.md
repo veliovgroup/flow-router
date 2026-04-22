@@ -1,9 +1,9 @@
 ### action hook
 
-`action(params, qs, data)`
+`action(params, queryParams, data)`
 
 - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
-- `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+- `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
 - `data` {*Mix*} - Value returned from `.data()` hook
 - Return: {*void*}
 

@@ -1,5 +1,3 @@
-import qs from 'qs';
-
 const requestAnimFrame = (() => {
   return window.requestAnimationFrame
     || window.webkitRequestAnimationFrame
@@ -7,4 +5,4 @@ const requestAnimFrame = (() => {
     || function (callback) { setTimeout(callback, 1000 / 60); };
 })();
 
-export { qs, requestAnimFrame };
+export { requestAnimFrame };

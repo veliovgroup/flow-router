@@ -1,9 +1,9 @@
 ### waitOnResources hook
 
-`waitOnResources(params, qs)`
+`waitOnResources(params, queryParams)`
 
 - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
-- `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+- `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
 - Return: {*Object*} `{ images: ['url'], other: ['url'] }`
 
 `.waitOnResources()` hook is triggered before `.action()` hook, allowing to load necessary files, images, fonts before rendering a template.

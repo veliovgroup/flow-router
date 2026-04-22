@@ -3,7 +3,7 @@ import { EJSON }    from 'meteor/ejson';
 import { Meteor }   from 'meteor/meteor';
 import { Tracker }  from 'meteor/tracker';
 import { _helpers } from './../lib/_helpers.js';
-import { qs } from './modules.js';
+import { qs }       from './../lib/qs.js';
 import { MicroRouter } from '../lib/micro-router.js';
 import { MAX_WAIT_FOR_MS } from '../lib/constants.js';
 
@@ -105,7 +105,7 @@ class Router {
         this._invalidateTracker();
       };
 
-      route.waitOn(this._current, (current, data) => {
+      route.waitOn(this._current, (_current, data) => {
         Triggers.runTriggers(
           this._triggersEnter.concat(route._triggersEnter),
           this._current,
@@ -116,7 +116,7 @@ class Router {
       });
     };
 
-    route._exitHandle = (context, next) => {
+    route._exitHandle = (_context, next) => {
       Triggers.runTriggers(
         this._triggersExit.concat(route._triggersExit),
         this._current,
@@ -151,7 +151,7 @@ class Router {
       const pathDefParts = pathDef.split(this.queryRegExp);
       pathDef = pathDefParts[0];
       if (pathDefParts[1]) {
-        queryParams = Object.assign(qs.parse(pathDefParts[1]), queryParams);
+        queryParams = qs.merge(qs.parse(pathDefParts[1]), queryParams);
       }
     }
 

@@ -4,7 +4,8 @@
     "scripts": {
         "test:once": "mtest --package ./ --port=8888 --once",
         "test:watch": "mtest --package ./ --port=8888",
-        "test:browser": "meteor test-packages ./ --port 8888"
+        "test:browser": "meteor test-packages ./ --port 8888",
+        "test:tsd": "tsd"
     },
     "devDependencies": {
         "@zodern/mtest": "^0.5.1",

@@ -1,10 +1,10 @@
 ### go method
 
-`.go(path, params, qs)`
+`.go(path, params, queryParams)`
 
 - `path` {*String*} - Path or Route's name
 - `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
-- `qs` {*Object*} - Serialized GET-query string, `{ key: 'val' }`
+- `queryParams` {*Object*} - Query params object, `{ key: 'val' }`
 - Returns {*true*}
 
 ```js

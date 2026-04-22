@@ -142,8 +142,8 @@ MONGO_URL="mongodb://127.0.0.1:27017/flow-router-tests" meteor test-packages ./ 
 
 ### Running Typescript Test
 
-1. Install [`tsd`](https://github.com/SamVerschueren/tsd) as a global package;
-2. Run `tsd` in your terminal. `tsd` will find the correct `*.test.d.ts` file and return with any errors.
+1. Install dev dependencies with `meteor npm install`;
+2. Run `meteor npm run test:tsd` (or `meteor npm exec tsd`) from package root. `tsd` will find `index.test-d.ts` and report type errors.
 
 ## Support this project:
 

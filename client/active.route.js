@@ -2,7 +2,7 @@ import { Meteor }       from 'meteor/meteor';
 import { _helpers }     from './../lib/_helpers.js';
 import { check, Match } from 'meteor/check';
 import { ReactiveDict } from 'meteor/reactive-dict';
-import { qs }           from './modules.js';
+import { qs }           from './../lib/qs.js';
 
 let Template;
 if (Package.templating) {
@@ -24,7 +24,7 @@ const init = (FlowRouter) => {
   const checkRouteOrPath = (arg) => {
     try {
       return check(arg, Match.OneOf(RegExp, String));
-    } catch (e) {
+    } catch (_e) {
       throw new Error(errorMessages.invalidRouteNameArgument);
     }
   };
@@ -32,7 +32,7 @@ const init = (FlowRouter) => {
   const checkParams = (arg) => {
     try {
       return check(arg, Object);
-    } catch (e) {
+    } catch (_e) {
       throw new Error(errorMessages.invalidRouteParamsArgument);
     }
   };
@@ -255,7 +255,12 @@ const init = (FlowRouter) => {
       path = view.hash.route;
       delete view.hash.route;
     }
-    const query    = view.hash.query ? qs.parse(view.hash.query) : {};
+    let query = {};
+    if (_helpers.isString(view.hash.query)) {
+      query = qs.parse(view.hash.query);
+    } else if (_helpers.isObject(view.hash.query)) {
+      query = view.hash.query;
+    }
     const hashBang = view.hash.hash ? view.hash.hash : '';
     return FlowRouter.path(path, view.hash, query) + (hashBang ? '#' + hashBang : '');
   };

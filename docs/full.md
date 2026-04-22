@@ -99,16 +99,16 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // Going to: /article/article_id?comment=123
 FlowRouter.route('/article/:_id', {
   name: 'article',
-  action(params, qs) {
+  action(params, queryParams) {
     // All passed parameters and query string
     // are available as Objects:
     console.log(params);
     // { _id: 'article_id' }
-    console.log(qs);
+    console.log(queryParams);
     // { comment: '123' }
 
     // Pass params and query string to Template's context
-    this.render('article', Object.assign({}, params, qs));
+    this.render('article', Object.assign({}, params, queryParams));
   }
 });
 ```
@@ -215,10 +215,10 @@ Tracker.autorun(function () {
 
 ### go method
 
-`.go(path, params, qs)`
+`.go(path, params, queryParams)`
  - `path` {*String*} - Path or Route's name
  - `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `{ key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `{ key: 'val' }`
  - Returns {*true*}
 
 ```js
@@ -342,11 +342,11 @@ FlowRouter.onRouteRegister((route) => {
 ### path method
 
 ```js
-FlowRouter.path(path, params, qs);
+FlowRouter.path(path, params, queryParams);
 ```
  - `path` {*String*} - Path or Route's name
  - `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `{ key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `{ key: 'val' }`
  - Returns {*String*} - URI
 
 ```js
@@ -358,7 +358,7 @@ const path = FlowRouter.path(pathDef, params, queryParams);
 console.log(path); // --> "/blog/met%20eor/abc?show=y%2Be%3Ds&color=black"
 ```
 
-If there are no `params` or `qs`, it will simply return the path as it is.
+If there are no `params` or `queryParams`, it will simply return the path as it is.
 
 -------
 
@@ -573,9 +573,9 @@ FlowRouter.setParams({appId: 'new-id'});
 ### setQueryParams method
 
 ```js
-FlowRouter.setQueryParams(qs);
+FlowRouter.setQueryParams(queryParams);
 ```
- - `qs` {*String*} - Serialized query string, `{ key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `{ key: 'val' }`
  - Returns {*true*}
 
 
@@ -606,11 +606,11 @@ You can't use both `only` and `except` at once.
 ### url method
 
 ```js
-FlowRouter.url(path, params, qs);
+FlowRouter.url(path, params, queryParams);
 ```
  - `path` {*String*} - Path or Route's name
  - `params` {*Object*} - Serialized route parameters, `{ _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `{ key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `{ key: 'val' }`
  - Returns {*String*} - Absolute URL using `Meteor.absoluteUrl`
 
 -------
@@ -643,7 +643,7 @@ FlowRouter.watchPathChange();
 ```
  - Returns {*void*}
 
-Reactively watch the changes in the path. If you need to simply get the `params` or `qs` use methods like `FlowRouter.getQueryParam()`.
+Reactively watch the changes in the path. If you need to simply get the `params` or `queryParams` use methods like `FlowRouter.getQueryParam()`.
 
 ```js
 Tracker.autorun(() => {
@@ -691,9 +691,9 @@ FlowRouter.withReplaceState(() => {
 
 ### action hook
 
-`action(params, qs, data)`
+`action(params, queryParams, data)`
  - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
  - `data` {*Mix*} - Value returned from `.data()` hook
  - Return: {*void*}
 
@@ -708,9 +708,9 @@ FlowRouter.withReplaceState(() => {
 
 ### data hook
 
-`data(params, qs)`
+`data(params, queryParams)`
  - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
  - Return: {*Mongo.Cursor*|*Object*|[*Object*]|*false*|*null*|*void*}
 
 
@@ -722,7 +722,7 @@ FlowRouter.route('/post/:_id', {
   waitOn(params) {
     return Meteor.subscribe('post', params._id);
   },
-  async data(params, qs) {
+  async data(params, queryParams) {
     return await PostsCollection.findOneAsync({_id: params._id});
   }
 });
@@ -732,13 +732,13 @@ FlowRouter.route('/post/:_id', {
 ```js
 FlowRouter.route('/post/:_id', {
   name: 'post',
-  action(params, qs, post) {
+  action(params, queryParams, post) {
     this.render('_layout', 'post', { post });
   },
   waitOn(params) {
     return Meteor.subscribe('post', params._id);
   },
-  async data(params, qs) {
+  async data(params, queryParams) {
     return await PostsCollection.findOneAsync({_id: params._id});
   }
 });
@@ -779,9 +779,9 @@ FlowRouter.route('/post/:_id', {
 
 ### onNoData hook
 
-`onNoData(params, qs)`
+`onNoData(params, queryParams)`
  - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
  - Return: {*void*}
 
 
@@ -793,7 +793,7 @@ FlowRouter.route('/post/:_id', {
   async data(params) {
     return await PostsCollection.findOneAsync({_id: params._id});
   },
-  async onNoData(params, qs){
+  async onNoData(params, queryParams){
     await import('/imports/client/page-404.js');
     this.render('_layout', '_404');
   }
@@ -890,9 +890,9 @@ FlowRouter.triggers.exit([cb1, cb2]);
 
 ### waitOn hook
 
-`waitOn(params, qs, ready)`
+`waitOn(params, queryParams, ready)`
  - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
  - `ready` {*Function*} - Call when computation is ready using *Tracker*
  - Return: {*Promise*|[*Promise*]|*Subscription*|[*Subscription*]|*Tracker*|[*Tracker*]}
 
@@ -919,7 +919,7 @@ Use reactive data sources inside `waitOn` hook. To make `waitOn` rerun on reacti
 ```js
 FlowRouter.route('/posts', {
   name: 'post',
-  waitOn(params, qs, ready) {
+  waitOn(params, queryParams, ready) {
     return Tracker.autorun(() => {
       ready(() => {
         return Meteor.subscribe('posts', search.get(), page.get());
@@ -933,7 +933,7 @@ FlowRouter.route('/posts', {
 ```js
 FlowRouter.route('/posts', {
   name: 'post',
-  waitOn(params, qs, ready) {
+  waitOn(params, queryParams, ready) {
     const tracks = [];
     tracks.push(Tracker.autorun(() => {
       ready(() => {
@@ -986,7 +986,7 @@ FlowRouter.route('/posts', {
   conf: {
     posts: false
   },
-  action(params, qs, data) {
+  action(params, queryParams, data) {
     this.render('layout', 'posts', data);
   },
   waitOn() {
@@ -1049,9 +1049,9 @@ FlowRouter.route('/posts', {
 
 ### waitOnResources hook
 
-`waitOnResources(params, qs)`
+`waitOnResources(params, queryParams)`
  - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
  - Return: {*Object*} `{ images: ['url'], other: ['url'] }`
 
 `.waitOnResources()` hook is triggered before `.action()` hook, allowing to load necessary files, images, fonts before rendering a template.
@@ -1133,9 +1133,9 @@ FlowRouter.globals.push({
 
 ### whileWaiting hook
 
-`whileWaiting(params, qs)`
+`whileWaiting(params, queryParams)`
  - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
- - `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+ - `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
  - Return: {*void*}
 
 `.whileWaiting()` hook is triggered before `.waitOn()` hook, allowing to display/render text or animation saying `Loading...`.

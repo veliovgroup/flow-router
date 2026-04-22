@@ -1,9 +1,9 @@
 ### waitOn hook
 
-`waitOn(params, qs, ready)`
+`waitOn(params, queryParams, ready)`
 
 - `params` {*Object*} - Serialized route parameters, `/route/:_id => { _id: 'str' }`
-- `qs` {*Object*} - Serialized query string, `/route/?key=val => { key: 'val' }`
+- `queryParams` {*Object*} - Query params object, `/route/?key=val => { key: 'val' }`
 - `ready` {*Function*} - Call when computation is ready using *Tracker*
 - Return: {*Promise*|[*Promise*]|*Subscription*|[*Subscription*]|*Tracker*|[*Tracker*]}
 
@@ -35,7 +35,7 @@ Use reactive data sources inside `waitOn` hook. To make `waitOn` rerun on reacti
 ```js
 FlowRouter.route('/posts', {
   name: 'post',
-  waitOn(params, qs, ready) {
+  waitOn(params, queryParams, ready) {
     return Tracker.autorun(() => {
       ready(() => {
         return Meteor.subscribe('posts', search.get(), page.get());
@@ -50,7 +50,7 @@ FlowRouter.route('/posts', {
 ```js
 FlowRouter.route('/posts', {
   name: 'post',
-  waitOn(params, qs, ready) {
+  waitOn(params, queryParams, ready) {
     const tracks = [];
     tracks.push(Tracker.autorun(() => {
       ready(() => {
@@ -104,7 +104,7 @@ FlowRouter.route('/posts', {
   conf: {
     posts: false
   },
-  action(params, qs, data) {
+  action(params, queryParams, data) {
     this.render('layout', 'posts', data);
   },
   waitOn() {

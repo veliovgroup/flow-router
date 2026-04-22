@@ -96,6 +96,41 @@ Tinytest.add('Common - Router - path - array query values', function (test) {
   test.equal(path, expectedPath);
 });
 
+Tinytest.add('Common - Router - path - nested query object values', function (test) {
+  var pathDef = "/blog/abc";
+  var queryParams = {
+    filter: {
+      status: "active",
+      owner: "meteor"
+    }
+  };
+  var expectedPath = "/blog/abc?filter%5Bstatus%5D=active&filter%5Bowner%5D=meteor";
+
+  var path = FlowRouter.path(pathDef, null, queryParams);
+  test.equal(path, expectedPath);
+});
+
+Tinytest.add('Common - Router - path - merge nested query from pathDef and queryParams', function (test) {
+  var pathDef = "/blog/abc?filter%5Bstatus%5D=active";
+  var queryParams = {
+    filter: {
+      owner: "meteor"
+    }
+  };
+  var expectedPath = "/blog/abc?filter%5Bstatus%5D=active&filter%5Bowner%5D=meteor";
+
+  var path = FlowRouter.path(pathDef, null, queryParams);
+  test.equal(path, expectedPath);
+});
+
+Tinytest.add('Common - Router - path - mixed scalar and array query values are stable', function (test) {
+  var pathDef = "/blog/abc?a=1&a%5B0%5D=2";
+  var expectedPath = "/blog/abc?a%5B0%5D=1&a%5B1%5D=2";
+
+  var path = FlowRouter.path(pathDef);
+  test.equal(path, expectedPath);
+});
+
 
 Tinytest.add('Common - Router - path - missing fields', function (test) {
   var pathDef = "/blog/:blogId/some/:name";

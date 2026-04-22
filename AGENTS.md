@@ -295,6 +295,7 @@ Often released together: **`ostrio:flow-router-extra`**, **`ostrio:flow-router-t
 - Prefer **`import`/`export`** over globals.
 - Prefer **`async`/`await`** in **`Meteor.startup`** when wiring initialization.
 - Changelog / release notes: preserve commit emojis, highlight new features, split into **`⚠️ major changes`**, **`Changes`**, **`✨ New`**, **`📦 Dependencies`** (prod vs dev).
+- Prefer Meteor-wrapped npm commands in this workspace (e.g., **`meteor npm run ...`**, **`meteor npm exec ...`**) to keep Meteor-managed Node/tooling environment consistency.
 
 ## Learned Workspace Facts
 
@@ -302,3 +303,4 @@ Often released together: **`ostrio:flow-router-extra`**, **`ostrio:flow-router-t
 - **`ostrio:flow-router-meta`** and **`ostrio:flow-router-title`** hook private **`router._notfoundRoute`** / **`router._current`** and **`notFound`** / **`notfound`** option shape; changes to 404 or not-found internals in **`client/router.js`** must stay compatible with those integrations.
 - Companion packages using **`tsd`** with **`meteor/ostrio:flow-router-extra`**: add a local **`tsd-stubs`** **`Router`** shim, wire **`paths`** under **`package.json` → `tsd.compilerOptions`**, and prefer **`import('meteor/ostrio:flow-router-extra').Router`** inside **`declare module`** (avoid `import type` inside the block); **`index.test-d.ts`** may need **`/// <reference path="./index.d.ts" />`** so tsd loads ambient package typings.
 - **`maxWaitFor`**: when the time limit is hit during **`waitOn`**, the route still proceeds to **`action`**; **navigating away** aborts **`waitOn`** and skips **`action`** for the route being left.
+- `ostrio:flow-router-extra` now uses internal query module **`lib/qs.js`** (no npm `qs` runtime dependency); query APIs/docs/types standardize on **`queryParams`** naming, and nested query merge goes through `qs.merge(...)` in router path/url building.

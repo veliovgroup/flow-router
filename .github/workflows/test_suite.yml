@@ -35,7 +35,7 @@ jobs:
       - name: Setup meteor
         uses: meteorengineer/setup-meteor@v3
         with:
-          meteor-release: '3.4.0'
+          meteor-release: '3.4'
 
       - run: |
           meteor npm install

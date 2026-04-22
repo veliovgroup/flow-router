@@ -2,6 +2,7 @@
 .agents/
 .gitignore
 .npm
+node_modules/
 .DS_Store
 .eslintcache
 .eslintrc

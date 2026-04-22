@@ -52,6 +52,50 @@ Tinytest.add('Common - Router - path - just queryParams', function (test) {
   test.equal(path, expectedPath);
 });
 
+Tinytest.add('Common - Router - path - query from pathDef', function (test) {
+  var pathDef = "/blog/abc?aa=100&bb=200";
+  var expectedPath = "/blog/abc?aa=100&bb=200";
+
+  var path = FlowRouter.path(pathDef);
+  test.equal(path, expectedPath);
+});
+
+Tinytest.add('Common - Router - path - merge query from pathDef and queryParams', function (test) {
+  var pathDef = "/blog/abc?aa=100&bb=200";
+  var queryParams = {
+    bb: "300",
+    cc: "400"
+  };
+  var expectedPath = "/blog/abc?aa=100&bb=300&cc=400";
+
+  var path = FlowRouter.path(pathDef, null, queryParams);
+  test.equal(path, expectedPath);
+});
+
+Tinytest.add('Common - Router - path - encode query values', function (test) {
+  var pathDef = "/blog/abc";
+  var queryParams = {
+    q: "flow router",
+    amp: "a&b",
+    eq: "x=y"
+  };
+  var expectedPath = "/blog/abc?q=flow%20router&amp=a%26b&eq=x%3Dy";
+
+  var path = FlowRouter.path(pathDef, null, queryParams);
+  test.equal(path, expectedPath);
+});
+
+Tinytest.add('Common - Router - path - array query values', function (test) {
+  var pathDef = "/blog/abc";
+  var queryParams = {
+    tags: ["flow", "router"]
+  };
+  var expectedPath = "/blog/abc?tags%5B0%5D=flow&tags%5B1%5D=router";
+
+  var path = FlowRouter.path(pathDef, null, queryParams);
+  test.equal(path, expectedPath);
+});
+
 
 Tinytest.add('Common - Router - path - missing fields', function (test) {
   var pathDef = "/blog/:blogId/some/:name";

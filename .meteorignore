@@ -1,5 +1,6 @@
 .github
 .agents/
+.cursorignore
 .gitignore
 .npm
 node_modules/
@@ -14,9 +15,9 @@ HISTORY.md
 LICENCE
 LICENSE
 ORIGINAL FlowRouter LICENSE
-README.md
 index.test-d.ts
 package-lock.json
 package.json
+tsconfig.json
 /test/
 /docs/

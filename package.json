@@ -6,7 +6,8 @@
     "test:once": "mtest --package ./ --port=8888 --once",
     "test:watch": "mtest --package ./ --port=8888",
     "test:browser": "meteor test-packages ./ --port 8888",
-    "test:tsd": "tsd"
+    "test:types": "tsd",
+    "test": "npm run test:once && npm run test:types"
   },
   "devDependencies": {
     "@zodern/mtest": "^0.5.1",

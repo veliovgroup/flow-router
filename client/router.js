@@ -142,6 +142,11 @@ class Router {
   path(_pathDef, fields = {}, _queryParams = {}) {
     let pathDef = _pathDef || '';
     let queryParams = _queryParams;
+    const hashIndex = pathDef.indexOf('#');
+    const hash = hashIndex >= 0 ? pathDef.slice(hashIndex + 1) : '';
+    if (hashIndex >= 0) {
+      pathDef = pathDef.slice(0, hashIndex);
+    }
 
     if (this._routesMap[pathDef]) {
       pathDef = _helpers.clone(this._routesMap[pathDef].pathDef);
@@ -185,6 +190,11 @@ class Router {
     }
 
     path = path.replace(/\/\/+/g, '/');
+
+    if (hash) {
+      path += `#${hash}`;
+    }
+
     return path;
   }
 
@@ -197,6 +207,11 @@ class Router {
     try {
       // MicroRouter expects paths without base; strip it before passing
       const routerPath = this._stripBase(path);
+      if (!this.env.reload.get() && this._microRouter._isHashOnlyChange(routerPath)) {
+        window.location.hash = this._microRouter._createContext(routerPath).hash;
+        return;
+      }
+
       if (this.env.replaceState.get()) {
         this._microRouter.replace(routerPath);
       } else {

@@ -21,6 +21,123 @@ Tinytest.addAsync('Client - Router - define and go to route', (test, next) => {
   }, 100);
 });
 
+Tinytest.addAsync('Client - Router - route matches path with hash fragment', (test, next) => {
+  const rand = Random.id();
+  let rendered = 0;
+  let currentContext;
+
+  FlowRouter.route('/' + rand, {
+    action() {
+      rendered++;
+      currentContext = FlowRouter.current().context;
+    }
+  });
+
+  FlowRouter.go('/' + rand + '#security');
+
+  Meteor.setTimeout(() => {
+    test.equal(rendered, 1);
+    test.equal(currentContext && currentContext.pathname, '/' + rand);
+    test.equal(currentContext && currentContext.path, '/' + rand + '#security');
+    test.equal(currentContext && currentContext.hash, 'security');
+    test.isTrue(location.href.endsWith('/' + rand + '#security'));
+    next();
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Router - route matches path with query and hash fragment', (test, next) => {
+  const rand = Random.id();
+  let rendered = 0;
+  let current;
+
+  FlowRouter.route('/' + rand, {
+    action() {
+      rendered++;
+      current = FlowRouter.current();
+    }
+  });
+
+  FlowRouter.go('/' + rand + '?tab=account#security');
+
+  Meteor.setTimeout(() => {
+    test.equal(rendered, 1);
+    test.equal(current && current.context.pathname, '/' + rand);
+    test.equal(current && current.context.path, '/' + rand + '?tab=account#security');
+    test.equal(current && current.context.querystring, 'tab=account');
+    test.equal(current && current.context.hash, 'security');
+    test.equal(current && current.queryParams.tab, 'account');
+    test.isTrue(location.href.endsWith('/' + rand + '?tab=account#security'));
+    next();
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Router - hash-only go does not rerun same route', (test, next) => {
+  const rand = Random.id();
+  let rendered = 0;
+  let hashChanges = 0;
+
+  const onHashChange = () => {
+    hashChanges++;
+  };
+  window.addEventListener('hashchange', onHashChange);
+
+  FlowRouter.route('/' + rand, {
+    action() {
+      rendered++;
+    }
+  });
+
+  FlowRouter.go('/' + rand);
+
+  Meteor.setTimeout(() => {
+    FlowRouter.go('/' + rand + '#security');
+
+    Meteor.setTimeout(() => {
+      test.equal(rendered, 1);
+      test.equal(window.location.hash, '#security');
+      test.equal(hashChanges, 1);
+      window.removeEventListener('hashchange', onHashChange);
+      next();
+    }, 100);
+  }, 100);
+});
+
+Tinytest.addAsync('Client - Router - same-route hash link uses browser default', (test, next) => {
+  const rand = Random.id();
+  let rendered = 0;
+  let hashChanges = 0;
+  const link = document.createElement('a');
+
+  const onHashChange = () => {
+    hashChanges++;
+  };
+  window.addEventListener('hashchange', onHashChange);
+
+  FlowRouter.route('/' + rand, {
+    action() {
+      rendered++;
+    }
+  });
+
+  FlowRouter.go('/' + rand);
+
+  Meteor.setTimeout(() => {
+    link.href = '/' + rand + '#security-link';
+    link.textContent = 'Security';
+    document.body.appendChild(link);
+    link.click();
+
+    Meteor.setTimeout(() => {
+      test.equal(rendered, 1);
+      test.equal(window.location.hash, '#security-link');
+      test.equal(hashChanges, 1);
+      document.body.removeChild(link);
+      window.removeEventListener('hashchange', onHashChange);
+      next();
+    }, 100);
+  }, 100);
+});
+
 Tinytest.addAsync('Client - Router - define and go to route with async waitOn', (test, next) => {
   const rand = Random.id();
   const events = [];

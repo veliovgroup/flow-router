@@ -60,6 +60,22 @@ Tinytest.add('Common - Router - path - query from pathDef', function (test) {
   test.equal(path, expectedPath);
 });
 
+Tinytest.add('Common - Router - path - hash from pathDef', function (test) {
+  var pathDef = "/blog/abc#security";
+  var expectedPath = "/blog/abc#security";
+
+  var path = FlowRouter.path(pathDef);
+  test.equal(path, expectedPath);
+});
+
+Tinytest.add('Common - Router - path - query and hash from pathDef', function (test) {
+  var pathDef = "/blog/abc?aa=100#security";
+  var expectedPath = "/blog/abc?aa=100#security";
+
+  var path = FlowRouter.path(pathDef);
+  test.equal(path, expectedPath);
+});
+
 Tinytest.add('Common - Router - path - merge query from pathDef and queryParams', function (test) {
   var pathDef = "/blog/abc?aa=100&bb=200";
   var queryParams = {

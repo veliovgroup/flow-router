@@ -9,3 +9,12 @@ Used to build a path to your route. First parameter can be either the path defin
 <a href="{{pathFor '/post/:id/comments/:cid' id=_id hash=comment._id}}">Jump to comment</a>
 <a href="{{pathFor '/post/:id/comments/:cid' id=_id cid=comment._id query='back=yes&more=true'}}">Link to comment in post with query params</a>
 ```
+
+Same-route hash links use browser fragment behavior. FlowRouter does not run route hooks or actions when only the hash changes; handle fragment-specific UI with `hashchange`.
+
+```js
+window.addEventListener('hashchange', () => {
+  const commentId = window.location.hash.slice(1);
+  document.getElementById(commentId)?.scrollIntoView();
+});
+```

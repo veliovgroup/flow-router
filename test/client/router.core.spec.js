@@ -138,6 +138,44 @@ Tinytest.addAsync('Client - Router - same-route hash link uses browser default',
   }, 100);
 });
 
+Tinytest.addAsync('Client - Router - relative hash link uses current path', (test, next) => {
+  const rand = Random.id();
+  let rendered = 0;
+  let hashChanges = 0;
+  const link = document.createElement('a');
+
+  const onHashChange = () => {
+    hashChanges++;
+  };
+  window.addEventListener('hashchange', onHashChange);
+
+  FlowRouter.route('/' + rand + '/settings', {
+    action() {
+      rendered++;
+    }
+  });
+
+  FlowRouter.go('/' + rand + '/settings?tab=profile');
+
+  Meteor.setTimeout(() => {
+    link.href = '#security-link';
+    link.textContent = 'Security';
+    document.body.appendChild(link);
+    link.click();
+
+    Meteor.setTimeout(() => {
+      test.equal(rendered, 1);
+      test.equal(window.location.pathname, '/' + rand + '/settings');
+      test.equal(window.location.search, '?tab=profile');
+      test.equal(window.location.hash, '#security-link');
+      test.equal(hashChanges, 1);
+      document.body.removeChild(link);
+      window.removeEventListener('hashchange', onHashChange);
+      next();
+    }, 100);
+  }, 100);
+});
+
 Tinytest.addAsync('Client - Router - define and go to route with async waitOn', (test, next) => {
   const rand = Random.id();
   const events = [];

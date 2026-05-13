@@ -1,4 +1,5 @@
 import { FlowRouter, Router } from 'meteor/ostrio:flow-router-extra';
+import { pathToRegExp, matchPath } from '../../lib/micro-router.js';
 
 Tinytest.addAsync('Common - Router - validate path definition', function (test, next) {
   // path must start with '/'
@@ -7,6 +8,75 @@ Tinytest.addAsync('Common - Router - validate path definition', function (test, 
   } catch(ex) {
     next();
   }
+});
+
+Tinytest.add('Common - Router - matchPath - optional last param missing', function (test) {
+  const compiled = pathToRegExp('/test/:_id?');
+
+  const params = matchPath(compiled, '/test');
+  test.isTrue(!!params);
+  test.equal(params._id, undefined);
+});
+
+Tinytest.add('Common - Router - matchPath - optional last param missing with trailing slash', function (test) {
+  const compiled = pathToRegExp('/test/:_id?');
+
+  const params = matchPath(compiled, '/test/');
+  test.isTrue(!!params);
+  test.equal(params._id, undefined);
+});
+
+Tinytest.add('Common - Router - matchPath - optional last param present', function (test) {
+  const compiled = pathToRegExp('/test/:_id?');
+
+  const params = matchPath(compiled, '/test/abc');
+  test.isTrue(!!params);
+  test.equal(params._id, 'abc');
+});
+
+Tinytest.add('Common - Router - matchPath - multiple optional params', function (test) {
+  const compiled = pathToRegExp('/blog/:id?/:action?');
+
+  const missing = matchPath(compiled, '/blog');
+  const first = matchPath(compiled, '/blog/6135cb32d14df059605901fd');
+  const both = matchPath(compiled, '/blog/6135cb32d14df059605901fd/view');
+
+  test.isTrue(!!missing);
+  test.isTrue(!!first);
+  test.isTrue(!!both);
+  test.equal(missing.id, undefined);
+  test.equal(missing.action, undefined);
+  test.equal(first.id, '6135cb32d14df059605901fd');
+  test.equal(first.action, undefined);
+  test.equal(both.id, '6135cb32d14df059605901fd');
+  test.equal(both.action, 'view');
+});
+
+Tinytest.add('Common - Router - matchPath - star param accepts zero or more segments', function (test) {
+  const compiled = pathToRegExp('/files/:path*');
+
+  const missing = matchPath(compiled, '/files');
+  const nested = matchPath(compiled, '/files/a/b');
+
+  test.isTrue(!!missing);
+  test.isTrue(!!nested);
+  test.equal(missing.path, undefined);
+  test.equal(nested.path, 'a/b');
+});
+
+Tinytest.add('Common - Router - matchPath - plus param requires one or more segments', function (test) {
+  const compiled = pathToRegExp('/files/:path+');
+
+  test.equal(matchPath(compiled, '/files'), null);
+  const nested = matchPath(compiled, '/files/a/b');
+  test.isTrue(!!nested);
+  test.equal(nested.path, 'a/b');
+});
+
+Tinytest.add('Common - Router - matchPath - required param missing', function (test) {
+  const compiled = pathToRegExp('/test/:_id');
+
+  test.equal(matchPath(compiled, '/test'), null);
 });
 
 Tinytest.add('Common - Router - path - generic', function (test) {

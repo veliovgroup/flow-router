@@ -524,6 +524,31 @@ Tinytest.addAsync('Client - Router - get current route path', (test, next) => {
   }, 50);
 });
 
+Tinytest.addAsync('Client - Router - named route matches when optional last param is missing', (test, next) => {
+  const randomValue = Random.id();
+  const name        = Random.id();
+  const pathDef     = '/' + randomValue + '/:_id?';
+  let rendered      = 0;
+  let detectedValue = 'unset';
+
+  FlowRouter.route(pathDef, {
+    name,
+    action(params) {
+      rendered++;
+      detectedValue = params._id;
+    }
+  });
+
+  FlowRouter.go(name);
+
+  Meteor.setTimeout(() => {
+    test.equal(rendered, 1);
+    test.equal(FlowRouter.getRouteName(), name);
+    test.equal(detectedValue, undefined);
+    next();
+  }, 50);
+});
+
 Tinytest.addAsync('Client - Router - subscribe to global subs', (test, next) => {
   const rand = Random.id();
   FlowRouter.route('/' + rand);

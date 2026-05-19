@@ -10,6 +10,14 @@ if (Package.templating && Package.blaze) {
   Template = Package.templating.Template;
 }
 
+export function isActiveRoute(router, route) {
+  return !!(
+    router &&
+    router._current &&
+    router._current.route === route
+  );
+}
+
 const _BlazeRemove = function (view) {
   try {
     Blaze.remove(view);
@@ -72,6 +80,14 @@ class BlazeRenderer {
   }
 
   render(__layout, __template = false, __data = {}, __callback) {
+    this._enqueueRender(void 0, __layout, __template, __data, __callback);
+  }
+
+  renderForRoute(route, __layout, __template = false, __data = {}, __callback) {
+    this._enqueueRender(route, __layout, __template, __data, __callback);
+  }
+
+  _enqueueRender(route, __layout, __template = false, __data = {}, __callback) {
     if (!Blaze || !Template) {
       throw new Meteor.Error(400, '`.render()` - Requires `blaze` and `templating`, or `blaze-html-templates` packages to be installed');
     }
@@ -82,7 +98,7 @@ class BlazeRenderer {
       throw new Meteor.Error(400, '`.render()` - First argument must be a String or instance of Blaze.Template');
     }
 
-    this.queue.push([__layout, __template, __data, __callback]);
+    this.queue.push([__layout, __template, __data, __callback, route]);
     this.startQueue();
   }
 
@@ -101,8 +117,16 @@ class BlazeRenderer {
     }
   }
 
-  proceed(__layout, __template = false, __data = {}, __callback) {
+  proceed(__layout, __template = false, __data = {}, __callback, __route) {
     if (!Blaze || !Template) {
+      return;
+    }
+
+    if (__route && !isActiveRoute(this.router, __route)) {
+      this.isRendering = false;
+      if (this.queue.length) {
+        requestAnimFrame(() => this.startQueue());
+      }
       return;
     }
 
@@ -158,6 +182,7 @@ class BlazeRenderer {
     }
 
     const current = this.newState(layout, template);
+    current.route = __route;
     current.data = data;
     current.callback = callback;
     let updateTemplate = true;
@@ -331,6 +356,11 @@ class BlazeRenderer {
 
   materialize(current) {
     if (!Blaze || !Template) {
+      return;
+    }
+
+    if (current.route && !isActiveRoute(this.router, current.route)) {
+      this.isRendering = false;
       return;
     }
 

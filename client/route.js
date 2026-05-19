@@ -18,7 +18,14 @@ const makeTriggers = (triggers) => {
 
 class Route {
   constructor(router = new Router(), pathDef, options = {}, group) {
-    this.render           = router.Renderer.render.bind(router.Renderer);
+    this.render           = (...args) => {
+      const renderer = router.Renderer;
+      if (renderer && _helpers.isFunction(renderer.renderForRoute)) {
+        renderer.renderForRoute(this, ...args);
+      } else if (renderer && _helpers.isFunction(renderer.render)) {
+        renderer.render(...args);
+      }
+    };
     this.options          = options;
     this.globals          = router.globals;
     this.pathDef          = pathDef;

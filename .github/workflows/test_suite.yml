@@ -9,9 +9,38 @@ on:
   pull_request:
 
 jobs:
-  tests:
-    name: Meteor package tests
+  types:
+    name: TypeScript (tsd)
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+      - run: npm run test:types
+
+  tests:
+    name: Meteor ${{ matrix.meteor-release }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        meteor-release:
+          # top 3 minor releases — Meteor v2
+          - '2.14'
+          - '2.15'
+          - '2.16'
+          # top 3 minor releases — Meteor v3
+          - '3.2'
+          - '3.3'
+          - '3.4'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,8 +54,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-22-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-22-meteor-${{ matrix.meteor-release }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
+            ${{ runner.os }}-node-22-meteor-${{ matrix.meteor-release }}-
             ${{ runner.os }}-node-22-
 
       # we use mtest to run tinytest headless
@@ -35,7 +65,7 @@ jobs:
       - name: Setup meteor
         uses: meteorengineer/setup-meteor@v3
         with:
-          meteor-release: '3.4'
+          meteor-release: ${{ matrix.meteor-release }}
 
       - run: |
           meteor npm install

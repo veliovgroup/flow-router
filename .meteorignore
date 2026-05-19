@@ -19,6 +19,5 @@ index.test-d.ts
 package-lock.json
 package.json
 tsconfig.json
-/tsd-stubs/
 /test/
 /docs/

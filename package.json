@@ -10,6 +10,7 @@
     "test": "npm run test:once && npm run test:types"
   },
   "devDependencies": {
+    "@types/meteor": "^2.9.11",
     "@zodern/mtest": "^0.5.1",
     "tsd": "^0.31.2"
   }

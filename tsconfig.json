@@ -7,5 +7,6 @@
         ".meteor/local/types/packages.d.ts"
       ]
     }
-  }
+  },
+  "files": ["index.d.ts", "index.test-d.ts"]
 }

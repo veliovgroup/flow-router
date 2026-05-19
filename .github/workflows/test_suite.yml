@@ -39,7 +39,8 @@ jobs:
           - '2.16'
           # top 3 minor releases — Meteor v3
           - '3.2'
-          - '3.3'
+          # 3.3.0 breaks babel-compiler when typescript is used (meteor/meteor#13886)
+          - '3.3.1'
           - '3.4'
     steps:
       - name: Checkout

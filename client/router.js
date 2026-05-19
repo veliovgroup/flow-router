@@ -68,7 +68,12 @@ class Router {
   }
 
   set notFound(opts) {
-    Meteor.deprecate('FlowRouter.notFound is deprecated, use FlowRouter.route(\'*\', { /*...*/ }) instead!');
+    const deprecationMessage = "FlowRouter.notFound is deprecated, use FlowRouter.route('*', { /*...*/ }) instead!";
+    if (typeof Meteor.deprecate === 'function') {
+      Meteor.deprecate(deprecationMessage);
+    } else {
+      Meteor._debug(`[ostrio:flow-router-extra] ${deprecationMessage}`);
+    }
     opts.name = opts.name || '__notFound';
     this._notFound = this.route('*', opts);
   }

@@ -2,7 +2,6 @@
 .DS_Store
 .eslintcache
 .npm
-.github
 node_modules
 CHANGELOG.md
 CODE_OF_CONDUCT.md

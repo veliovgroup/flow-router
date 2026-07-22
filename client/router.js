@@ -110,14 +110,36 @@ class Router {
         this._invalidateTracker();
       };
 
-      route.waitOn(this._current, (_current, data) => {
-        Triggers.runTriggers(
-          this._triggersEnter.concat(route._triggersEnter),
-          this._current,
-          this._redirectFn,
-          afterAllTriggersRan,
-          data
-        );
+      const current = this._current;
+      const proceed = () => {
+        route.waitOn(current, (_current, data) => {
+          Triggers.runTriggers(
+            this._triggersEnter.concat(route._triggersEnter),
+            current,
+            this._redirectFn,
+            afterAllTriggersRan,
+            data
+          );
+        });
+      };
+
+      if (route._guards.length === 0) {
+        proceed();
+        return;
+      }
+
+      const redirectFromGuard = (...args) => {
+        if (this._current === current) {
+          this._redirectFn(...args);
+        }
+      };
+
+      route.runGuards(current, redirectFromGuard).then((redirected) => {
+        if (!redirected && this._current === current) {
+          proceed();
+        }
+      }).catch((error) => {
+        Meteor._debug('[ostrio:flow-router-extra] route guard rejected', error);
       });
     };
 

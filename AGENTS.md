@@ -169,15 +169,16 @@ FlowRouter.triggers.enter([(context, redirect) => {
 
 Order matches **`docs/hooks/README.md`**:
 
-1. **`whileWaiting`**
-2. **`waitOn`**
-3. **`waitOnResources`**
-4. **`endWaiting`**
-5. **`data`**
-6. **`onNoData`**
-7. **`triggersEnter`** (after global **`FlowRouter.triggers.enter`** concatenation)
-8. **`action`**
-9. **`triggersExit`**
+1. **`guard`** (parent group → child group → route; may be async)
+2. **`whileWaiting`**
+3. **`waitOn`**
+4. **`waitOnResources`**
+5. **`endWaiting`**
+6. **`data`**
+7. **`onNoData`**
+8. **`triggersEnter`** (after global **`FlowRouter.triggers.enter`** concatenation)
+9. **`action`**
+10. **`triggersExit`**
 
 **Per-file docs:** `docs/hooks/*.md`. **Implementation:** `client/route.js` (`waitOn`, `callAction`, etc.).
 

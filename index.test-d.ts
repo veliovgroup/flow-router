@@ -49,6 +49,7 @@ FlowRouter.go('/');
 expectType<string>(FlowRouter.current().route.name);
 expectType<string>(FlowRouter.current().path);
 expectType<Record<string, string>>(FlowRouter.current().params);
+expectType<string | undefined>(FlowRouter.getActiveRouteNameReactive());
 
 FlowRouter.route('/post/:id', {
   name: 'singlePost',

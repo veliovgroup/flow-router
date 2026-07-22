@@ -19,6 +19,8 @@ class Router {
     this._tracker = this._buildTracker();
     this._current = {};
     this._onEveryPath = new Tracker.Dependency();
+    this._activeRouteName = undefined;
+    this._activeRouteDep = new Tracker.Dependency();
 
     this.maxWaitFor = MAX_WAIT_FOR_MS;
     this._globalRoute = new Route(this);
@@ -105,6 +107,12 @@ class Router {
         oldRoute,
         queryParams
       };
+
+      const activeRouteName = route.name;
+      if (this._activeRouteName !== activeRouteName) {
+        this._activeRouteName = activeRouteName;
+        this._activeRouteDep.changed();
+      }
 
       const afterAllTriggersRan = () => {
         this._invalidateTracker();
@@ -286,6 +294,17 @@ class Router {
     current.queryParams = EJSON.clone(current.queryParams);
     current.params = EJSON.clone(current.params);
     return current;
+  }
+
+  /**
+   * Reactively returns the route currently being navigated to.
+   *
+   * Unlike getRouteName(), this dependency changes before waitOn completes,
+   * making it suitable for optimistic navigation UI such as active links.
+   */
+  getActiveRouteNameReactive() {
+    this._activeRouteDep.depend();
+    return this._activeRouteName;
   }
 
   track(reactiveMapper) {

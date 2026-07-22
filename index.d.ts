@@ -96,6 +96,8 @@ export interface Router {
         route: Route;
     };
     getRouteName: () => string;
+    /** Reactive route target, updated before `waitOn` completes. */
+    getActiveRouteNameReactive: () => string | undefined;
 
     watchPathChange: () => void;
     withReplaceState: (callback: () => void) => void;

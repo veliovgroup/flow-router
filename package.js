@@ -1,7 +1,7 @@
 Package.describe({
   name: 'ostrio:flow-router-extra',
   summary: 'The router for modern JavaScript apps, with support for Blaze, Vue, React, Svelte',
-  version: '3.15.3',
+  version: '3.15.4',
   git: 'https://github.com/veliovgroup/flow-router',
   documentation: 'README.md',
 });
@@ -10,7 +10,7 @@ Package.onUse((api) => {
   api.versionsFrom(['1.4', '2.8.0', '3.0.1', '3.4']);
   api.use(['modules', 'ecmascript', 'promise', 'tracker', 'reactive-dict', 'reactive-var', 'ejson', 'check'], ['client', 'server']);
 
-  api.use(['zodern:types@1.0.13', 'typescript'], ['client', 'server'], { weak: true });
+  api.use('zodern:types@1.0.13', ['client', 'server'], { weak: true });
   api.use(['templating', 'blaze@2.0.0 || 3.0.0'], 'client', { weak: true });
   api.mainModule('client/_init.js', 'client');
   api.mainModule('server/_init.js', 'server');

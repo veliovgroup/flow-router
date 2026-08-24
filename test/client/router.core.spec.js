@@ -222,6 +222,35 @@ Tinytest.addAsync('Client - Router - define and go to route with async waitOn', 
   }, 10);
 });
 
+Tinytest.addAsync('Client - Router - active route name reacts before waitOn completes', (test, next) => {
+  const rand = Random.id();
+  const routeName = `active-${rand}`;
+  const observed = [];
+  let releaseWaitOn;
+
+  FlowRouter.route('/' + rand, {
+    name: routeName,
+    waitOn() {
+      return new Promise((resolve) => {
+        releaseWaitOn = resolve;
+      });
+    }
+  });
+
+  const computation = Tracker.autorun(() => {
+    observed.push(FlowRouter.getActiveRouteNameReactive());
+  });
+
+  FlowRouter.go('/' + rand);
+
+  Meteor.setTimeout(() => {
+    test.equal(observed.at(-1), routeName);
+    releaseWaitOn();
+    computation.stop();
+    next();
+  }, 20);
+});
+
 Tinytest.addAsync('Client - Router - waitOn aborts when navigating away', (test, next) => {
   const randA = Random.id();
   const randB = Random.id();

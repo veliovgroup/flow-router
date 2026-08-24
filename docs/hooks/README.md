@@ -2,6 +2,7 @@
 
 *Hooks below are listed in execution order*
 
+- [`.guard()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/guard.md)
 - [`.whileWaiting()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/whileWaiting.md)
 - [`.waitOn()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOn.md)
 - [`.waitOnResources()` hook](https://github.com/veliovgroup/flow-router/blob/master/docs/hooks/waitOnResources.md)

@@ -43,6 +43,9 @@ class Route {
     this._onNoData        = options.onNoData || null;
     this._endWaiting      = options.endWaiting || null;
     this._currentData     = null;
+    this._guards          = _helpers.isArray(options.guards)
+      ? options.guards
+      : (_helpers.isFunction(options.guard) ? [options.guard] : (_helpers.isArray(options.guard) ? options.guard : []));
     this._triggersExit    = options.triggersExit ? makeTriggers(options.triggersExit) : [];
     this._whileWaiting    = options.whileWaiting || null;
     this._triggersEnter   = options.triggersEnter ? makeTriggers(options.triggersEnter) : [];
@@ -85,6 +88,28 @@ class Route {
     }
 
     return !results.includes(false);
+  }
+
+  async runGuards(current, redirectFn) {
+    for (const guard of this._guards) {
+      let redirected = false;
+      const redirect = (pathDef, fields, queryParams) => {
+        if (redirected) {
+          throw new Error('guard already redirected');
+        }
+        if (!pathDef) {
+          throw new Error('guard redirect requires a path');
+        }
+        redirected = true;
+        redirectFn(pathDef, fields, queryParams);
+      };
+
+      await guard(current, redirect);
+      if (redirected) {
+        return true;
+      }
+    }
+    return false;
   }
 
   async waitOn(current = {}, next) {

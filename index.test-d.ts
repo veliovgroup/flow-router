@@ -42,6 +42,14 @@ FlowRouter.initialize({ hashbang: false, maxWaitFor: 60_000 });
 
 FlowRouter.route('/', {
   name: 'home',
+  guard: async (context, redirect) => {
+    expectType<string>(context.path);
+    redirect('home');
+  },
+});
+
+FlowRouter.group({
+  guard: [() => undefined, async () => undefined],
 });
 
 FlowRouter.go('/');

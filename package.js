@@ -39,6 +39,7 @@ Package.onTest((api) => {
   api.addFiles('test/client/router.subs_ready.spec.js', 'client');
   api.addFiles('test/client/router.reactivity.spec.js', 'client');
   api.addFiles('test/client/group.spec.js', 'client');
+  api.addFiles('test/client/guard.spec.js', 'client');
   api.addFiles('test/client/trigger.spec.js', 'client');
   api.addFiles('test/client/triggers.js', 'client');
 

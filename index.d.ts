@@ -4,6 +4,8 @@ import type { Tracker } from "meteor/tracker";
 
 type Trigger = (context: ReturnType<Router["current"]>, redirect: Router["go"], stop: () => void, data: any) => void;
 
+type Guard = (context: ReturnType<Router["current"]>, redirect: Router["go"]) => void | Promise<void>;
+
 type TriggerFilterParam = { only: string[] } | { except: string[] };
 
 type DynamicImport = Promise<string>;
@@ -56,6 +58,7 @@ export interface Router {
         path: string,
         options?: {
             name?: string;
+            guard?: Guard | Guard[];
             whileWaiting?: Hook;
             waitOn?: waitOn;
             waitOnResources?: waitOnResources;
@@ -71,7 +74,7 @@ export interface Router {
             [key: string]: any;
         }
     ) => Route;
-    group: (options: { name: string; prefix?: string; [key: string]: any }) => any;
+    group: (options: { name?: string; prefix?: string; guard?: Guard | Guard[]; [key: string]: any }) => any;
     render: (layout: string, template: string, data?: { [key: string]: any }, callback?: () => void) => void;
 
     refresh: (layout: string, template: string) => void;

@@ -3,8 +3,8 @@
     "preserveSymlinks": true,
     "paths": {
       "meteor/*": [
-        "node_modules/@types/meteor/*",
-        ".meteor/local/types/packages.d.ts"
+        "./node_modules/@types/meteor/*",
+        "./.meteor/local/types/packages.d.ts"
       ]
     }
   },
